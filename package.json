@@ -40,8 +40,11 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,scss,css,md}": [
+    "*.{js,jsx,ts,tsx,json}": [
       "npm run lint:fix",
+      "prettier --write"
+    ],
+    "*.{scss,css,md}": [
       "prettier --write"
     ]
   },

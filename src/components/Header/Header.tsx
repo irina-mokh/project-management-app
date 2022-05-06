@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./Header.scss";
+import { WelcomeHeader } from "./WelcomeHeader";
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
@@ -36,8 +37,7 @@ export const Header = () => {
         <span className="on">RU</span>
         <span className="off">EN</span>
       </div>
-      <button className="headerBtn">+ create new board</button>
-      <button className="headerBtn">Log In</button>
+      <WelcomeHeader />
     </header>
   );
 };

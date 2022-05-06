@@ -21,6 +21,7 @@ $height: 40px;
 
   .h1 {
     color: $orange;
+    font-size: 1.3em;
   }
 }
 
@@ -146,4 +147,5 @@ input.check-toggle-round-flat:checked + label:after {
   margin-right: 0;
   font-weight: 700;
   font-size: 1em;
+  cursor: pointer;
 }

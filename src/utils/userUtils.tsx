@@ -31,6 +31,10 @@ export const createNewUser = async (user: NewUserType) => {
 export const getUserToken = async (user: TokenUserType) => {
   const rawResponse = await fetch(`${API_URL}${ENDPOINTS.CREATE_TOKEN}`, {
     method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(user),
   })
     .then((response) => {
@@ -38,11 +42,12 @@ export const getUserToken = async (user: TokenUserType) => {
         throw new Error("Пользователя с таким адресом нет");
       } else if (response.status === 403) {
         throw new Error("Введен неверный пароль");
-      } else if (response.status === 200) {
-        return response;
+      } else if (response.status === 201) {
+        return response.json();
       }
     })
     .catch((error) => console.log(error));
+
   console.log("rawToken", rawResponse);
   return rawResponse;
 };

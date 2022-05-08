@@ -6,10 +6,10 @@ export const WelcomeHeader = () => {
   return (
     <div>
       <Link to={APP_ROUTES.SIGNUP} className="headerBtn">
-        Sign Up
+        Зарегистрироваться
       </Link>
       <Link to={APP_ROUTES.LOGIN} className="headerBtn">
-        Log In
+        Войти
       </Link>
     </div>
   );

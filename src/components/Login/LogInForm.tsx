@@ -84,6 +84,8 @@ export const LogInForm = () => {
         setLoadingState(false);
         if (response.status === 403) {
           throw new Error("Пользователь с таким логином/паролем не найден");
+        } else if (response.status === 400) {
+          throw new Error("Заполните поля, чтобы авторизироваться");
         } else if (response.status === 201) {
           return response.json();
         }
@@ -160,17 +162,28 @@ export const LogInForm = () => {
               id="password"
               autoComplete="current-password"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              style={{ backgroundColor: success ? "#19d219" : "blue" }}
-              disabled={passError || loginError}
-              onClick={() => setLoadingState(true)}
-            >
-              {success ? "Вход выполнен" : "Войти"}
-            </Button>
+            {success ? (
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                style={{ backgroundColor: "#19d219" }}
+                disabled={Boolean(BEndError) || passError || loginError}
+              >
+                Вход выполнен
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={Boolean(BEndError) || passError || loginError}
+                onClick={() => setLoadingState(true)}
+              >
+                Войти
+              </Button>
+            )}
             <Grid container>
               <Grid item>
                 <span>Впервые на сайте? </span>

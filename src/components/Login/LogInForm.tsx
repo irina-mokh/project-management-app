@@ -10,66 +10,51 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ActionTypes } from "../../utils/State/Actions";
+import { AppContext } from "../../utils/State/Context";
+import { API_URL, ENDPOINTS } from "../../utils/userUtils";
 import { APP_ROUTES } from "../App/App";
+import { Loader } from "../Loader/Loader";
+import { TokenUserType } from "./SignUpForm";
 
 const theme = createTheme();
 
 export const LogInForm = () => {
   const navigate = useNavigate();
-  function checkLocation() {
-    navigate(-2);
-  }
 
   const [success, setSuccess] = useState(false);
 
-  const [name, setName] = useState("");
-  const [nameError, setNameError] = useState(false);
-  const [nameErrorText, setNameErrorText] = useState("");
-
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [emailErrorText, setEmailErrorText] = useState("");
+  const [login, setLogin] = useState("");
+  const [loginError, setLoginError] = useState(false);
+  const [loginErrorText, setLoginErrorText] = useState("");
 
   const [password, setPassword] = useState("");
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState("");
 
-  function nameValidation(inputName: string) {
-    if (inputName && inputName.length > 3) {
-      setNameError(false);
-      setNameErrorText("");
-    } else {
-      setNameError(true);
-      setNameErrorText("Имя должно содержать более 3х символов");
-    }
-  }
+  const [isLoading, setLoadingState] = useState<boolean>(false);
+  const [BEndError, setBEndError] = useState<string | null>(null);
+  const { dispatch } = useContext(AppContext);
 
-  const nameHandler = (event: React.SyntheticEvent) => {
-    const inputName = (event.target as HTMLInputElement).value;
-    setName(inputName);
-    nameValidation(inputName);
+  const loginHandler = (event: React.SyntheticEvent) => {
+    const inputLogin = (event.target as HTMLInputElement).value;
+    setLogin(inputLogin);
+    loginValidation(inputLogin);
+    setBEndError(null);
+  };
+  const loginValidation = (inputLogin: string) => {
+    if (inputLogin && inputLogin.length > 3) {
+      setLoginError(false);
+      setLoginErrorText("");
+    } else {
+      setLoginError(true);
+      setLoginErrorText("Логин должен содержать более 3х символов");
+    }
   };
 
-  function emailValidation(inputEmail: string) {
-    const regEm = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (regEm.test(inputEmail)) {
-      setEmailError(false);
-      setEmailErrorText("");
-    } else {
-      setEmailError(true);
-      setEmailErrorText("Введите корректный адрес почты");
-    }
-  }
-
-  const emailHandler = (event: React.SyntheticEvent) => {
-    const inputEmail = (event.target as HTMLInputElement).value;
-    setEmail(inputEmail);
-    emailValidation(inputEmail);
-  };
-
-  function passValidation(inputPass: string) {
+  const passValidation = (inputPass: string) => {
     if (inputPass && inputPass.length > 7) {
       setPassError(false);
       setPassErrorText("");
@@ -77,58 +62,58 @@ export const LogInForm = () => {
       setPassError(true);
       setPassErrorText("Пароль должен содержать минимум 8 символов");
     }
-  }
+  };
 
   const passHandler = (event: React.SyntheticEvent) => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
+    setBEndError(null);
   };
 
-  const [alreadyRegError, setAlreadyRegError] = useState(false);
-  const [loadingState, setLoadingState] = useState(false);
+  const getCurUserToken = async (user: TokenUserType) => {
+    const rawResponse = await fetch(`${API_URL}${ENDPOINTS.CREATE_TOKEN}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        setLoadingState(false);
+        if (response.status === 403) {
+          throw new Error("Пользователь с таким логином/паролем не найден");
+        } else if (response.status === 201) {
+          return response.json();
+        }
+      })
+      .catch((error: Error) => {
+        console.log("Error happened", error.message);
+        setBEndError(error.message);
+      });
+
+    console.log("rawToken", rawResponse);
+    return rawResponse;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const newUser = {
-      name: data.get("userName") as string,
-      email: data.get("email") as string,
+    const curUser = {
+      login: data.get("login") as string,
       password: data.get("password") as string,
     };
-  };
-  /* const user: CurUser = {};
 
-    const newData: void | Response | undefined = await createUser(newUser);
-    setLoadingState(true);
-    
-
-    if (newData) {
-      //const dataUser = await loginUser(newUser);
-
-      if (dataUser) {
-        const currentUser = await dataUser.json();
-        console.log("newUser", currentUser);
-        user.message = currentUser.message;
-        user.userId = currentUser.userId;
-        user.token = currentUser.token;
-        user.refreshToken = currentUser.refreshToken;
-        user.name = currentUser.name;
-        localStorage.setItem("CurrentUser", JSON.stringify(user));
-        //userContext.dispatchUserEvent("UPDATE_USER", user);
-      }
-      setAlreadyRegError(false);
+    const tokenData = await getCurUserToken(curUser);
+    if (tokenData) {
       setSuccess(true);
-      setLoadingState(true);
-      setTimeout(checkLocation, 1500);
-    } else {
-      setLoadingState(true);
-      setAlreadyRegError(true);
-      console.log("Aккаунт уже существует. Попробуйте войти");
+      dispatch({ type: ActionTypes.CheckToken, payload: tokenData.token });
+      setTimeout(() => navigate(APP_ROUTES.MAIN), 700);
     }
   };
-*/
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -148,17 +133,17 @@ export const LogInForm = () => {
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <TextField
-              error={emailError}
-              helperText={emailErrorText}
-              onChange={emailHandler}
-              value={email}
+              error={loginError}
+              helperText={loginErrorText}
+              onChange={loginHandler}
+              value={login}
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Эл.почта"
-              name="email"
-              autoComplete="email"
+              id="login"
+              name="login"
+              label="Логин"
+              autoComplete="login"
               autoFocus
             />
             <TextField
@@ -180,9 +165,11 @@ export const LogInForm = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={passError || emailError}
+              style={{ backgroundColor: success ? "#19d219" : "blue" }}
+              disabled={passError || loginError}
+              onClick={() => setLoadingState(true)}
             >
-              Войти
+              {success ? "Вход выполнен" : "Войти"}
             </Button>
             <Grid container>
               <Grid item>
@@ -194,6 +181,8 @@ export const LogInForm = () => {
             </Grid>
           </Box>
         </Box>
+        {isLoading ? <Loader /> : null}
+        {BEndError ? <div className="errorMessageCont">{BEndError}</div> : null}
       </Container>
     </ThemeProvider>
   );

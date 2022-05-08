@@ -10,10 +10,21 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createNewUser, getUserToken } from "../../utils/userUtils";
+import { ActionTypes } from "../../utils/State/Actions";
+import { AppContext } from "../../utils/State/Context";
+import { TokenReducer } from "../../utils/State/Reducers";
+import { initialAppState } from "../../utils/State/State";
+import {
+  API_URL,
+  createNewUser,
+  ENDPOINTS,
+  getUserToken,
+} from "../../utils/userUtils";
 import { APP_ROUTES } from "../App/App";
+import { Loader } from "../Loader/Loader";
+import "./AuthForm.scss";
 
 const theme = createTheme();
 
@@ -28,6 +39,7 @@ export interface TokenUserType {
 }
 
 export const SignUpForm = () => {
+  const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
 
   const [name, setName] = useState("");
@@ -42,7 +54,7 @@ export const SignUpForm = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState("");
 
-  function nameValidation(inputName: string) {
+  const nameValidation = (inputName: string) => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
       setNameErrorText("");
@@ -50,7 +62,7 @@ export const SignUpForm = () => {
       setNameError(true);
       setNameErrorText("Имя должно содержать более 3х символов");
     }
-  }
+  };
 
   const nameHandler = (event: React.SyntheticEvent) => {
     const inputName = (event.target as HTMLInputElement).value;
@@ -62,8 +74,9 @@ export const SignUpForm = () => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
+    setBEndError(null);
   };
-  function loginValidation(inputLogin: string) {
+  const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
       setLoginError(false);
       setLoginErrorText("");
@@ -71,9 +84,9 @@ export const SignUpForm = () => {
       setLoginError(true);
       setLoginErrorText("Логин должен содержать более 3х символов");
     }
-  }
+  };
 
-  function passValidation(inputPass: string) {
+  const passValidation = (inputPass: string) => {
     if (inputPass && inputPass.length > 7) {
       setPassError(false);
       setPassErrorText("");
@@ -81,7 +94,7 @@ export const SignUpForm = () => {
       setPassError(true);
       setPassErrorText("Пароль должен содержать минимум 8 символов");
     }
-  }
+  };
 
   const passHandler = (event: React.SyntheticEvent) => {
     const inputPass = (event.target as HTMLInputElement).value;
@@ -89,8 +102,36 @@ export const SignUpForm = () => {
     passValidation(inputPass);
   };
 
-  const [alreadyRegError, setAlreadyRegError] = useState(false);
-  const [loadingState, setLoadingState] = useState(false);
+  const [isLoading, setLoadingState] = useState<boolean>(false);
+  const [BEndError, setBEndError] = useState<string | null>(null);
+  const { dispatch } = useContext(AppContext);
+
+  const checkSignUp = async (user: NewUserType) => {
+    const resp = await fetch(`${API_URL}${ENDPOINTS.SINGUP}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => {
+        setLoadingState(false);
+        if (res.status === 409) {
+          throw new Error("Пользователь с таким логином уже существует");
+        } else if (res.status === 400) {
+          throw new Error("Заполните поля, чтобы зарегистироваться");
+        } else if (res.status === 201) {
+          return res.json();
+        }
+      })
+      .catch((error: Error) => {
+        console.log("Error happened", error.message);
+        setBEndError(error.message);
+      });
+
+    return resp;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,26 +143,20 @@ export const SignUpForm = () => {
       password: data.get("password") as string,
     };
 
-    const dataUser = {
-      login: data.get("login") as string,
-      password: data.get("password") as string,
-    };
-    const newData: void | Response | undefined = await createNewUser(newUser);
-    setLoadingState(true);
-    console.log("new data", newData);
-    /*
-    if (newData) {
-      const token = await getUserToken(dataUser);
-      //userContext.dispatchUserEvent("UPDATE_USER", user);
+    const newData: void | Response | undefined = await checkSignUp(newUser);
 
-      setAlreadyRegError(false);
+    if (newData) {
       setSuccess(true);
-      setLoadingState(true);
-    } else {
-      setLoadingState(true);
-      setAlreadyRegError(true);
-      console.log("Aккаунт уже существует. Попробуйте войти");
-    }*/
+      const dataUser = {
+        login: data.get("login") as string,
+        password: data.get("password") as string,
+      };
+      const tokenData = await getUserToken(dataUser);
+      if (tokenData) {
+        navigate(APP_ROUTES.MAIN);
+        dispatch({ type: ActionTypes.CheckToken, payload: tokenData.token });
+      }
+    }
   };
 
   return (
@@ -159,6 +194,7 @@ export const SignUpForm = () => {
               error={loginError}
               helperText={loginErrorText}
               onChange={loginHandler}
+              type="text"
               value={login}
               margin="normal"
               required
@@ -166,7 +202,7 @@ export const SignUpForm = () => {
               id="login"
               label="Login"
               name="login"
-              autoComplete="email"
+              autoComplete="userlogin"
             />
             <TextField
               error={passError}
@@ -198,7 +234,9 @@ export const SignUpForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                disabled={passError || nameError || loginError}
+                //disabled={passError || nameError || loginError}
+                disabled={false || passError || nameError || loginError}
+                onClick={() => setLoadingState(true)}
               >
                 Создать аккаунт
               </Button>
@@ -214,6 +252,8 @@ export const SignUpForm = () => {
             </Grid>
           </Box>
         </Box>
+        {isLoading ? <Loader /> : null}
+        {BEndError ? <div className="errorMessageCont">{BEndError}</div> : null}
       </Container>
     </ThemeProvider>
   );

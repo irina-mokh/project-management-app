@@ -18,7 +18,7 @@ $height: 40px;
   -o-transition: background-color 500ms linear;
   -ms-transition: background-color 500ms linear;
   transition: background-color 500ms linear;
-
+  font-family: "Times New Roman", Times, serif;
   .h1 {
     color: $orange;
     font-size: 1.3em;
@@ -39,6 +39,8 @@ $height: 40px;
 .switch {
   position: relative;
   display: inline-block;
+  margin-right: 20px;
+  margin-left: auto;
 }
 
 .switch > span {
@@ -144,8 +146,9 @@ input.check-toggle-round-flat:checked + label:after {
   height: $height;
   padding: 10px;
   border: 2px solid $green;
-  margin-right: 0;
+  margin-left: 10px;
   font-weight: 700;
   font-size: 1em;
   cursor: pointer;
+  font-family: "Times New Roman", Times, serif;
 }

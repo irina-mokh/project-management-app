@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AppContext } from "../../utils/State/Context";
 import "./Header.scss";
+import { UserHeader } from "./UserHeader";
 import { WelcomeHeader } from "./WelcomeHeader";
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
   const headerLine = useRef<HTMLElement>(null);
+  const { state } = useContext(AppContext);
 
   const checkSticky = () => {
     if (
@@ -26,7 +29,6 @@ export const Header = () => {
   return (
     <header ref={headerLine} className={isSticky ? "header sticky" : "header"}>
       <h1 className="h1">Project Management App</h1>
-
       <div className="switch">
         <input
           id="language-toggle"
@@ -37,7 +39,7 @@ export const Header = () => {
         <span className="on">RU</span>
         <span className="off">EN</span>
       </div>
-      <WelcomeHeader />
+      {state.userToken ? <UserHeader /> : <WelcomeHeader />}
     </header>
   );
 };

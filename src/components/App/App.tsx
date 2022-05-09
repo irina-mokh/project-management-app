@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ProfileEditForm } from "../Forms/ProfileEditForm";
 import { Header } from "../Header/Header";
 import { LogInForm } from "../Login/LogInForm";
 import { SignUpForm } from "../Login/SignUpForm";
@@ -12,7 +13,7 @@ export const APP_ROUTES = {
   MAIN: "/boards",
   SIGNUP: "/signUp",
   LOGIN: "/logIn",
-  NOTFOUND: "/404",
+  EDIT_PROFILE: "/editProfile",
   WRONGPATH: "*",
 };
 
@@ -29,6 +30,10 @@ export const App = () => {
             <Route path={APP_ROUTES.SIGNUP} element={<SignUpForm />} />
             <Route path={APP_ROUTES.LOGIN} element={<LogInForm />} />
             <Route path={APP_ROUTES.WRONGPATH} element={<Page404 />} />
+            <Route
+              path={APP_ROUTES.EDIT_PROFILE}
+              element={<ProfileEditForm />}
+            />
           </Routes>
         </div>
       </div>

@@ -18,7 +18,7 @@ import { API_URL, ENDPOINTS, getUserToken } from "../../utils/userUtils";
 import { APP_ROUTES } from "../App/App";
 import { Loader } from "../Loader/Loader";
 import "./AuthForm.scss";
-import { upDateToken } from "../../utils/Redux/AppSlice";
+import { setUserLogin, upDateToken } from "../../utils/Redux/AppSlice";
 
 const theme = createTheme();
 
@@ -149,6 +149,7 @@ export const SignUpForm = () => {
       if (tokenData) {
         navigate(APP_ROUTES.MAIN);
         dispatch(upDateToken(tokenData.token));
+        dispatch(setUserLogin(dataUser.login));
       }
     }
   };

@@ -1,3 +1,4 @@
+@import "./vars";
 @use "./global.scss";
 @use "../components/App/app.scss";
-// @use '../layout/Header/header.scss';
+@import "../components/Header/Header";

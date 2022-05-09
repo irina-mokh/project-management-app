@@ -1,7 +1,4 @@
-$orange: #ff8c32;
-$green: #fcd900;
-$height: 40px;
-
+@import "../../styles/vars";
 .header {
   width: 100%;
   display: flex;
@@ -152,4 +149,15 @@ input.check-toggle-round-flat:checked + label:after {
   font-size: 1em;
   cursor: pointer;
   font-family: "Times New Roman", Times, serif;
+}
+.userHeaderCont {
+  display: flex;
+  gap: 10px;
+  margin-right: 0;
+}
+.userMenu_link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
 }

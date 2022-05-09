@@ -4,6 +4,7 @@ import { appSlice } from "./AppSlice";
 export const store = configureStore({
   reducer: {
     userToken: appSlice.reducer,
+    userLogin: appSlice.reducer,
   },
 });
 

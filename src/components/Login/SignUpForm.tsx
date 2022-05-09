@@ -10,21 +10,15 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { useContext, useReducer, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ActionTypes } from "../../utils/State/Actions";
-import { AppContext } from "../../utils/State/Context";
-import { TokenReducer } from "../../utils/State/Reducers";
-import { initialAppState } from "../../utils/State/State";
-import {
-  API_URL,
-  createNewUser,
-  ENDPOINTS,
-  getUserToken,
-} from "../../utils/userUtils";
+import { AppDispatch } from "../../utils/Redux/Store";
+import { useDispatch } from "react-redux";
+import { API_URL, ENDPOINTS, getUserToken } from "../../utils/userUtils";
 import { APP_ROUTES } from "../App/App";
 import { Loader } from "../Loader/Loader";
 import "./AuthForm.scss";
+import { upDateToken } from "../../utils/Redux/AppSlice";
 
 const theme = createTheme();
 
@@ -104,7 +98,7 @@ export const SignUpForm = () => {
 
   const [isLoading, setLoadingState] = useState<boolean>(false);
   const [BEndError, setBEndError] = useState<string | null>(null);
-  const { dispatch } = useContext(AppContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const checkSignUp = async (user: NewUserType) => {
     const resp = await fetch(`${API_URL}${ENDPOINTS.SINGUP}`, {
@@ -154,7 +148,7 @@ export const SignUpForm = () => {
       const tokenData = await getUserToken(dataUser);
       if (tokenData) {
         navigate(APP_ROUTES.MAIN);
-        dispatch({ type: ActionTypes.CheckToken, payload: tokenData.token });
+        dispatch(upDateToken(tokenData.token));
       }
     }
   };

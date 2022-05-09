@@ -3,6 +3,7 @@ import { Header } from "../Header/Header";
 import { LogInForm } from "../Login/LogInForm";
 import { SignUpForm } from "../Login/SignUpForm";
 import { MainPage } from "../MainPage/MainPage";
+import { Page404 } from "../Page404";
 import { WelcomePage } from "../WelcomePage/WelcomePage";
 import "./app.scss";
 
@@ -27,6 +28,7 @@ export const App = () => {
             <Route path={APP_ROUTES.MAIN} element={<MainPage />} />
             <Route path={APP_ROUTES.SIGNUP} element={<SignUpForm />} />
             <Route path={APP_ROUTES.LOGIN} element={<LogInForm />} />
+            <Route path={APP_ROUTES.WRONGPATH} element={<Page404 />} />
           </Routes>
         </div>
       </div>

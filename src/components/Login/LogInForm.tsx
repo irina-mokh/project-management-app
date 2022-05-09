@@ -10,10 +10,11 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { ActionTypes } from "../../utils/State/Actions";
-import { AppContext } from "../../utils/State/Context";
+import { upDateToken } from "../../utils/Redux/AppSlice";
+import { AppDispatch } from "../../utils/Redux/Store";
 import { API_URL, ENDPOINTS } from "../../utils/userUtils";
 import { APP_ROUTES } from "../App/App";
 import { Loader } from "../Loader/Loader";
@@ -36,7 +37,7 @@ export const LogInForm = () => {
 
   const [isLoading, setLoadingState] = useState<boolean>(false);
   const [BEndError, setBEndError] = useState<string | null>(null);
-  const { dispatch } = useContext(AppContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const loginHandler = (event: React.SyntheticEvent) => {
     const inputLogin = (event.target as HTMLInputElement).value;
@@ -111,7 +112,7 @@ export const LogInForm = () => {
     const tokenData = await getCurUserToken(curUser);
     if (tokenData) {
       setSuccess(true);
-      dispatch({ type: ActionTypes.CheckToken, payload: tokenData.token });
+      dispatch(upDateToken(tokenData.token));
       setTimeout(() => navigate(APP_ROUTES.MAIN), 700);
     }
   };

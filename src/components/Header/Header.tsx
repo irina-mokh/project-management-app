@@ -1,5 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { AppContext } from "../../utils/State/Context";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../utils/Redux/Store";
 import "./Header.scss";
 import { UserHeader } from "./UserHeader";
 import { WelcomeHeader } from "./WelcomeHeader";
@@ -7,7 +8,7 @@ import { WelcomeHeader } from "./WelcomeHeader";
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
   const headerLine = useRef<HTMLElement>(null);
-  const { state } = useContext(AppContext);
+  const { userToken } = useSelector((state: RootState) => state.userToken);
 
   const checkSticky = () => {
     if (
@@ -39,7 +40,7 @@ export const Header = () => {
         <span className="on">RU</span>
         <span className="off">EN</span>
       </div>
-      {state.userToken ? <UserHeader /> : <WelcomeHeader />}
+      {userToken ? <UserHeader /> : <WelcomeHeader />}
     </header>
   );
 };

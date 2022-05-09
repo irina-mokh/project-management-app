@@ -1,3 +1,4 @@
+import { AccountMenu } from "./AccountMenu";
 import "./Header.scss";
 export const UserHeader = () => {
   return (
@@ -7,10 +8,11 @@ export const UserHeader = () => {
       <button className="headerBtn">Log Out</button>
     </div>
     */
-    <div>
+    <div className="userHeaderCont">
       <button className="headerBtn">+ создать борд</button>
-      <button className="headerBtn">Редактировать профиль</button>
-      <button className="headerBtn">Выйти</button>
+      {/*<button className="headerBtn">Редактировать профиль</button>
+      <button className="headerBtn">Выйти</button>*/}
+      <AccountMenu />
     </div>
   );
 };

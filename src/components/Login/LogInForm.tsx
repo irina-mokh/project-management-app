@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { upDateToken } from "../../utils/Redux/AppSlice";
+import { setUserLogin, upDateToken } from "../../utils/Redux/AppSlice";
 import { AppDispatch } from "../../utils/Redux/Store";
 import { API_URL, ENDPOINTS } from "../../utils/userUtils";
 import { APP_ROUTES } from "../App/App";
@@ -113,6 +113,7 @@ export const LogInForm = () => {
     if (tokenData) {
       setSuccess(true);
       dispatch(upDateToken(tokenData.token));
+      dispatch(setUserLogin(curUser.login));
       setTimeout(() => navigate(APP_ROUTES.MAIN), 700);
     }
   };

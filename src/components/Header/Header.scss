@@ -5,6 +5,7 @@ $height: 40px;
 .header {
   width: 100%;
   display: flex;
+  z-index: 100;
   align-items: center;
   justify-content: space-between;
   background-color: #41397a;

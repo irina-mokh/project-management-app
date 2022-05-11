@@ -28,6 +28,9 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           color: '#fff',
+          '&.Mui-focused': {
+            color: '#fff',
+          },
         },
       },
     },
@@ -35,10 +38,20 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           color: '#fff',
-          border: '1px solid #ced4da',
-          '&:onFocus': {
-            border: '1px solid rgba(0, 0, 0, 0.42)',
-            color: '#red',
+
+          backgroundColor: '#282933',
+
+          '-webkit-autofill:focus': {
+            transition: 'background-color 600000s 0s, color 600000s 0s',
+          },
+          '& fieldset': {
+            border: 'none',
+          },
+          '& .MuiInputBase-input:hover + fieldset': {
+            border: `2px solid #ced4da`,
+          },
+          '& .MuiInputBase-input:focus + fieldset': {
+            border: `2px solid #ced4da`,
           },
         },
       },

@@ -8,7 +8,6 @@ import Logout from '@mui/icons-material/Logout';
 import { LetterAvatar } from './Avatar';
 import { Link } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import './Header.scss';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../utils/Redux/Store';
 import { routes } from 'routes';
@@ -73,7 +72,7 @@ export const AccountMenu = () => {
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>
-            Редактировать профиль
+            Edit profile
           </Link>
         </MenuItem>
         <Divider />
@@ -81,7 +80,7 @@ export const AccountMenu = () => {
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Выйти
+          Sign Out
         </MenuItem>
       </Menu>
     </React.Fragment>

@@ -12,7 +12,6 @@ import {
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { routes } from 'routes';
 import { theme } from 'theme';
 import { setPageTitle } from 'utils/setPageTitle';
 import { setUserLogin, upDateToken } from '../../utils/Redux/AppSlice';
@@ -20,6 +19,7 @@ import { AppDispatch } from '../../utils/Redux/Store';
 import { API_URL, ENDPOINTS } from '../../utils/userUtils';
 import { Loader } from '../Loader/Loader';
 import { TokenUserType } from './SignUpForm';
+import './AuthForm.scss';
 
 export const SignInForm = () => {
   setPageTitle();
@@ -114,7 +114,7 @@ export const SignInForm = () => {
       setSuccess(true);
       dispatch(upDateToken(tokenData.token));
       dispatch(setUserLogin(curUser.login));
-      setTimeout(() => navigate(routes.main.path), 700);
+      setTimeout(() => navigate('/main'), 700);
     }
   };
 
@@ -190,7 +190,7 @@ export const SignInForm = () => {
             <Grid container>
               <Grid item>
                 <span>For the first time on the site? </span>
-                <Link to={routes.signUp.path}>
+                <Link to={'/signup'}>
                   <span>Create an account</span>
                 </Link>
               </Grid>

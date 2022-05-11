@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../utils/Redux/Store';
-import './Header.scss';
 import { UserHeader } from './UserHeader';
 import { WelcomeHeader } from './WelcomeHeader';
+import './Header.scss';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);

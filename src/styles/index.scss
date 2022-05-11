@@ -1,4 +1,7 @@
-@import "./vars";
-@use "./global.scss";
-@use "../components/App/app.scss";
-@import "../components/Header/Header";
+@import './vars';
+@import './global.scss';
+@import '../components/App/app.scss';
+@import '../components/Loader/Loader.scss';
+@import '../components/LoginForms/AuthForm.scss';
+@import '../layout/Header/Header.scss';
+@import '../pages/notFound/Page404.scss';

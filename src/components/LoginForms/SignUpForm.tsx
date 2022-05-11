@@ -15,10 +15,10 @@ import { AppDispatch } from '../../utils/Redux/Store';
 import { useDispatch } from 'react-redux';
 import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
 import { Loader } from '../Loader/Loader';
-import './AuthForm.scss';
 import { setUserLogin, upDateToken } from '../../utils/Redux/AppSlice';
 import { routes } from 'routes';
 import { theme } from 'theme';
+import './AuthForm.scss';
 
 export interface NewUserType {
   name: string;
@@ -84,7 +84,7 @@ export const SignUpForm = () => {
       setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText('Пароль должен содержать минимум 8 символов');
+      setPassErrorText('Password should contain at least 8 symbols');
     }
   };
 
@@ -170,7 +170,6 @@ export const SignUpForm = () => {
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate id="formBox">
             <TextField
-              //InputProps={}
               error={nameError}
               helperText={nameErrorText}
               onChange={nameHandler}
@@ -228,7 +227,7 @@ export const SignUpForm = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 //disabled={passError || nameError || loginError}
-                style={{ backgroundColor: '#9D1C6A' }}
+                style={{ backgroundColor: '#9c27b0' }}
                 disabled={false || passError || nameError || loginError}
                 onClick={() => setLoadingState(true)}
               >
@@ -239,7 +238,7 @@ export const SignUpForm = () => {
             <Grid container>
               <Grid item>
                 <span>Already have an account? </span>
-                <Link to={routes.signIn.path}>
+                <Link to={'/signin'}>
                   <span>Sign In</span>
                 </Link>
               </Grid>

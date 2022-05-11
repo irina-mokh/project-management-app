@@ -1,4 +1,3 @@
-import './Page404.scss';
 export const NotFound = () => {
   return (
     <div className="container">

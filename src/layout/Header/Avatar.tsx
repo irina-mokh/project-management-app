@@ -2,6 +2,7 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import { RootState } from '../../utils/Redux/Store';
 import { useSelector } from 'react-redux';
+import './Header.scss';
 
 const stringToColor = (string: string) => {
   let hash = 0;

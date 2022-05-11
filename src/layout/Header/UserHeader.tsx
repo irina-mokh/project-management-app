@@ -9,7 +9,7 @@ export const UserHeader = () => {
     </div>
     */
     <div className="userHeaderCont">
-      <button className="headerBtn">+ создать борд</button>
+      <button className="headerBtn">+ create board</button>
       {/*<button className="headerBtn">Редактировать профиль</button>
       <button className="headerBtn">Выйти</button>*/}
       <AccountMenu />

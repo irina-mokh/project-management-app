@@ -1,4 +1,5 @@
 @import '../../styles/vars';
+
 .header {
   width: 100%;
   display: flex;
@@ -18,7 +19,7 @@
   transition: background-color 500ms linear;
 
   .h1 {
-    color: $pink;
+    color: $green;
     font-size: 1.3em;
   }
 }

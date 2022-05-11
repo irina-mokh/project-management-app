@@ -1,4 +1,4 @@
-@import "../../styles/vars";
+@import '../../styles/vars';
 .header {
   width: 100%;
   display: flex;
@@ -16,7 +16,7 @@
   -o-transition: background-color 500ms linear;
   -ms-transition: background-color 500ms linear;
   transition: background-color 500ms linear;
-  font-family: "Times New Roman", Times, serif;
+  //font-family: "Times New Roman", Times, serif;
   .h1 {
     color: $orange;
     font-size: 1.3em;
@@ -103,7 +103,7 @@ input.check-toggle-round-flat + label:before,
 input.check-toggle-round-flat + label:after {
   display: block;
   position: absolute;
-  content: "";
+  content: '';
 }
 
 input.check-toggle-round-flat + label:before {
@@ -148,7 +148,7 @@ input.check-toggle-round-flat:checked + label:after {
   font-weight: 700;
   font-size: 1em;
   cursor: pointer;
-  font-family: "Times New Roman", Times, serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 .userHeaderCont {
   display: flex;

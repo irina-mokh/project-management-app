@@ -9,16 +9,16 @@ import {
   TextField,
   ThemeProvider,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { setUserLogin, upDateToken } from "../../utils/Redux/AppSlice";
-import { AppDispatch } from "../../utils/Redux/Store";
-import { API_URL, ENDPOINTS } from "../../utils/userUtils";
-import { APP_ROUTES } from "../App/App";
-import { Loader } from "../Loader/Loader";
-import { TokenUserType } from "./SignUpForm";
+} from '@mui/material';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { setUserLogin, upDateToken } from '../../utils/Redux/AppSlice';
+import { AppDispatch } from '../../utils/Redux/Store';
+import { API_URL, ENDPOINTS } from '../../utils/userUtils';
+import { APP_ROUTES } from '../App/App';
+import { Loader } from '../Loader/Loader';
+import { TokenUserType } from './SignUpForm';
 
 const theme = createTheme();
 
@@ -27,13 +27,13 @@ export const LogInForm = () => {
 
   const [success, setSuccess] = useState(false);
 
-  const [login, setLogin] = useState("");
+  const [login, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
-  const [loginErrorText, setLoginErrorText] = useState("");
+  const [loginErrorText, setLoginErrorText] = useState('');
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [passError, setPassError] = useState(false);
-  const [passErrorText, setPassErrorText] = useState("");
+  const [passErrorText, setPassErrorText] = useState('');
 
   const [isLoading, setLoadingState] = useState<boolean>(false);
   const [BEndError, setBEndError] = useState<string | null>(null);
@@ -48,20 +48,20 @@ export const LogInForm = () => {
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
       setLoginError(false);
-      setLoginErrorText("");
+      setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText("Логин должен содержать более 3х символов");
+      setLoginErrorText('Логин должен содержать более 3х символов');
     }
   };
 
   const passValidation = (inputPass: string) => {
     if (inputPass && inputPass.length > 7) {
       setPassError(false);
-      setPassErrorText("");
+      setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText("Пароль должен содержать минимум 8 символов");
+      setPassErrorText('Пароль должен содержать минимум 8 символов');
     }
   };
 
@@ -74,29 +74,29 @@ export const LogInForm = () => {
 
   const getCurUserToken = async (user: TokenUserType) => {
     const rawResponse = await fetch(`${API_URL}${ENDPOINTS.CREATE_TOKEN}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
     })
       .then((response) => {
         setLoadingState(false);
         if (response.status === 403) {
-          throw new Error("Пользователь с таким логином/паролем не найден");
+          throw new Error('Пользователь с таким логином/паролем не найден');
         } else if (response.status === 400) {
-          throw new Error("Заполните поля, чтобы авторизироваться");
+          throw new Error('Заполните поля, чтобы авторизироваться');
         } else if (response.status === 201) {
           return response.json();
         }
       })
       .catch((error: Error) => {
-        console.log("Error happened", error.message);
+        console.log('Error happened', error.message);
         setBEndError(error.message);
       });
 
-    console.log("rawToken", rawResponse);
+    console.log('rawToken', rawResponse);
     return rawResponse;
   };
 
@@ -105,8 +105,8 @@ export const LogInForm = () => {
     const data = new FormData(event.currentTarget);
 
     const curUser = {
-      login: data.get("login") as string,
-      password: data.get("password") as string,
+      login: data.get('login') as string,
+      password: data.get('password') as string,
     };
 
     const tokenData = await getCurUserToken(curUser);
@@ -125,13 +125,13 @@ export const LogInForm = () => {
         <Box
           sx={{
             marginBottom: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             padding: 0,
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
           <Typography component="h1" variant="h5">
             Авторизация
           </Typography>
@@ -169,7 +169,7 @@ export const LogInForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                style={{ backgroundColor: "#19d219" }}
+                style={{ backgroundColor: '#19d219' }}
                 disabled={Boolean(BEndError) || passError || loginError}
               >
                 Вход выполнен

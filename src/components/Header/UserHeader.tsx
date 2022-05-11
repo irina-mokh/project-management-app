@@ -1,5 +1,5 @@
-import { AccountMenu } from "./AccountMenu";
-import "./Header.scss";
+import { AccountMenu } from './AccountMenu';
+import './Header.scss';
 export const UserHeader = () => {
   return (
     /*<div>

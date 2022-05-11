@@ -1,5 +1,5 @@
 //https://codepen.io/souradeepsarkar77/pen/OJzYwej
-import "./Loader.scss";
+import './Loader.scss';
 export const Loader = () => {
   return (
     <div className="middle">

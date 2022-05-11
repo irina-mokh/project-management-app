@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../utils/Redux/Store";
-import "./Header.scss";
-import { UserHeader } from "./UserHeader";
-import { WelcomeHeader } from "./WelcomeHeader";
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../utils/Redux/Store';
+import './Header.scss';
+import { UserHeader } from './UserHeader';
+import { WelcomeHeader } from './WelcomeHeader';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
@@ -11,10 +11,7 @@ export const Header = () => {
   const { userToken } = useSelector((state: RootState) => state.userToken);
 
   const checkSticky = () => {
-    if (
-      headerLine.current?.clientHeight &&
-      window.pageYOffset > headerLine.current?.clientHeight
-    ) {
+    if (headerLine.current?.clientHeight && window.pageYOffset > headerLine.current?.clientHeight) {
       setSticky(true);
     } else {
       setSticky(false);
@@ -22,13 +19,13 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", checkSticky);
+    window.addEventListener('scroll', checkSticky);
     return () => {
-      window.removeEventListener("scroll", checkSticky);
+      window.removeEventListener('scroll', checkSticky);
     };
   });
   return (
-    <header ref={headerLine} className={isSticky ? "header sticky" : "header"}>
+    <header ref={headerLine} className={isSticky ? 'header sticky' : 'header'}>
       <h1 className="h1">Project Management App</h1>
       <div className="switch">
         <input

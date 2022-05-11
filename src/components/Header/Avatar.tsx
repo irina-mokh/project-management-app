@@ -1,7 +1,7 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import { RootState } from "../../utils/Redux/Store";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import { RootState } from '../../utils/Redux/Store';
+import { useSelector } from 'react-redux';
 
 const stringToColor = (string: string) => {
   let hash = 0;
@@ -12,7 +12,7 @@ const stringToColor = (string: string) => {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = "#";
+  let color = '#';
 
   for (i = 0; i < 3; i += 1) {
     const value = (hash >> (i * 8)) & 0xff;
@@ -29,8 +29,8 @@ const stringAvatar = (name: string | null) => {
       sx: {
         bgcolor: stringToColor(name),
         border: 2,
-        borderColor: "#fcd900",
-        cursor: "pointer",
+        borderColor: '#fcd900',
+        cursor: 'pointer',
       },
       children: `${name[0].toUpperCase()}`,
     };

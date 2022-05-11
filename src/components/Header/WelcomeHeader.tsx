@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { APP_ROUTES } from "../App/App";
-import "./Header.scss";
+import { Link } from 'react-router-dom';
+import { APP_ROUTES } from '../App/App';
+import './Header.scss';
 
 export const WelcomeHeader = () => {
   return (

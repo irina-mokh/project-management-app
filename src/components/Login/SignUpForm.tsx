@@ -9,16 +9,16 @@ import {
   TextField,
   ThemeProvider,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AppDispatch } from "../../utils/Redux/Store";
-import { useDispatch } from "react-redux";
-import { API_URL, ENDPOINTS, getUserToken } from "../../utils/userUtils";
-import { APP_ROUTES } from "../App/App";
-import { Loader } from "../Loader/Loader";
-import "./AuthForm.scss";
-import { setUserLogin, upDateToken } from "../../utils/Redux/AppSlice";
+} from '@mui/material';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppDispatch } from '../../utils/Redux/Store';
+import { useDispatch } from 'react-redux';
+import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
+import { APP_ROUTES } from '../App/App';
+import { Loader } from '../Loader/Loader';
+import './AuthForm.scss';
+import { setUserLogin, upDateToken } from '../../utils/Redux/AppSlice';
 
 const theme = createTheme();
 
@@ -36,25 +36,25 @@ export const SignUpForm = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
-  const [nameErrorText, setNameErrorText] = useState("");
+  const [nameErrorText, setNameErrorText] = useState('');
 
-  const [login, setLogin] = useState("");
+  const [login, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
-  const [loginErrorText, setLoginErrorText] = useState("");
+  const [loginErrorText, setLoginErrorText] = useState('');
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [passError, setPassError] = useState(false);
-  const [passErrorText, setPassErrorText] = useState("");
+  const [passErrorText, setPassErrorText] = useState('');
 
   const nameValidation = (inputName: string) => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
-      setNameErrorText("");
+      setNameErrorText('');
     } else {
       setNameError(true);
-      setNameErrorText("Имя должно содержать более 3х символов");
+      setNameErrorText('Имя должно содержать более 3х символов');
     }
   };
 
@@ -73,20 +73,20 @@ export const SignUpForm = () => {
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
       setLoginError(false);
-      setLoginErrorText("");
+      setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText("Логин должен содержать более 3х символов");
+      setLoginErrorText('Логин должен содержать более 3х символов');
     }
   };
 
   const passValidation = (inputPass: string) => {
     if (inputPass && inputPass.length > 7) {
       setPassError(false);
-      setPassErrorText("");
+      setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText("Пароль должен содержать минимум 8 символов");
+      setPassErrorText('Пароль должен содержать минимум 8 символов');
     }
   };
 
@@ -102,25 +102,25 @@ export const SignUpForm = () => {
 
   const checkSignUp = async (user: NewUserType) => {
     const resp = await fetch(`${API_URL}${ENDPOINTS.SINGUP}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
     })
       .then((res) => {
         setLoadingState(false);
         if (res.status === 409) {
-          throw new Error("Пользователь с таким логином уже существует");
+          throw new Error('Пользователь с таким логином уже существует');
         } else if (res.status === 400) {
-          throw new Error("Заполните поля, чтобы зарегистироваться");
+          throw new Error('Заполните поля, чтобы зарегистироваться');
         } else if (res.status === 201) {
           return res.json();
         }
       })
       .catch((error: Error) => {
-        console.log("Error happened", error.message);
+        console.log('Error happened', error.message);
         setBEndError(error.message);
       });
 
@@ -132,9 +132,9 @@ export const SignUpForm = () => {
     const data = new FormData(event.currentTarget);
 
     const newUser = {
-      name: data.get("userName") as string,
-      login: data.get("login") as string,
-      password: data.get("password") as string,
+      name: data.get('userName') as string,
+      login: data.get('login') as string,
+      password: data.get('password') as string,
     };
 
     const newData: void | Response | undefined = await checkSignUp(newUser);
@@ -142,8 +142,8 @@ export const SignUpForm = () => {
     if (newData) {
       setSuccess(true);
       const dataUser = {
-        login: data.get("login") as string,
-        password: data.get("password") as string,
+        login: data.get('login') as string,
+        password: data.get('password') as string,
       };
       const tokenData = await getUserToken(dataUser);
       if (tokenData) {
@@ -161,13 +161,13 @@ export const SignUpForm = () => {
         <Box
           sx={{
             marginBottom: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             padding: 0,
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
           <Typography component="h1" variant="h5">
             Регистрация
           </Typography>
@@ -218,7 +218,7 @@ export const SignUpForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                style={{ backgroundColor: "#19d219" }}
+                style={{ backgroundColor: '#19d219' }}
                 disabled={passError || nameError || loginError}
               >
                 Регистрация завершена

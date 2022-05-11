@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { NewUserType } from 'types';
-import { axios } from '../../utils/axios';
+import { axios } from 'utils/axios';
 
 type IAuthState = {
   login: string;

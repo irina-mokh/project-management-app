@@ -1,7 +1,7 @@
-import { theme } from '../../theme';
+import { theme } from 'theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
-import { AppRouter } from '../../routes';
+import { AppRouter } from 'routes';
 
 function App() {
   return (

@@ -6,15 +6,15 @@ import { Welcome } from 'pages/welcome';
 import { Board } from 'pages/board';
 import { NotFound } from 'pages/notFound';
 
-const prefixTitle = 'Project management app';
+const prefixTitle = 'PMA';
 export const routes = {
   welcome: {
-    title: `${prefixTitle}Welcome page`,
+    title: `${prefixTitle} Welcome page`,
     path: '/',
     element: <Welcome />,
   },
   main: {
-    title: `${prefixTitle}Main page`,
+    title: `${prefixTitle} Main page`,
     path: 'main',
     element: <Main />,
   },
@@ -34,8 +34,8 @@ export const routes = {
   //   component: <EditProfile />,
   // },
   board: {
-    title: `${prefixTitle}board`,
-    path: 'boards/:key',
+    title: `${prefixTitle} Board`,
+    path: 'boards/:id',
     element: <Board />,
   },
   notFound: {
@@ -47,7 +47,6 @@ export const routes = {
 
 export const AppRouter = () => {
   const appRoutes = Object.values(routes).map((route, index) => {
-    document.title = route.title;
     return <Route key={index} {...route} />;
   });
   return (

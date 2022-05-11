@@ -5,7 +5,7 @@
   z-index: 100;
   align-items: center;
   justify-content: space-between;
-  background-color: #41397a;
+  background-color: #363c60;
   padding: 10px;
   top: 0;
   position: relative;
@@ -16,9 +16,9 @@
   -o-transition: background-color 500ms linear;
   -ms-transition: background-color 500ms linear;
   transition: background-color 500ms linear;
-  font-family: 'Times New Roman', Times, serif;
+
   .h1 {
-    color: $orange;
+    color: $pink;
     font-size: 1.3em;
   }
 }
@@ -26,7 +26,7 @@
 .header.sticky {
   position: fixed;
   top: 0;
-  background-color: #251d3a;
+  background-color: #334d79;
   transition: all 0.5 ease;
   -webkit-transition: background-color 500ms linear;
   -moz-transition: background-color 500ms linear;
@@ -53,7 +53,7 @@
 }
 
 input.check-toggle-round-flat:checked ~ .off {
-  color: $orange;
+  color: $green;
 }
 
 input.check-toggle-round-flat:checked ~ .on {
@@ -63,7 +63,7 @@ input.check-toggle-round-flat:checked ~ .on {
 .switch > span.on {
   left: 0;
   padding-left: 2px;
-  color: $orange;
+  color: $green;
 }
 
 .switch > span.off {
@@ -89,10 +89,10 @@ input.check-toggle-round-flat:checked ~ .on {
 }
 
 input.check-toggle-round-flat + label {
-  padding: 2px;
+  padding: 7px;
   width: 100px;
   height: $height;
-  background-color: $orange;
+  background-color: $green;
   -webkit-border-radius: 60px;
   -moz-border-radius: 60px;
   -ms-border-radius: 60px;
@@ -111,7 +111,7 @@ input.check-toggle-round-flat + label:before {
   left: 2px;
   bottom: 2px;
   right: 2px;
-  background-color: $orange;
+  background-color: $green;
   -moz-border-radius: 60px;
   -ms-border-radius: 60px;
   -o-border-radius: 60px;
@@ -148,7 +148,6 @@ input.check-toggle-round-flat:checked + label:after {
   font-weight: 700;
   font-size: 1em;
   cursor: pointer;
-  font-family: 'Times New Roman', Times, serif;
 }
 .userHeaderCont {
   display: flex;

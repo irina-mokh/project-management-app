@@ -1,4 +1,4 @@
-import { NewUserType, TokenUserType } from '../components/Login/SignUpForm';
+import { NewUserType, TokenUserType } from '../components/LoginForms/SignUpForm';
 
 export const API_URL = 'https://thawing-spire-17017.herokuapp.com';
 export const ENDPOINTS = {

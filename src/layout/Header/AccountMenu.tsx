@@ -6,12 +6,12 @@ import Divider from '@mui/material/Divider';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { LetterAvatar } from './Avatar';
-import { APP_ROUTES } from '../App/App';
 import { Link } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import './Header.scss';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../utils/Redux/Store';
+import { routes } from 'routes';
 
 export const AccountMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -69,7 +69,7 @@ export const AccountMenu = () => {
           {userLogin}
         </MenuItem>
         <MenuItem>
-          <Link to={APP_ROUTES.EDIT_PROFILE} className="userMenu_link">
+          <Link to={routes.editProfile.path} className="userMenu_link">
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>

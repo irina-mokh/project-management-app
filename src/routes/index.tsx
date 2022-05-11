@@ -4,6 +4,9 @@ import { Layout } from 'layout';
 import { Main } from 'pages/main';
 import { Welcome } from 'pages/welcome';
 import { Board } from 'pages/board';
+import { SignUpForm } from 'components/LoginForms/SignUpForm';
+import { SignInForm } from 'components/LoginForms/SignInForm';
+import { EditProfileForm } from 'components/Forms/EditProfileForm';
 import { NotFound } from 'pages/notFound';
 
 const prefixTitle = 'PMA';
@@ -11,44 +14,45 @@ export const routes = {
   welcome: {
     title: `${prefixTitle} Welcome page`,
     path: '/',
-    element: <Welcome />,
+    component: <Welcome />,
   },
   main: {
     title: `${prefixTitle} Main page`,
     path: 'main',
-    element: <Main />,
+    component: <Main />,
   },
-  // signUp: {
-  //   title: `${prefixTitle}Sign up`,
-  //   path: 'signup',
-  //   component: <SignUp />,
-  // },
-  // signIn: {
-  //   title: `${prefixTitle}Sign in`,
-  //   path: 'signin',
-  //   component: <SignIn />,
-  // },
-  // editProfile: {
-  //   title: `${prefixTitle}Edit profile`,
-  //   path: 'edit-profile',
-  //   component: <EditProfile />,
-  // },
+  signUp: {
+    title: `${prefixTitle}Sign up`,
+    path: 'signup',
+    component: <SignUpForm />,
+  },
+  signIn: {
+    title: `${prefixTitle}Sign in`,
+    path: 'signin',
+    component: <SignInForm />,
+  },
+  editProfile: {
+    title: `${prefixTitle}Edit profile`,
+    path: 'edit-profile',
+    component: <EditProfileForm />,
+  },
   board: {
     title: `${prefixTitle} Board`,
     path: 'boards/:id',
-    element: <Board />,
+    component: <Board />,
   },
   notFound: {
     title: `${prefixTitle} Not found`,
     path: '*',
-    element: <NotFound />,
+    component: <NotFound />,
   },
 };
 
 export const AppRouter = () => {
   const appRoutes = Object.values(routes).map((route, index) => {
-    return <Route key={index} {...route} />;
+    return <Route key={index} path={route.path} element={route.component} />;
   });
+  console.log(appRoutes);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>

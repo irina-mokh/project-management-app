@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Container,
-  createTheme,
   CssBaseline,
   Grid,
   TextField,
@@ -11,34 +10,22 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AppDispatch } from '../../utils/Redux/Store';
 import { useDispatch } from 'react-redux';
-import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
-import { APP_ROUTES } from '../App/App';
-import { Loader } from '../Loader/Loader';
-import './AuthForm.scss';
+import { Link, useNavigate } from 'react-router-dom';
+import { routes } from 'routes';
+import { theme } from 'theme';
+import { setPageTitle } from 'utils/setPageTitle';
 import { setUserLogin, upDateToken } from '../../utils/Redux/AppSlice';
+import { AppDispatch } from '../../utils/Redux/Store';
+import { API_URL, ENDPOINTS } from '../../utils/userUtils';
+import { Loader } from '../Loader/Loader';
+import { TokenUserType } from './SignUpForm';
 
-const theme = createTheme();
-
-export interface NewUserType {
-  name: string;
-  login: string;
-  password: string;
-}
-export interface TokenUserType {
-  login: string;
-  password: string;
-}
-
-export const SignUpForm = () => {
+export const SignInForm = () => {
+  setPageTitle();
   const navigate = useNavigate();
-  const [success, setSuccess] = useState(false);
 
-  const [name, setName] = useState('');
-  const [nameError, setNameError] = useState(false);
-  const [nameErrorText, setNameErrorText] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const [login, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -48,21 +35,9 @@ export const SignUpForm = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState('');
 
-  const nameValidation = (inputName: string) => {
-    if (inputName && inputName.length > 3) {
-      setNameError(false);
-      setNameErrorText('');
-    } else {
-      setNameError(true);
-      setNameErrorText('Имя должно содержать более 3х символов');
-    }
-  };
-
-  const nameHandler = (event: React.SyntheticEvent) => {
-    const inputName = (event.target as HTMLInputElement).value;
-    setName(inputName);
-    nameValidation(inputName);
-  };
+  const [isLoading, setLoadingState] = useState<boolean>(false);
+  const [BEndError, setBEndError] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const loginHandler = (event: React.SyntheticEvent) => {
     const inputLogin = (event.target as HTMLInputElement).value;
@@ -76,7 +51,7 @@ export const SignUpForm = () => {
       setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText('Логин должен содержать более 3х символов');
+      setLoginErrorText('Login must be longer than 3 symbols');
     }
   };
 
@@ -86,7 +61,7 @@ export const SignUpForm = () => {
       setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText('Пароль должен содержать минимум 8 символов');
+      setPassErrorText('Password should contain at least 8 symbols');
     }
   };
 
@@ -94,14 +69,11 @@ export const SignUpForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
+    setBEndError(null);
   };
 
-  const [isLoading, setLoadingState] = useState<boolean>(false);
-  const [BEndError, setBEndError] = useState<string | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
-
-  const checkSignUp = async (user: NewUserType) => {
-    const resp = await fetch(`${API_URL}${ENDPOINTS.SINGUP}`, {
+  const getCurUserToken = async (user: TokenUserType) => {
+    const rawResponse = await fetch(`${API_URL}${ENDPOINTS.CREATE_TOKEN}`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -109,14 +81,14 @@ export const SignUpForm = () => {
       },
       body: JSON.stringify(user),
     })
-      .then((res) => {
+      .then((response) => {
         setLoadingState(false);
-        if (res.status === 409) {
-          throw new Error('Пользователь с таким логином уже существует');
-        } else if (res.status === 400) {
-          throw new Error('Заполните поля, чтобы зарегистироваться');
-        } else if (res.status === 201) {
-          return res.json();
+        if (response.status === 403) {
+          throw new Error('User with such a login/password was not found');
+        } else if (response.status === 400) {
+          throw new Error('Fill fields to sign in');
+        } else if (response.status === 201) {
+          return response.json();
         }
       })
       .catch((error: Error) => {
@@ -124,80 +96,59 @@ export const SignUpForm = () => {
         setBEndError(error.message);
       });
 
-    return resp;
+    console.log('rawToken', rawResponse);
+    return rawResponse;
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const newUser = {
-      name: data.get('userName') as string,
+    const curUser = {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
 
-    const newData: void | Response | undefined = await checkSignUp(newUser);
-
-    if (newData) {
+    const tokenData = await getCurUserToken(curUser);
+    if (tokenData) {
       setSuccess(true);
-      const dataUser = {
-        login: data.get('login') as string,
-        password: data.get('password') as string,
-      };
-      const tokenData = await getUserToken(dataUser);
-      if (tokenData) {
-        navigate(APP_ROUTES.MAIN);
-        dispatch(upDateToken(tokenData.token));
-        dispatch(setUserLogin(dataUser.login));
-      }
+      dispatch(upDateToken(tokenData.token));
+      dispatch(setUserLogin(curUser.login));
+      setTimeout(() => navigate(routes.main.path), 700);
     }
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" sx={{ mt: 5, color: 'primary.contrastText' }}>
         <CssBaseline />
         <Box
           sx={{
-            marginBottom: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             padding: 0,
+            color: 'primary.contrastText',
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-          <Typography component="h1" variant="h5">
-            Регистрация
+          <Typography component="h1" variant="h5" sx={{ color: 'primary.contrastText' }}>
+            Sign In
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate id="formBox">
-            <TextField
-              error={nameError}
-              helperText={nameErrorText}
-              onChange={nameHandler}
-              value={name}
-              margin="normal"
-              required
-              fullWidth
-              id="userName"
-              label="Имя"
-              name="userName"
-              autoFocus
-            />
+          <Box component="form" onSubmit={handleSubmit} noValidate>
             <TextField
               error={loginError}
               helperText={loginErrorText}
               onChange={loginHandler}
-              type="text"
               value={login}
               margin="normal"
               required
               fullWidth
               id="login"
-              label="Login"
               name="login"
-              autoComplete="userlogin"
+              label="Login"
+              autoComplete="login"
+              autoFocus
             />
             <TextField
               error={passError}
@@ -208,7 +159,7 @@ export const SignUpForm = () => {
               required
               fullWidth
               name="password"
-              label="Пароль"
+              label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -218,10 +169,10 @@ export const SignUpForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                style={{ backgroundColor: '#19d219' }}
-                disabled={passError || nameError || loginError}
+                style={{ backgroundColor: '#69D882' }}
+                disabled={Boolean(BEndError) || passError || loginError}
               >
-                Регистрация завершена
+                Successfully!
               </Button>
             ) : (
               <Button
@@ -229,19 +180,18 @@ export const SignUpForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                //disabled={passError || nameError || loginError}
-                disabled={false || passError || nameError || loginError}
+                style={{ backgroundColor: '#9D1C6A' }}
+                disabled={Boolean(BEndError) || passError || loginError}
                 onClick={() => setLoadingState(true)}
               >
-                Создать аккаунт
+                Sign In
               </Button>
             )}
-
             <Grid container>
               <Grid item>
-                <span>Уже есть аккаунт?</span>
-                <Link to={APP_ROUTES.LOGIN}>
-                  <span>Войти</span>
+                <span>For the first time on the site? </span>
+                <Link to={routes.signUp.path}>
+                  <span>Create an account</span>
                 </Link>
               </Grid>
             </Grid>

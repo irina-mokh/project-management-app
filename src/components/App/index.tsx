@@ -1,9 +1,17 @@
-import Button from "@mui/material/Button";
+import { theme } from 'theme';
+import { ThemeProvider } from '@mui/material/styles';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRouter } from 'routes';
+
 function App() {
   return (
-    <div className="App" data-testid="app">
-      <Button variant="outlined">Hello World</Button>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <div data-testid="app">
+          <AppRouter />
+        </div>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

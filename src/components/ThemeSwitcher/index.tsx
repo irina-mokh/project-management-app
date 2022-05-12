@@ -14,7 +14,6 @@ export const ThemeSwitcher = () => {
     <Stack direction="row" spacing={1} alignItems="center">
       <Typography>Dark</Typography>
       <Switch
-        defaultChecked
         checked={themeMode === 'light'}
         inputProps={{ 'aria-label': 'theme' }}
         onChange={() => {

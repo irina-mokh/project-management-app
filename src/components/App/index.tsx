@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from 'routes';
 
-import { NewBoardModal } from 'components/NewBoardModal';
+import { AddBoardModal } from 'components/AddBoardModal';
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <div data-testid="app">
           <AppRouter />
-          <NewBoardModal />
+          <AddBoardModal />
         </div>
       </ThemeProvider>
     </BrowserRouter>

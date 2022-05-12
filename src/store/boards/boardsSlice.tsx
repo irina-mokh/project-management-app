@@ -22,7 +22,6 @@ export const getBoards = createAsyncThunk(
       if (response.statusText !== 'OK') {
         throw new Error('Error');
       }
-      console.log(response.data);
       return response.data;
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);

@@ -43,7 +43,7 @@ export const BoardList = () => {
   useEffect(() => {
     dispatch(getBoards());
   }, [dispatch]);
-  const theme = useTheme();
+  const { palette } = useTheme();
 
   if (data?.length) {
     boards = data?.map((item) => {
@@ -54,29 +54,24 @@ export const BoardList = () => {
           component="li"
           key={id}
           sx={{
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: palette.background.paper,
             minHeight: 70,
+            position: 'relative',
           }}
         >
           <CardActionArea component={Link} to={`boards/${id}`}>
-            <CardHeader
-              title={title}
-              // здесть стили не подтягиваются
-              // sx={{ color: 'inherit' }}
-              action={
-                <IconButton aria-label="delete">
-                  <DeleteOutlined sx={{ height: 24, width: 24 }} />
-                </IconButton>
-              }
-            ></CardHeader>
+            <CardHeader title={title} />
             <CardContent>
-              <Typography color={theme.palette.primary.contrastText} variant="body2">
+              <Typography variant="body2">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident quas beatae esse
                 quisquam ut soluta in, saepe suscipit sunt aliquid. Magni aliquam, similique a porro
                 molestiae quia natus iusto inventore.
               </Typography>
             </CardContent>
           </CardActionArea>
+          <IconButton aria-label="delete" sx={{ position: 'absolute', right: 0, bottom: 0 }}>
+            <DeleteOutlined color="error" sx={{ height: 20, width: 20, zIndex: 5 }} />
+          </IconButton>
         </Card>
       );
     });
@@ -100,7 +95,7 @@ export const BoardList = () => {
       }}
     >
       {data?.length && boards}
-      <Card>
+      <Card variant="outlined">
         <Button
           startIcon={<AddCircleOutlineRounded />}
           sx={{

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Box, createTheme } from '@mui/material';
+import { Box, createTheme, CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
@@ -11,6 +11,7 @@ export const MainLayout = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Box
         sx={{
           backgroundColor: theme.palette.background.default,

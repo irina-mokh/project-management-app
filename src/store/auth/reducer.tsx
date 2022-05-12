@@ -1,7 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosError } from 'axios';
-import { NewUserType } from 'types';
-import { axios } from 'utils/axios';
+import { createSlice } from '@reduxjs/toolkit';
+import { createUser } from './actions';
 
 type IAuthState = {
   login: string;
@@ -15,22 +13,6 @@ const initialState: IAuthState = {
   isLoading: true,
   token: null,
 };
-
-export const createUser = createAsyncThunk(
-  'auth/createUser',
-  async function (user: NewUserType, { rejectWithValue }) {
-    const url = `signup`;
-    try {
-      const response = await axios.post(url, user);
-      if (response.statusText !== 'OK') {
-        throw new Error('Error');
-      }
-      return response.data;
-    } catch (err) {
-      return rejectWithValue((err as AxiosError).message);
-    }
-  }
-);
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -51,7 +33,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
-// export const {  } = authSlice.actions;
 
 export default authSlice.reducer;

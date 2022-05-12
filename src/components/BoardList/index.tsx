@@ -13,14 +13,15 @@ import { DeleteOutlined, AddCircleOutlineRounded } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from 'store';
-import { getBoards } from 'store/boards/boardsSlice';
+import { AppDispatch } from 'store';
+import { getBoards } from 'store/boards/actions';
+import { selectBoards } from 'store/boards/selectors';
 import { Loading } from 'components/Loading';
-import { axios } from 'utils/axios';
+import { axiosClient } from 'utils/axios';
 
 // temp sign in
 const signin = () => {
-  axios.post('/signin', {
+  axiosClient.post('/signin', {
     login: 'user-007',
     password: 'pswrd123',
   });
@@ -35,8 +36,7 @@ const signin = () => {
 export const BoardList = () => {
   signin();
   // addBoard();
-  const { data, isLoading, error } = useSelector((state: RootState) => state.boards);
-
+  const { data, isLoading, error } = useSelector(selectBoards);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
 

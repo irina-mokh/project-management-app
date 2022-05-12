@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosError } from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
 import { Board } from 'types';
-import { axios } from 'utils/axios';
+import { getBoards } from './actions';
 
 type IBoardsState = {
   isLoading: boolean;
@@ -13,21 +12,6 @@ const initialState: IBoardsState = {
   error: null,
   data: null,
 };
-
-export const getBoards = createAsyncThunk(
-  'boards/getBoards',
-  async function (arg, { rejectWithValue }) {
-    try {
-      const response = await axios.get('boards');
-      if (response.statusText !== 'OK') {
-        throw new Error('Error');
-      }
-      return response.data;
-    } catch (err) {
-      return rejectWithValue((err as AxiosError).message);
-    }
-  }
-);
 
 export const boardsSlice = createSlice({
   name: 'boards',

@@ -8,12 +8,11 @@ const initialState: IModeState = {
   mode: (localStorage.getItem('mode') as PaletteMode) || 'light',
 };
 
-export const modeSlice = createSlice({
-  name: 'mode',
+export const themeSlice = createSlice({
+  name: 'theme',
   initialState,
   reducers: {
     toggleMode: (state) => {
-      console.log('toggleMode');
       if (state.mode === 'light') {
         state.mode = 'dark';
       } else {
@@ -24,6 +23,6 @@ export const modeSlice = createSlice({
   },
 });
 
-export const { toggleMode } = modeSlice.actions;
+export const { toggleMode } = themeSlice.actions;
 
-export default modeSlice.reducer;
+export default themeSlice.reducer;

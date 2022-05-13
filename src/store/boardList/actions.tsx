@@ -17,3 +17,15 @@ export const getBoards = createAsyncThunk(
     }
   }
 );
+
+export const deleteBoard = createAsyncThunk(
+  'boards/deleteBoard',
+  async function (id: string, { rejectWithValue }) {
+    try {
+      await axiosClient.delete(`boards/${id}`);
+      return id;
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);

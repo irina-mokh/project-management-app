@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { getBoards } from 'store/boardList/actions';
+import { getBoards, deleteBoard } from 'store/boardList/actions';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
@@ -71,7 +71,11 @@ export const BoardList = () => {
               </Typography>
             </CardContent>
           </CardActionArea>
-          <IconButton aria-label="delete" sx={{ position: 'absolute', right: 0, bottom: 0 }}>
+          <IconButton
+            aria-label="delete"
+            sx={{ position: 'absolute', right: 0, bottom: 0 }}
+            onClick={() => dispatch(deleteBoard(id))}
+          >
             <DeleteOutlined color="error" sx={{ height: 20, width: 20, zIndex: 5 }} />
           </IconButton>
         </Card>

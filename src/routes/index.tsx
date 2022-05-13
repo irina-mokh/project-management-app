@@ -4,10 +4,10 @@ import { Layout } from 'layout';
 import { Main } from 'pages/main';
 import { Welcome } from 'pages/welcome';
 import { Board } from 'pages/board';
-import { SignUpForm } from 'components/LoginForms/SignUpForm';
-import { SignInForm } from 'components/LoginForms/SignInForm';
 import { EditProfileForm } from 'components/Forms/EditProfileForm';
 import { NotFound } from 'pages/notFound';
+import { SignUpForm } from 'pages/signUp';
+import { SignInForm } from 'pages/signIn';
 
 const prefixTitle = 'PMA';
 export const routes = {
@@ -22,17 +22,17 @@ export const routes = {
     component: <Main />,
   },
   signUp: {
-    title: `${prefixTitle}Sign up`,
+    title: `${prefixTitle} Sign up`,
     path: 'signup',
     component: <SignUpForm />,
   },
   signIn: {
-    title: `${prefixTitle}Sign in`,
+    title: `${prefixTitle} Sign in`,
     path: 'signin',
     component: <SignInForm />,
   },
   editProfile: {
-    title: `${prefixTitle}Edit profile`,
+    title: `${prefixTitle} Edit profile`,
     path: 'edit-profile',
     component: <EditProfileForm />,
   },

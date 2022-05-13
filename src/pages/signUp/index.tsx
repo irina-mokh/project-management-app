@@ -10,22 +10,31 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
+import { routes } from 'routes';
 import { theme } from 'theme';
-import { setPageTitle } from 'utils/setPageTitle';
-import { setUserLogin, upDateToken } from '../../utils/Redux/AppSlice';
-import { AppDispatch } from '../../utils/Redux/Store';
-import { API_URL, ENDPOINTS } from '../../utils/userUtils';
-import { Loader } from '../Loader/Loader';
-import { TokenUserType } from './SignUpForm';
-import './AuthForm.scss';
+import { Loader } from 'components/Loader/index.';
+import { useTitle } from 'hooks';
 
-export const SignInForm = () => {
-  setPageTitle();
+export interface NewUserType {
+  name: string;
+  login: string;
+  password: string;
+}
+export interface TokenUserType {
+  login: string;
+  password: string;
+}
+
+export const SignUpForm = () => {
+  useTitle(routes.signUp.title);
   const navigate = useNavigate();
-
   const [success, setSuccess] = useState(false);
+
+  const [name, setName] = useState('');
+  const [nameError, setNameError] = useState(false);
+  const [nameErrorText, setNameErrorText] = useState('');
 
   const [login, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -35,9 +44,21 @@ export const SignInForm = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState('');
 
-  const [isLoading, setLoadingState] = useState<boolean>(false);
-  const [BEndError, setBEndError] = useState<string | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const nameValidation = (inputName: string) => {
+    if (inputName && inputName.length > 3) {
+      setNameError(false);
+      setNameErrorText('');
+    } else {
+      setNameError(true);
+      setNameErrorText('Name should contain more then 3 symbols');
+    }
+  };
+
+  const nameHandler = (event: React.SyntheticEvent) => {
+    const inputName = (event.target as HTMLInputElement).value;
+    setName(inputName);
+    nameValidation(inputName);
+  };
 
   const loginHandler = (event: React.SyntheticEvent) => {
     const inputLogin = (event.target as HTMLInputElement).value;
@@ -51,7 +72,7 @@ export const SignInForm = () => {
       setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText('Login must be longer than 3 symbols');
+      setLoginErrorText('Name should contain more then 3 symbols');
     }
   };
 
@@ -69,11 +90,13 @@ export const SignInForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
-    setBEndError(null);
   };
 
-  const getCurUserToken = async (user: TokenUserType) => {
-    const rawResponse = await fetch(`${API_URL}${ENDPOINTS.CREATE_TOKEN}`, {
+  const [isLoading, setLoadingState] = useState<boolean>(false);
+  const [BEndError, setBEndError] = useState<string | null>(null);
+
+  const checkSignUp = async (user: NewUserType) => {
+    const resp = await fetch(`${API_URL}${ENDPOINTS.SINGUP}`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -81,14 +104,14 @@ export const SignInForm = () => {
       },
       body: JSON.stringify(user),
     })
-      .then((response) => {
+      .then((res) => {
         setLoadingState(false);
-        if (response.status === 403) {
-          throw new Error('User with such a login/password was not found');
-        } else if (response.status === 400) {
-          throw new Error('Fill fields to sign in');
-        } else if (response.status === 201) {
-          return response.json();
+        if (res.status === 409) {
+          throw new Error('User with such a login is already exist');
+        } else if (res.status === 400) {
+          throw new Error('Fill fields to sign up');
+        } else if (res.status === 201) {
+          return res.json();
         }
       })
       .catch((error: Error) => {
@@ -96,25 +119,31 @@ export const SignInForm = () => {
         setBEndError(error.message);
       });
 
-    console.log('rawToken', rawResponse);
-    return rawResponse;
+    return resp;
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const curUser = {
+    const newUser = {
+      name: data.get('userName') as string,
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
 
-    const tokenData = await getCurUserToken(curUser);
-    if (tokenData) {
+    const newData: void | Response | undefined = await checkSignUp(newUser);
+
+    if (newData) {
       setSuccess(true);
-      dispatch(upDateToken(tokenData.token));
-      dispatch(setUserLogin(curUser.login));
-      setTimeout(() => navigate('/main'), 700);
+      const dataUser = {
+        login: data.get('login') as string,
+        password: data.get('password') as string,
+      };
+      const tokenData = await getUserToken(dataUser);
+      if (tokenData) {
+        navigate(routes.main.path);
+      }
     }
   };
 
@@ -128,27 +157,39 @@ export const SignInForm = () => {
             flexDirection: 'column',
             alignItems: 'center',
             padding: 0,
-            color: 'primary.contrastText',
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-          <Typography component="h1" variant="h5" sx={{ color: 'primary.contrastText' }}>
-            Sign In
+          <Typography component="h1" variant="h5">
+            Sign Up
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Box component="form" onSubmit={handleSubmit} noValidate id="formBox">
+            <TextField
+              error={nameError}
+              helperText={nameErrorText}
+              onChange={nameHandler}
+              value={name}
+              margin="normal"
+              required
+              fullWidth
+              id="userName"
+              label="Name"
+              name="userName"
+              autoFocus
+            />
             <TextField
               error={loginError}
               helperText={loginErrorText}
               onChange={loginHandler}
+              type="text"
               value={login}
               margin="normal"
               required
               fullWidth
               id="login"
-              name="login"
               label="Login"
-              autoComplete="login"
-              autoFocus
+              name="login"
+              autoComplete="userlogin"
             />
             <TextField
               error={passError}
@@ -170,9 +211,9 @@ export const SignInForm = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: '#69D882' }}
-                disabled={Boolean(BEndError) || passError || loginError}
+                disabled={passError || nameError || loginError}
               >
-                Successfully!
+                Registration complete!
               </Button>
             ) : (
               <Button
@@ -180,18 +221,20 @@ export const SignInForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                style={{ backgroundColor: '#9D1C6A' }}
-                disabled={Boolean(BEndError) || passError || loginError}
+                //disabled={passError || nameError || loginError}
+                style={{ backgroundColor: '#9c27b0' }}
+                disabled={false || passError || nameError || loginError}
                 onClick={() => setLoadingState(true)}
               >
-                Sign In
+                Create an account
               </Button>
             )}
+
             <Grid container>
               <Grid item>
-                <span>For the first time on the site? </span>
-                <Link to={'/signup'}>
-                  <span>Create an account</span>
+                <span>Already have an account? </span>
+                <Link to={'/signin'}>
+                  <span>Sign In</span>
                 </Link>
               </Grid>
             </Grid>

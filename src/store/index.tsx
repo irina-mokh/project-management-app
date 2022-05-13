@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/reducer';
-import boardsReducer from './boards/reducer';
+import boardListReducer from './boardList/reducer';
 import themeReducer from './theme/reducer';
+import boardReducer from './board/reducer';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    boards: boardsReducer,
+    boardList: boardListReducer,
     theme: themeReducer,
+    board: boardReducer,
   },
 });
 

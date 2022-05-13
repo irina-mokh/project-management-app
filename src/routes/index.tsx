@@ -15,7 +15,7 @@ export const routes = {
   },
   main: {
     title: `${prefixTitle} Main page`,
-    path: 'main',
+    path: 'boards',
     element: <Main />,
   },
   // signUp: {

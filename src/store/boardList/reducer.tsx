@@ -13,8 +13,8 @@ const initialState: IBoardsState = {
   data: null,
 };
 
-export const boardsSlice = createSlice({
-  name: 'boards',
+export const boardListSlice = createSlice({
+  name: 'boardList',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -35,4 +35,4 @@ export const boardsSlice = createSlice({
 
 // export const {  } = authSlice.actions;
 
-export default boardsSlice.reducer;
+export default boardListSlice.reducer;

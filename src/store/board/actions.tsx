@@ -3,11 +3,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { axiosClient } from 'utils/axios';
 
-export const getBoards = createAsyncThunk(
+export const getBoard = createAsyncThunk(
   'boards/getBoards',
-  async function (arg, { rejectWithValue }) {
+  async function (id, { rejectWithValue }) {
     try {
-      const response = await axiosClient.get('boards');
+      const response = await axiosClient.get(`boards/${id}`);
       if (response.statusText !== 'OK') {
         throw new Error('Error');
       }

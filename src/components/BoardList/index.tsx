@@ -14,8 +14,8 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { getBoards } from 'store/boards/actions';
-import { selectBoards } from 'store/boards/selectors';
+import { getBoards } from 'store/boardList/actions';
+import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
 
@@ -36,7 +36,7 @@ const signin = () => {
 export const BoardList = () => {
   signin();
   // addBoard();
-  const { data, isLoading, error } = useSelector(selectBoards);
+  const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
 
@@ -59,7 +59,7 @@ export const BoardList = () => {
             position: 'relative',
           }}
         >
-          <CardActionArea component={Link} to={`boards/${id}`}>
+          <CardActionArea component={Link} to={`${id}`}>
             <CardHeader title={title} />
             <CardContent>
               <Typography variant="body2">

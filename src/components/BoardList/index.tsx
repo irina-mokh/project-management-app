@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { getBoards } from 'store/boards/actions';
+import { getBoards, deleteBoard } from 'store/boards/actions';
 import { selectBoards } from 'store/boards/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
@@ -28,8 +28,8 @@ const signin = () => {
 };
 // temp adding board
 // const addBoard = () => {
-//   axios.post('/boards', {
-//     title: 'new board title',
+//   axiosClient.post('/boards', {
+//     title: 'test board',
 //   });
 // };
 
@@ -69,7 +69,11 @@ export const BoardList = () => {
               </Typography>
             </CardContent>
           </CardActionArea>
-          <IconButton aria-label="delete" sx={{ position: 'absolute', right: 0, bottom: 0 }}>
+          <IconButton
+            aria-label="delete"
+            sx={{ position: 'absolute', right: 0, bottom: 0 }}
+            onClick={() => dispatch(deleteBoard(id))}
+          >
             <DeleteOutlined color="error" sx={{ height: 20, width: 20, zIndex: 5 }} />
           </IconButton>
         </Card>

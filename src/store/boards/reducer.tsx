@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Board } from 'types';
-import { getBoards } from './actions';
+import { getBoards, deleteBoard } from './actions';
 
 type IBoardsState = {
   isLoading: boolean;
   error: string | null;
-  data: [Board] | null;
+  data: Board[] | null;
 };
 const initialState: IBoardsState = {
   isLoading: true,
@@ -29,10 +29,19 @@ export const boardsSlice = createSlice({
       })
       .addCase(getBoards.rejected, (state, action) => {
         state.error = String(action.payload);
+      })
+
+      .addCase(deleteBoard.fulfilled, (state, action) => {
+        if (state.data?.length) {
+          state.data = state.data?.filter((board) => board.id !== action.payload);
+        }
+      })
+      .addCase(deleteBoard.rejected, (state, action) => {
+        state.error = String(action.payload);
       });
   },
 });
 
-// export const {  } = authSlice.actions;
+// export const { } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

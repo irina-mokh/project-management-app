@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  createTheme,
   CssBaseline,
   Grid,
   TextField,
@@ -16,19 +17,23 @@ import { Loader } from 'components/Loader';
 import { useTitle } from 'hooks';
 import { TokenUserType } from 'pages/signUp';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
-import { AppDispatch } from 'store';
-import { theme } from 'theme';
+
+import { selectTheme } from 'store/theme/selectors';
+import { getDesignTokens } from 'theme';
 import { upDateToken } from 'utils/Redux/AppSlice';
+import { AppDispatch } from 'utils/Redux/Store';
 //import { setPageTitle } from 'utils/setPageTitle';
 
 import { API_URL, ENDPOINTS } from '../../utils/userUtils';
 
 export const SignInForm = () => {
   useTitle(routes.signIn.title);
+  const mode = useSelector(selectTheme);
+  const theme = createTheme(getDesignTokens(mode));
   //const { auth } = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -126,7 +131,11 @@ export const SignInForm = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ mt: 5, color: 'primary.contrastText' }}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{ mt: 5, backgroundColor: theme.palette.background.default }}
+      >
         <CssBaseline />
         <Box
           sx={{

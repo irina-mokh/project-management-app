@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../utils/Redux/Store';
-import { UserHeader } from './UserHeader';
 import { WelcomeHeader } from './WelcomeHeader';
 import './Header.scss';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
   const headerLine = useRef<HTMLElement>(null);
-  const { userToken } = useSelector((state: RootState) => state.userToken);
+  //const { userToken } = useSelector((state: RootState) => state.userToken);
 
   const checkSticky = () => {
     if (headerLine.current?.clientHeight && window.pageYOffset > headerLine.current?.clientHeight) {
@@ -37,7 +34,8 @@ export const Header = () => {
         <span className="on">RU</span>
         <span className="off">EN</span>
       </div>
-      {userToken ? <UserHeader /> : <WelcomeHeader />}
+      {/*{userToken ? <UserHeader /> : <WelcomeHeader />}*/}
+      <WelcomeHeader />
     </header>
   );
 };

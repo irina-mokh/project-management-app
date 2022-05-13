@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  createTheme,
   CssBaseline,
   Grid,
   TextField,
@@ -13,9 +14,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
 import { routes } from 'routes';
-import { theme } from 'theme';
+
 import { Loader } from 'components/Loader';
 import { useTitle } from 'hooks';
+import { getDesignTokens } from 'theme';
+import { useSelector } from 'react-redux';
+import { selectTheme } from 'store/theme/selectors';
+import { upDateToken } from 'utils/Redux/AppSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'utils/Redux/Store';
 
 export interface NewUserType {
   name: string;
@@ -29,6 +36,10 @@ export interface TokenUserType {
 
 export const SignUpForm = () => {
   useTitle(routes.signUp.title);
+  const mode = useSelector(selectTheme);
+  const theme = createTheme(getDesignTokens(mode));
+  const dispatch = useDispatch<AppDispatch>();
+
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
 
@@ -142,6 +153,7 @@ export const SignUpForm = () => {
       };
       const tokenData = await getUserToken(dataUser);
       if (tokenData) {
+        dispatch(upDateToken(tokenData));
         navigate(routes.main.path);
       }
     }

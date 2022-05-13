@@ -7,14 +7,6 @@ export const getDesignTokens = (mode: PaletteMode) => ({
     h1: { color: '#fff' },
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          backgroundColor: '#20212A',
-          color: '#69d882',
-        },
-      },
-    },
     MuiInputLabel: {
       styleOverrides: {
         root: {

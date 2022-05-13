@@ -1,5 +1,6 @@
 import App from 'components/App';
 import React from 'react';
+import './styles/index.scss';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 

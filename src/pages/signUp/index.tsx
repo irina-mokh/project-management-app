@@ -14,7 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
 import { routes } from 'routes';
 import { theme } from 'theme';
-import { Loader } from 'components/Loader/index.';
+import { Loader } from 'components/Loader';
 import { useTitle } from 'hooks';
 
 export interface NewUserType {

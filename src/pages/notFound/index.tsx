@@ -1,5 +1,8 @@
+import { useTitle } from 'hooks';
+import { routes } from 'routes';
 import './Page404.scss';
 export const NotFound = () => {
+  useTitle(routes.notFound.title);
   return (
     <div className="container">
       <h1 className="title404">Sorry, page was not found</h1>

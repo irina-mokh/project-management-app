@@ -11,7 +11,8 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { Loader } from 'components/Loader/index.';
+import { Loader } from 'components/Loader';
+
 import { useTitle } from 'hooks';
 import { TokenUserType } from 'pages/signUp';
 import { useState } from 'react';

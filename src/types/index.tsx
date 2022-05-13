@@ -7,3 +7,8 @@ export interface TokenUserType {
   login: string;
   password: string;
 }
+
+export interface Board {
+  id: string;
+  title: string;
+}

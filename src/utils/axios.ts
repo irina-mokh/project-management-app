@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const instance = axios.create({
+export const axiosClient = axios.create({
   baseURL: 'https://thawing-spire-17017.herokuapp.com/',
   timeout: 5000,
   headers: {
@@ -9,7 +9,7 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.request.use(
+axiosClient.interceptors.request.use(
   async (config) => {
     const value = localStorage.getItem('token');
 
@@ -25,7 +25,7 @@ instance.interceptors.request.use(
   }
 );
 
-instance.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (response) => {
     const {
       data: { token },
@@ -40,5 +40,3 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export { instance as axios };

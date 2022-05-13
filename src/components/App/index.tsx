@@ -1,21 +1,16 @@
-import { theme } from 'theme';
-import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
-import { AppRouter } from 'routes';
+import { Provider } from 'react-redux';
+import { store } from 'store';
+import { MainLayout } from 'components/MainLayout';
 
-import { AddBoardModal } from 'components/AddBoardModal';
-
-function App() {
+export const App = () => {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <div data-testid="app">
-          <AppRouter />
-          <AddBoardModal />
-        </div>
-      </ThemeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <MainLayout />
+      </BrowserRouter>
+    </Provider>
   );
-}
+};
 
 export default App;

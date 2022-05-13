@@ -7,11 +7,16 @@ import {
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'store';
+import { createBoard } from 'store/boards/actions';
 
 export function AddBoardModal() {
   const [isOpen, setOpen] = useState(true);
   const [name, setName] = useState('');
   const [hasErrors, setErrors] = useState(false);
+
+  const dispatch: AppDispatch = useDispatch();
 
   const handleClose = () => {
     setOpen(false);
@@ -19,8 +24,9 @@ export function AddBoardModal() {
 
   const handleSubmit = () => {
     if (hasErrors) return;
-    console.log(name);
+
     // отправляем POST запрос с созданием доски
+    dispatch(createBoard(name));
 
     // закрываем окошко
     handleClose();
@@ -31,7 +37,7 @@ export function AddBoardModal() {
 
     // записываем ввод в стейт и сразу делаем валидацию
     setName(value);
-    setErrors(value.length < 2 ? true : false);
+    setErrors(value.length < 3 ? true : false);
   };
 
   return (

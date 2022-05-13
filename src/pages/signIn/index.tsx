@@ -12,30 +12,25 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { Loader } from 'components/Loader';
+import { Loading } from 'components/Loading';
 
 import { useTitle } from 'hooks';
-import { TokenUserType } from 'pages/signUp';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
-
+import { AppDispatch, RootState } from 'store';
+import { signInUser } from 'store/auth/actions';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
-import { upDateToken } from 'utils/Redux/AppSlice';
-import { AppDispatch } from 'utils/Redux/Store';
-//import { setPageTitle } from 'utils/setPageTitle';
-
-import { API_URL, ENDPOINTS } from '../../utils/userUtils';
 
 export const SignInForm = () => {
   useTitle(routes.signIn.title);
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
-  //const { auth } = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
+  const { error } = useSelector((state: RootState) => state.auth);
+  const { isLoading } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
 
   const [success, setSuccess] = useState(false);
@@ -48,14 +43,10 @@ export const SignInForm = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState('');
 
-  const [isLoading, setLoadingState] = useState<boolean>(false);
-  const [BEndError, setBEndError] = useState<string | null>(null);
-
   const loginHandler = (event: React.SyntheticEvent) => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
-    setBEndError(null);
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
@@ -81,35 +72,6 @@ export const SignInForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
-    setBEndError(null);
-  };
-
-  const getCurUserToken = async (user: TokenUserType) => {
-    const rawResponse = await fetch(`${API_URL}${ENDPOINTS.CREATE_TOKEN}`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
-      .then((response) => {
-        setLoadingState(false);
-        if (response.status === 403) {
-          throw new Error('User with such a login/password was not found');
-        } else if (response.status === 400) {
-          throw new Error('Fill fields to sign in');
-        } else if (response.status === 201) {
-          return response.json();
-        }
-      })
-      .catch((error: Error) => {
-        console.log('Error happened', error.message);
-        setBEndError(error.message);
-      });
-
-    console.log('rawToken', rawResponse);
-    return rawResponse;
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -120,11 +82,10 @@ export const SignInForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
+    const createdToken = await dispatch(signInUser(curUser));
 
-    const tokenData = await getCurUserToken(curUser);
-    if (tokenData) {
+    if (createdToken) {
       setSuccess(true);
-      dispatch(upDateToken(tokenData));
       setTimeout(() => navigate('/main'), 700);
     }
   };
@@ -185,7 +146,7 @@ export const SignInForm = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: '#69D882' }}
-                disabled={Boolean(BEndError) || passError || loginError}
+                //disabled={Boolean(BEndError) || passError || loginError}
               >
                 Successfully!
               </Button>
@@ -196,8 +157,7 @@ export const SignInForm = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: '#9D1C6A' }}
-                disabled={Boolean(BEndError) || passError || loginError}
-                onClick={() => setLoadingState(true)}
+                //disabled={Boolean(BEndError) || passError || loginError}
               >
                 Sign In
               </Button>
@@ -212,11 +172,11 @@ export const SignInForm = () => {
             </Grid>
           </Box>
         </Box>
-        {isLoading ? <Loader /> : null}
-        {BEndError ? (
+        {isLoading ? <Loading /> : null}
+        {error ? (
           <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
-            {BEndError}
+            {error}
           </Alert>
         ) : null}
       </Container>

@@ -3,6 +3,10 @@ export interface NewUserType {
   login: string;
   password: string;
 }
+export interface CurUserType {
+  login: string;
+  password: string;
+}
 export interface TokenUserType {
   login: string;
   password: string;

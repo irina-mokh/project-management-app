@@ -13,19 +13,15 @@ import {
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { Loading } from 'components/Loading';
-
-import { useTitle } from 'hooks';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { routes } from 'routes';
 import { AppDispatch, RootState } from 'store';
 import { signInUser } from 'store/auth/actions';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
 
 export const SignInForm = () => {
-  useTitle(routes.signIn.title);
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();

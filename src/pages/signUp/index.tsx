@@ -14,8 +14,6 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { routes } from 'routes';
-import { useTitle } from 'hooks';
 import { getDesignTokens } from 'theme';
 import { useSelector } from 'react-redux';
 import { selectTheme } from 'store/theme/selectors';
@@ -35,7 +33,6 @@ export interface TokenUserType {
 }
 
 export const SignUpForm = () => {
-  useTitle(routes.signUp.title);
   const navigate = useNavigate();
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));

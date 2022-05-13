@@ -23,7 +23,7 @@ export const routes = {
     path: 'main',
     component: <Main />,
   },
-  signUp: {
+  /*signUp: {
     title: `${prefixTitle} Sign up`,
     path: 'signup',
     component: <SignUpForm />,
@@ -32,7 +32,7 @@ export const routes = {
     title: `${prefixTitle} Sign in`,
     path: 'signin',
     component: <SignInForm />,
-  },
+  },*/
   editProfile: {
     title: `${prefixTitle} Edit profile`,
     path: 'edit-profile',

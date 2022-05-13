@@ -37,7 +37,7 @@ export const SignUpForm = () => {
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
-  const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+  const { token, error, isLoading, userId } = useSelector((state: RootState) => state.auth);
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
@@ -107,16 +107,16 @@ export const SignUpForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-    const createdUser = await dispatch(createUser(newUser));
+    dispatch(createUser(newUser));
 
-    if (createdUser) {
+    if (userId?.length) {
       const dataUser = {
         login: data.get('login') as string,
         password: data.get('password') as string,
       };
-      const createdToken = await dispatch(signInUser(dataUser));
-      if (createdToken) {
-        setTimeout(() => setTimeout(() => navigate('/main'), 700));
+      dispatch(signInUser(dataUser));
+      if (token?.length) {
+        setTimeout(() => navigate('/main'), 700);
       }
     }
   };

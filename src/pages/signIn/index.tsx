@@ -27,6 +27,7 @@ export const SignInForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
   const { isLoading } = useSelector((state: RootState) => state.auth);
+  const { token } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
 
   const [success, setSuccess] = useState(false);
@@ -78,9 +79,9 @@ export const SignInForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-    const createdToken = await dispatch(signInUser(curUser));
+    dispatch(signInUser(curUser));
 
-    if (createdToken) {
+    if (token?.length) {
       setSuccess(true);
       setTimeout(() => navigate('/main'), 700);
     }
@@ -100,11 +101,10 @@ export const SignInForm = () => {
             flexDirection: 'column',
             alignItems: 'center',
             padding: 0,
-            color: 'primary.contrastText',
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-          <Typography component="h1" variant="h5" sx={{ color: 'primary.contrastText' }}>
+          <Typography component="h1" variant="h5">
             Sign In
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate>

@@ -8,7 +8,7 @@ export const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
+/*
 axiosClient.interceptors.request.use(
   async (config) => {
     const value = localStorage.getItem('token');
@@ -40,3 +40,4 @@ axiosClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+*/

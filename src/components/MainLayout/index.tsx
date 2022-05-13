@@ -4,7 +4,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
 import { AppRouter } from 'routes';
-import { AddBoardModal } from '../AddBoardModal';
 
 export const MainLayout = () => {
   const mode = useSelector(selectTheme);
@@ -20,7 +19,6 @@ export const MainLayout = () => {
         }}
       >
         <AppRouter />
-        <AddBoardModal />
       </Box>
     </ThemeProvider>
   );

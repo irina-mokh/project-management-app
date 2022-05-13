@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createBoard } from 'store/boards/actions';
 
-export function AddBoardModal() {
+export function CreateBoardModal() {
   const [isOpen, setOpen] = useState(true);
   const [name, setName] = useState('');
   const [hasErrors, setErrors] = useState(false);
@@ -49,7 +49,6 @@ export function AddBoardModal() {
           required
           onChange={handleChange}
           margin="dense"
-          id="title"
           fullWidth
           variant="standard"
           error={hasErrors}

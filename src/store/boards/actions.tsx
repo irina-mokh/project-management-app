@@ -23,8 +23,9 @@ export const createBoard = createAsyncThunk(
   async function (title: string, { rejectWithValue }) {
     try {
       const response = await axiosClient.post('boards', { title: title });
-      if (response.statusText !== 'OK') {
-        throw new Error('Error');
+      if (response.status !== 201) {
+        console.error(response);
+        throw new Error('Error with code: ' + response.status);
       }
       return response.data;
     } catch (err) {

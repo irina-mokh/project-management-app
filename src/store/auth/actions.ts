@@ -12,8 +12,9 @@ export const createUser = createAsyncThunk(
       const response = await axiosClient.post(url, user);
       if (response.status !== 201) {
         throw new Error('Error');
+      } else {
+        return response.data;
       }
-      return response.data;
     } catch (err) {
       let errorMessage;
       if ((err as AxiosError).response?.status === 400) {

@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getDesignTokens } from 'theme';
 import { useSelector } from 'react-redux';
 import { selectTheme } from 'store/theme/selectors';
@@ -33,11 +33,10 @@ export interface TokenUserType {
 }
 
 export const SignUpForm = () => {
-  const navigate = useNavigate();
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
-  const { token, error, isLoading, userId } = useSelector((state: RootState) => state.auth);
+  const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
@@ -107,23 +106,20 @@ export const SignUpForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-    dispatch(createUser(newUser));
-
-    if (userId?.length) {
-      const dataUser = {
-        login: data.get('login') as string,
-        password: data.get('password') as string,
-      };
-      dispatch(signInUser(dataUser));
-      if (token?.length) {
-        setTimeout(() => navigate('/main'), 700);
-      }
-    }
+    dispatch(createUser(newUser))
+      .unwrap()
+      .then((newUser) => {
+        dispatch(signInUser({ password: newUser.password, login: newUser.login }));
+      })
+      .catch((e) => {
+        // error in case of rejection inside createAsyncThunk second argument
+        console.log('e', e);
+      });
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ mt: 5, color: 'primary.contrastText' }}>
+      <Container component="main" maxWidth="xs" sx={{ mt: 5 }}>
         <CssBaseline />
         <Box
           sx={{
@@ -195,8 +191,6 @@ export const SignUpForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                //disabled={passError || nameError || loginError}
-                style={{ backgroundColor: '#9c27b0' }}
                 disabled={false || passError || nameError || loginError}
               >
                 Create an account

@@ -25,9 +25,7 @@ export const SignInForm = () => {
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
-  const { error } = useSelector((state: RootState) => state.auth);
-  const { isLoading } = useSelector((state: RootState) => state.auth);
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { error, isLoading, token } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
 
   const [success, setSuccess] = useState(false);
@@ -44,6 +42,7 @@ export const SignInForm = () => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
+    //dispatch<AppDispatch>(remError());
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {

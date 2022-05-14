@@ -20,7 +20,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    removeError: (state) => {
+    remError: (state) => {
       state.error = null;
     },
   },
@@ -30,10 +30,10 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      // axios sets token to LS
       .addCase(createUser.fulfilled, (state, action) => {
-        state.userId = action.payload.id;
         state.isLoading = false;
+        state.userId = action.payload.id;
+        console.log('action', action.payload);
       })
       .addCase(createUser.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -58,6 +58,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const removeError = authSlice.actions;
+export const remError = authSlice.actions;
 
 export default authSlice.reducer;

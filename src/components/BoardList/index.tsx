@@ -27,15 +27,17 @@ const signin = () => {
   });
 };
 // temp adding board
-// const addBoard = () => {
-//   axios.post('/boards', {
-//     title: 'new board title',
-//   });
-// };
+const addBoard = async (title: string) => {
+  const response = await axiosClient.post('/boards', {
+    title: title,
+  });
+  console.log(response);
+  localStorage.setItem('boardId', response.data.id);
+};
 
 export const BoardList = () => {
   signin();
-  // addBoard();
+  addBoard('DONT DELETE, PLEASE');
   const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;

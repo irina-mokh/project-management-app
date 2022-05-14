@@ -24,6 +24,7 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.data = action.payload;
         state.isLoading = false;
       })

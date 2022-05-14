@@ -5,7 +5,7 @@ import { axiosClient } from 'utils/axios';
 
 export const getBoard = createAsyncThunk(
   'boards/getBoards',
-  async function (id, { rejectWithValue }) {
+  async function (id: string, { rejectWithValue }) {
     try {
       const response = await axiosClient.get(`boards/${id}`);
       if (response.statusText !== 'OK') {

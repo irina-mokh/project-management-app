@@ -33,7 +33,11 @@ const signin = () => {
 //   });
 // };
 
-export const BoardList = () => {
+interface IAddBoard {
+  addBoard?: () => void;
+}
+
+export const BoardList = ({ addBoard }: IAddBoard) => {
   signin();
   // addBoard();
   const { data, isLoading, error } = useSelector(selectBoards);
@@ -97,6 +101,7 @@ export const BoardList = () => {
       {data?.length && boards}
       <Card variant="outlined">
         <Button
+          onClick={addBoard}
           startIcon={<AddCircleOutlineRounded />}
           sx={{
             width: '100%',

@@ -32,7 +32,6 @@ export function CreateBoardModal() {
   const { toggleModal } = boardsSlice.actions;
   const dispatch: AppDispatch = useDispatch();
 
-  const [isOpen, setOpen] = useState(hasModal);
   const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
   const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
 
@@ -40,16 +39,22 @@ export function CreateBoardModal() {
     dispatch(toggleModal());
   };
 
-  useEffect(() => {
-    setOpen(hasModal);
-  }, [hasModal]);
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (hasErrors.title || hasErrors.description) return;
 
+    const { title, description } = boardRequestFields;
+
     //отправляем POST запрос с созданием доски
-    dispatch(createBoard(boardRequestFields));
+    dispatch(
+      createBoard({
+        title: title.trim(),
+        description: description.trim(),
+      })
+    );
+
+    // возвращаем дефолтные значения (reset)
+    setBoardRequestFields(defaultRequestValues);
 
     // закрываем окошко
     handleClose();
@@ -59,6 +64,7 @@ export function CreateBoardModal() {
     const target = event.target as HTMLInputElement;
     const { value, name } = target;
 
+    // смотрим, откуда получили значения и выставляем значения
     setBoardRequestFields({
       title: name == 'title' ? value : boardRequestFields.title,
       description: name == 'description' ? value : boardRequestFields.description,
@@ -67,6 +73,7 @@ export function CreateBoardModal() {
 
   // валидация значений
   useEffect(() => {
+    // в самих компонентах ошибки показываем только если пользователь что-то ввёл в это поле
     setHasErrors({
       title: boardRequestFields.title.trim().length < 3,
       description: boardRequestFields.description.trim().length < 3,
@@ -74,7 +81,7 @@ export function CreateBoardModal() {
   }, [boardRequestFields]);
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} maxWidth="sm" fullWidth={true}>
+    <Dialog open={hasModal} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
         <DialogTitle>Create new board</DialogTitle>
 

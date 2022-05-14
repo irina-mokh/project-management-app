@@ -16,15 +16,14 @@ export const Board = () => {
   const { toggleModal } = boardsSlice.actions;
   const dispatch: AppDispatch = useDispatch();
 
-  const clickHandler = () => {
+  const addBoardHandler = () => {
     dispatch(toggleModal());
   };
 
   return (
     <>
-      <button onClick={clickHandler}>Add new board!</button>
       <CreateBoardModal />
-      <BoardList />
+      <BoardList addBoard={addBoardHandler} />
     </>
   );
 };

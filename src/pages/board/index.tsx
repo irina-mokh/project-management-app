@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { AppDispatch } from 'store';
-import { setPageTitle } from 'utils/setPageTitle';
 import { useParams } from 'react-router-dom';
 import { getBoard } from 'store/board/actions';
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Card, Paper, Typography, Box } from '@mui/material';
+import { List, Card, Paper, Typography, Container } from '@mui/material';
 import { Column, Task } from 'types';
 import { AddButton } from 'components/AddButton';
+import { useTitle } from 'hooks';
+import { routes } from 'routes';
 
 export const Board = () => {
-  setPageTitle();
+  useTitle(routes.board.title);
   const { id } = useParams();
 
   const { data, isLoading, error } = useSelector(selectBoard);
@@ -34,7 +35,7 @@ export const Board = () => {
     return <>{error}</>;
   }
   return (
-    <Box sx={{ width: '100%', height: '83vh', padding: '5px' }}>
+    <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
       <Typography variant="h3" color="primary" fontSize="1.8em">
         {data?.title}
       </Typography>
@@ -77,6 +78,6 @@ export const Board = () => {
           <AddButton text="add column" />
         </Card>
       </List>
-    </Box>
+    </Container>
   );
 };

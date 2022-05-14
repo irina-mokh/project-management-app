@@ -38,3 +38,8 @@ export interface Task {
     }
   ];
 }
+
+export interface ICreateBoardRequestFields {
+  title: string;
+  description: string;
+}

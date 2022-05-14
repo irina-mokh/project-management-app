@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { getBoards, deleteBoard } from 'store/boardList/actions';
+import { toggleModal } from 'store/boardList/reducer';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
@@ -27,11 +28,19 @@ const signin = () => {
   });
 };
 
+// interface IAddBoard {
+//   addBoard?: () => void;
+// }
+
 export const BoardList = () => {
   signin();
   const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
+
+  const addBoardHandler = () => {
+    dispatch(toggleModal());
+  };
 
   useEffect(() => {
     dispatch(getBoards());
@@ -92,7 +101,7 @@ export const BoardList = () => {
       }}
     >
       {data?.length && boards}
-      <AddButton text="add board" />
+      <AddButton text="add board" addHandler={addBoardHandler} />
     </List>
   );
 };

@@ -67,6 +67,7 @@ export const SignInForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
+    dispatch(remError());
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

@@ -67,6 +67,7 @@ export const SignUpForm = () => {
     const inputName = (event.target as HTMLInputElement).value;
     setName(inputName);
     nameValidation(inputName);
+    dispatch(remError());
   };
 
   const loginHandler = (event: React.SyntheticEvent) => {

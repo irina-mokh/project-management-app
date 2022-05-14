@@ -11,9 +11,9 @@ export interface TokenUserType {
 export interface Board {
   id: string;
   title: string;
+  description: string;
 }
 export interface BoardDetails extends Board {
-  description: string;
   columns: Column[];
 }
 

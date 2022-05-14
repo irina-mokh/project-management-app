@@ -10,11 +10,11 @@ import {
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { createBoard } from 'store/boards/actions';
+import { createBoard } from 'store/boardList/actions';
 import { ICreateBoardRequestFields } from 'types/index';
 
-import { selectBoards } from 'store/boards/selectors';
-import { boardsSlice } from 'store/boards/reducer';
+import { selectBoardList } from 'store/boardList/selectors';
+import { boardListSlice } from 'store/boardList/reducer';
 
 const defaultRequestValues: ICreateBoardRequestFields = {
   title: '',
@@ -28,8 +28,8 @@ const defaultErrorsValues = {
 
 export function CreateBoardModal() {
   // показ зависит от состояния глобального стора
-  const { hasModal } = useSelector(selectBoards);
-  const { toggleModal } = boardsSlice.actions;
+  const { hasModal } = useSelector(selectBoardList);
+  const { toggleModal } = boardListSlice.actions;
   const dispatch: AppDispatch = useDispatch();
 
   const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);

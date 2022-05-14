@@ -49,7 +49,7 @@ export const BoardList = () => {
 
   if (data?.length) {
     boards = data?.map((item) => {
-      const { id, title } = item;
+      const { id, title, description } = item;
       return (
         <Card
           variant="outlined"
@@ -64,11 +64,7 @@ export const BoardList = () => {
           <CardActionArea component={Link} to={`${id}`}>
             <CardHeader title={title} />
             <CardContent>
-              <Typography variant="body2">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident quas beatae esse
-                quisquam ut soluta in, saepe suscipit sunt aliquid. Magni aliquam, similique a porro
-                molestiae quia natus iusto inventore.
-              </Typography>
+              <Typography variant="body2">{description}</Typography>
             </CardContent>
           </CardActionArea>
           <IconButton

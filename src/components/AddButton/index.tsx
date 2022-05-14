@@ -3,11 +3,12 @@ import { AddCircleOutlineRounded } from '@mui/icons-material';
 
 type IAddButton = {
   text: string;
+  addHandler?: () => void;
 };
 
 export const AddButton = (props: IAddButton) => {
   return (
-    <Card variant="outlined" sx={{ height: '50px' }}>
+    <Card variant="outlined" sx={{ height: '50px' }} onClick={props.addHandler}>
       <Button
         startIcon={<AddCircleOutlineRounded />}
         sx={{

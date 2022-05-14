@@ -3,6 +3,7 @@ import { BoardList } from 'components/BoardList';
 import { Search } from 'components/Search';
 import { Container } from '@mui/material';
 import { ThemeSwitcher } from 'components/ThemeSwitcher';
+import { CreateBoardModal } from 'components/CreateBoardModal';
 
 export const Main = () => {
   setPageTitle();
@@ -12,7 +13,8 @@ export const Main = () => {
       <Container>
         <Search />
         <ThemeSwitcher />
-        <BoardList></BoardList>
+        <CreateBoardModal />
+        <BoardList />
       </Container>
     </>
   );

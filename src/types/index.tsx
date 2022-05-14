@@ -13,7 +13,8 @@ export interface Board {
   title: string;
 }
 export interface BoardDetails extends Board {
-  data: Column[];
+  description: string;
+  columns: Column[];
 }
 
 export interface Column {

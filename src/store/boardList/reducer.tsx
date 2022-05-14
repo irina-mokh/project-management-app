@@ -5,12 +5,12 @@ import { getBoards, deleteBoard } from './actions';
 type IBoardsState = {
   isLoading: boolean;
   error: string | null;
-  data: Board[] | null;
+  data: Board[];
 };
 const initialState: IBoardsState = {
   isLoading: true,
   error: null,
-  data: null,
+  data: [],
 };
 
 export const boardListSlice = createSlice({

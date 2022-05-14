@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { axiosClient } from 'utils/axios';
 
 export const getBoard = createAsyncThunk(
-  'boards/getBoards',
+  'board/getBoard',
   async function (id: string, { rejectWithValue }) {
     try {
       const response = await axiosClient.get(`boards/${id}`);

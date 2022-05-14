@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { BoardDetails } from 'types';
 import { getBoard } from './actions';
 
-interface IBoardState {
+type IBoardState = {
   isLoading: boolean;
   error: string | null;
-  data: [BoardDetails] | null;
-}
+  data: BoardDetails | null;
+};
 const initialState: IBoardState = {
   isLoading: true,
   error: null,

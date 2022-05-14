@@ -1,5 +1,4 @@
 import {
-  Button,
   IconButton,
   Card,
   CardHeader,
@@ -9,7 +8,7 @@ import {
   useTheme,
   Typography,
 } from '@mui/material';
-import { DeleteOutlined, AddCircleOutlineRounded } from '@mui/icons-material';
+import { DeleteOutlined } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -18,26 +17,18 @@ import { getBoards, deleteBoard } from 'store/boardList/actions';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
+import { AddButton } from 'components/AddButton';
 
 // temp sign in
 const signin = () => {
   axiosClient.post('/signin', {
-    login: 'user-007',
-    password: 'pswrd123',
+    login: 'mokh-user',
+    password: '07007pswrd',
   });
-};
-// temp adding board
-const addBoard = async (title: string) => {
-  const response = await axiosClient.post('/boards', {
-    title: title,
-  });
-  console.log(response);
-  localStorage.setItem('boardId', response.data.id);
 };
 
 export const BoardList = () => {
   signin();
-  addBoard('DONT DELETE, PLEASE');
   const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
@@ -101,17 +92,7 @@ export const BoardList = () => {
       }}
     >
       {data?.length && boards}
-      <Card variant="outlined">
-        <Button
-          startIcon={<AddCircleOutlineRounded />}
-          sx={{
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          add board
-        </Button>
-      </Card>
+      <AddButton text="add board" />
     </List>
   );
 };

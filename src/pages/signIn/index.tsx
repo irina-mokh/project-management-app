@@ -15,9 +15,10 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { Loading } from 'components/Loading';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AppDispatch, RootState } from 'store';
 import { signInUser } from 'store/auth/actions';
+import { authSlice } from 'store/auth/reducer';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
 
@@ -25,10 +26,8 @@ export const SignInForm = () => {
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
-  const { error, isLoading } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
-
-  const [success, setSuccess] = useState(false);
+  const { error, isLoading, token } = useSelector((state: RootState) => state.auth);
+  const { remError } = authSlice.actions;
 
   const [loginInput, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -42,7 +41,7 @@ export const SignInForm = () => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
-    //dispatch<AppDispatch>(remError());
+    dispatch(remError());
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
@@ -78,10 +77,7 @@ export const SignInForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-    dispatch(signInUser(curUser)).then(() => {
-      setSuccess(true);
-      setTimeout(() => navigate('/main'), 700);
-    });
+    dispatch(signInUser(curUser));
 
     /*if (token?.length) {
       setSuccess(true);
@@ -138,7 +134,7 @@ export const SignInForm = () => {
               id="password"
               autoComplete="current-password"
             />
-            {success ? (
+            {token ? (
               <Button
                 fullWidth
                 variant="contained"

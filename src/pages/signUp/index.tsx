@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from 'components/Loading';
 import { createUser, signInUser } from 'store/auth/actions';
 import { AppDispatch, RootState } from 'store';
+import { authSlice } from 'store/auth/reducer';
 
 export interface NewUserType {
   name: string;
@@ -37,6 +38,7 @@ export const SignUpForm = () => {
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+  const { remError } = authSlice.actions;
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
@@ -54,6 +56,7 @@ export const SignUpForm = () => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
       setNameErrorText('');
+      dispatch(remError());
     } else {
       setNameError(true);
       setNameErrorText('Name should contain more then 3 symbols');
@@ -108,8 +111,8 @@ export const SignUpForm = () => {
     };
     dispatch(createUser(newUser))
       .unwrap()
-      .then((newUser) => {
-        dispatch(signInUser({ password: newUser.password, login: newUser.login }));
+      .then(() => {
+        dispatch(signInUser({ login: newUser.login, password: newUser.password }));
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument

@@ -8,10 +8,13 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createBoard } from 'store/boards/actions';
 import { ICreateBoardRequestFields } from 'types/index';
+
+import { selectBoards } from 'store/boards/selectors';
+import { boardsSlice } from 'store/boards/reducer';
 
 const defaultRequestValues: ICreateBoardRequestFields = {
   title: '',
@@ -24,16 +27,22 @@ const defaultErrorsValues = {
 };
 
 export function CreateBoardModal() {
-  const [isOpen, setOpen] = useState(true);
+  // показ зависит от состояния глобального стора
+  const { hasModal } = useSelector(selectBoards);
+  const { toggleModal } = boardsSlice.actions;
+  const dispatch: AppDispatch = useDispatch();
 
+  const [isOpen, setOpen] = useState(hasModal);
   const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
   const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
 
-  const dispatch: AppDispatch = useDispatch();
-
   const handleClose = () => {
-    setOpen(false);
+    dispatch(toggleModal());
   };
+
+  useEffect(() => {
+    setOpen(hasModal);
+  }, [hasModal]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

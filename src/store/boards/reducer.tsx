@@ -6,18 +6,30 @@ type IBoardsState = {
   isLoading: boolean;
   error: string | null;
   data: Array<Board>;
+  hasModal: boolean;
 };
 
 const initialState: IBoardsState = {
   isLoading: true,
   error: null,
   data: [],
+  hasModal: false,
 };
 
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {},
+  reducers: {
+    // возвращаем state и меняем только hasModal
+    toggleModal: function (state) {
+      console.log('Current state: ');
+      console.log(state);
+      return {
+        ...state,
+        hasModal: !state.hasModal,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       // getBoards

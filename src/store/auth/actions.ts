@@ -33,7 +33,6 @@ export const signInUser = createAsyncThunk(
     const url = `signin`;
     try {
       const response = await axiosClient.post(url, user);
-      console.log('resp', response);
       if (response.status !== 201) {
         throw new Error('Error');
       }
@@ -41,7 +40,6 @@ export const signInUser = createAsyncThunk(
         token: response.data.token,
         login: user.login,
       };
-      console.log('responseData', resData);
       return resData;
     } catch (err) {
       let errorMessage;
@@ -50,7 +48,6 @@ export const signInUser = createAsyncThunk(
       } else if ((err as AxiosError).response?.status === 403) {
         errorMessage = 'User with such login/password was not found';
       }
-      console.log('errorData', errorMessage);
       return rejectWithValue(errorMessage);
     }
   }

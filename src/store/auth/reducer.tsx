@@ -33,7 +33,6 @@ export const authSlice = createSlice({
       .addCase(createUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userId = action.payload.id;
-        console.log('action', action.payload);
       })
       .addCase(createUser.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -48,12 +47,10 @@ export const authSlice = createSlice({
         state.token = action.payload.token;
         state.login = action.payload.login;
         state.isLoading = false;
-        console.log('responseData', action.payload.token);
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = String(action.payload);
-        console.log('errorData', String(action.payload));
       });
   },
 });

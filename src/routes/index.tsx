@@ -55,7 +55,6 @@ export const AppRouter = () => {
     return <Route key={index} path={route.path} element={route.component} />;
   });
   const { token } = useSelector((state: RootState) => state.auth);
-  console.log(appRoutes);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>

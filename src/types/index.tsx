@@ -12,3 +12,8 @@ export interface Board {
   id: string;
   title: string;
 }
+
+export interface ICreateBoardRequestFields {
+  title: string;
+  description: string;
+}

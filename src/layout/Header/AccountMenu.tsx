@@ -9,8 +9,9 @@ import { LetterAvatar } from './Avatar';
 import { Link } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../utils/Redux/Store';
+
 import { routes } from 'routes';
+import { RootState } from 'store';
 
 export const AccountMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -21,7 +22,7 @@ export const AccountMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { userLogin } = useSelector((state: RootState) => state.userLogin);
+  const { login } = useSelector((state: RootState) => state.auth);
 
   return (
     <React.Fragment>
@@ -65,7 +66,7 @@ export const AccountMenu = () => {
           <ListItemIcon>
             <AccountCircleOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          {userLogin}
+          {login}
         </MenuItem>
         <MenuItem>
           <Link to={routes.editProfile.path} className="userMenu_link">

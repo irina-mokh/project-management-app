@@ -39,6 +39,23 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0',
+          backgroundColor: 'transparent',
+          // border: '1',
+          boxShadow: 'none',
+        },
+      },
+    },
   },
   palette: {
     primary: teal,

@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Avatar,
   Box,
   Button,
@@ -11,18 +13,15 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { API_URL, ENDPOINTS, getUserToken } from '../../utils/userUtils';
-import { routes } from 'routes';
-
-import { Loader } from 'components/Loader';
-import { useTitle } from 'hooks';
+import { Link } from 'react-router-dom';
 import { getDesignTokens } from 'theme';
 import { useSelector } from 'react-redux';
 import { selectTheme } from 'store/theme/selectors';
-import { upDateToken } from 'utils/Redux/AppSlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'utils/Redux/Store';
+import { Loading } from 'components/Loading';
+import { createUser, signInUser } from 'store/auth/actions';
+import { AppDispatch, RootState } from 'store';
+import { authSlice } from 'store/auth/reducer';
 
 export interface NewUserType {
   name: string;
@@ -35,13 +34,11 @@ export interface TokenUserType {
 }
 
 export const SignUpForm = () => {
-  useTitle(routes.signUp.title);
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
-
-  const navigate = useNavigate();
-  const [success, setSuccess] = useState(false);
+  const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+  const { remError } = authSlice.actions;
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
@@ -59,6 +56,7 @@ export const SignUpForm = () => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
       setNameErrorText('');
+      dispatch(remError());
     } else {
       setNameError(true);
       setNameErrorText('Name should contain more then 3 symbols');
@@ -69,13 +67,13 @@ export const SignUpForm = () => {
     const inputName = (event.target as HTMLInputElement).value;
     setName(inputName);
     nameValidation(inputName);
+    dispatch(remError());
   };
 
   const loginHandler = (event: React.SyntheticEvent) => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
-    setBEndError(null);
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
@@ -103,36 +101,6 @@ export const SignUpForm = () => {
     passValidation(inputPass);
   };
 
-  const [isLoading, setLoadingState] = useState<boolean>(false);
-  const [BEndError, setBEndError] = useState<string | null>(null);
-
-  const checkSignUp = async (user: NewUserType) => {
-    const resp = await fetch(`${API_URL}${ENDPOINTS.SINGUP}`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        setLoadingState(false);
-        if (res.status === 409) {
-          throw new Error('User with such a login is already exist');
-        } else if (res.status === 400) {
-          throw new Error('Fill fields to sign up');
-        } else if (res.status === 201) {
-          return res.json();
-        }
-      })
-      .catch((error: Error) => {
-        console.log('Error happened', error.message);
-        setBEndError(error.message);
-      });
-
-    return resp;
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -142,26 +110,20 @@ export const SignUpForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-
-    const newData: void | Response | undefined = await checkSignUp(newUser);
-
-    if (newData) {
-      setSuccess(true);
-      const dataUser = {
-        login: data.get('login') as string,
-        password: data.get('password') as string,
-      };
-      const tokenData = await getUserToken(dataUser);
-      if (tokenData) {
-        dispatch(upDateToken(tokenData));
-        navigate(routes.main.path);
-      }
-    }
+    dispatch(createUser(newUser))
+      .unwrap()
+      .then(() => {
+        dispatch(signInUser({ login: newUser.login, password: newUser.password }));
+      })
+      .catch((e) => {
+        // error in case of rejection inside createAsyncThunk second argument
+        console.log('e', e);
+      });
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ mt: 5, color: 'primary.contrastText' }}>
+      <Container component="main" maxWidth="xs" sx={{ mt: 5 }}>
         <CssBaseline />
         <Box
           sx={{
@@ -217,7 +179,7 @@ export const SignUpForm = () => {
               id="password"
               autoComplete="current-password"
             />
-            {success ? (
+            {token ? (
               <Button
                 fullWidth
                 variant="contained"
@@ -233,10 +195,7 @@ export const SignUpForm = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                //disabled={passError || nameError || loginError}
-                style={{ backgroundColor: '#9c27b0' }}
                 disabled={false || passError || nameError || loginError}
-                onClick={() => setLoadingState(true)}
               >
                 Create an account
               </Button>
@@ -252,8 +211,13 @@ export const SignUpForm = () => {
             </Grid>
           </Box>
         </Box>
-        {isLoading ? <Loader /> : null}
-        {BEndError ? <div className="errorMessageCont">{BEndError}</div> : null}
+        {isLoading ? <Loading /> : null}
+        {error ? (
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        ) : null}
       </Container>
     </ThemeProvider>
   );

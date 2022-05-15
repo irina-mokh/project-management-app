@@ -1,5 +1,4 @@
 import {
-  Button,
   IconButton,
   Card,
   CardHeader,
@@ -9,36 +8,39 @@ import {
   useTheme,
   Typography,
 } from '@mui/material';
-import { DeleteOutlined, AddCircleOutlineRounded } from '@mui/icons-material';
+import { DeleteOutlined } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { getBoards } from 'store/boards/actions';
-import { selectBoards } from 'store/boards/selectors';
+import { getBoards, deleteBoard } from 'store/boardList/actions';
+import { toggleModal } from 'store/boardList/reducer';
+import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
+import { AddButton } from 'components/AddButton';
 
 // temp sign in
 const signin = () => {
   axiosClient.post('/signin', {
-    login: 'user-007',
-    password: 'pswrd123',
+    login: 'mokh-user',
+    password: '07007pswrd',
   });
 };
-// temp adding board
-// const addBoard = () => {
-//   axios.post('/boards', {
-//     title: 'new board title',
-//   });
-// };
+
+// interface IAddBoard {
+//   addBoard?: () => void;
+// }
 
 export const BoardList = () => {
   signin();
-  // addBoard();
-  const { data, isLoading, error } = useSelector(selectBoards);
+  const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
+
+  const addBoardHandler = () => {
+    dispatch(toggleModal());
+  };
 
   useEffect(() => {
     dispatch(getBoards());
@@ -47,7 +49,7 @@ export const BoardList = () => {
 
   if (data?.length) {
     boards = data?.map((item) => {
-      const { id, title } = item;
+      const { id, title, description } = item;
       return (
         <Card
           variant="outlined"
@@ -59,17 +61,17 @@ export const BoardList = () => {
             position: 'relative',
           }}
         >
-          <CardActionArea component={Link} to={`boards/${id}`}>
+          <CardActionArea component={Link} to={`${id}`}>
             <CardHeader title={title} />
             <CardContent>
-              <Typography variant="body2">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident quas beatae esse
-                quisquam ut soluta in, saepe suscipit sunt aliquid. Magni aliquam, similique a porro
-                molestiae quia natus iusto inventore.
-              </Typography>
+              <Typography variant="body2">{description}</Typography>
             </CardContent>
           </CardActionArea>
-          <IconButton aria-label="delete" sx={{ position: 'absolute', right: 0, bottom: 0 }}>
+          <IconButton
+            aria-label="delete"
+            sx={{ position: 'absolute', right: 0, bottom: 0 }}
+            onClick={() => dispatch(deleteBoard(id))}
+          >
             <DeleteOutlined color="error" sx={{ height: 20, width: 20, zIndex: 5 }} />
           </IconButton>
         </Card>
@@ -95,17 +97,7 @@ export const BoardList = () => {
       }}
     >
       {data?.length && boards}
-      <Card variant="outlined">
-        <Button
-          startIcon={<AddCircleOutlineRounded />}
-          sx={{
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          add board
-        </Button>
-      </Card>
+      <AddButton text="add board" addHandler={addBoardHandler} />
     </List>
   );
 };

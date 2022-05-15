@@ -4,11 +4,14 @@ import './Header.scss';
 import Typography from '@mui/material/Typography/Typography';
 import { ThemeSwitcher } from 'components/ThemeSwitcher';
 import { useTheme } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { UserHeader } from './UserHeader';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
   const headerLine = useRef<HTMLElement>(null);
-
+  const { token } = useSelector((state: RootState) => state.auth);
   const checkSticky = () => {
     if (headerLine.current?.clientHeight && window.pageYOffset > headerLine.current?.clientHeight) {
       setSticky(true);
@@ -47,8 +50,7 @@ export const Header = () => {
         <span className="off">EN</span>
       </div>
       <ThemeSwitcher />
-      {/*{userToken ? <UserHeader /> : <WelcomeHeader />}*/}
-      <WelcomeHeader />
+      {token && token.length ? <UserHeader /> : <WelcomeHeader />}
     </header>
   );
 };

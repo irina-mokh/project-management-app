@@ -5,7 +5,7 @@ import { axiosClient } from 'utils/axios';
 import { ICreateBoardRequestFields } from '../../types';
 
 export const getBoards = createAsyncThunk(
-  'boards/getBoards',
+  'boardList/getBoards',
   async function (arg, { rejectWithValue }) {
     try {
       const response = await axiosClient.get('boards');
@@ -13,6 +13,18 @@ export const getBoards = createAsyncThunk(
         throw new Error('Error');
       }
       return response.data;
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);
+
+export const deleteBoard = createAsyncThunk(
+  'boards/deleteBoard',
+  async function (id: string, { rejectWithValue }) {
+    try {
+      await axiosClient.delete(`boards/${id}`);
+      return id;
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);
     }

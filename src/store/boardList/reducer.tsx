@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Board } from 'types';
-import { getBoards, createBoard } from './actions';
+import { getBoards, deleteBoard, createBoard } from './actions';
 
 type IBoardsState = {
   isLoading: boolean;
@@ -16,8 +16,8 @@ const initialState: IBoardsState = {
   hasModal: false,
 };
 
-export const boardsSlice = createSlice({
-  name: 'boards',
+export const boardListSlice = createSlice({
+  name: 'boardList',
   initialState,
   reducers: {
     // возвращаем state и меняем только hasModal
@@ -45,6 +45,12 @@ export const boardsSlice = createSlice({
         state.error = String(action.payload);
       })
 
+      .addCase(deleteBoard.fulfilled, (state, action) => {
+        if (state.data?.length) {
+          state.data = state.data?.filter((board) => board.id !== action.payload);
+        }
+      })
+
       // createBoard
       .addCase(createBoard.pending, (state) => {
         state.isLoading = true;
@@ -60,6 +66,6 @@ export const boardsSlice = createSlice({
   },
 });
 
-// export const {  } = authSlice.actions;
+export const { toggleModal } = boardListSlice.actions;
 
-export default boardsSlice.reducer;
+export default boardListSlice.reducer;

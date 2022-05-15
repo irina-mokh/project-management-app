@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/reducer';
-import boardsReducer from './boards/reducer';
+import boardListReducer from './boardList/reducer';
 import themeReducer from './theme/reducer';
+import boardReducer from './board/reducer';
 
 const persistedState = () => {
   let state;
@@ -18,8 +19,9 @@ export const store = configureStore({
   preloadedState: persistedState(),
   reducer: {
     auth: authReducer,
-    boards: boardsReducer,
+    boardList: boardListReducer,
     theme: themeReducer,
+    board: boardReducer,
   },
 });
 

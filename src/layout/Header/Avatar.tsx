@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import { RootState } from '../../utils/Redux/Store';
+
 import { useSelector } from 'react-redux';
 import './Header.scss';
+import { RootState } from 'store';
 
 const stringToColor = (string: string) => {
   let hash = 0;
@@ -41,6 +42,6 @@ const stringAvatar = (name: string | null) => {
 export const LetterAvatar = (props: {
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }) => {
-  const { userLogin } = useSelector((state: RootState) => state.userLogin);
-  return <Avatar onClick={props.onClick} {...stringAvatar(userLogin)} />;
+  const { login } = useSelector((state: RootState) => state.auth);
+  return <Avatar onClick={props.onClick} {...stringAvatar(login)} />;
 };

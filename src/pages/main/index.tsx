@@ -13,6 +13,7 @@ export const Main = () => {
         <Search />
         <ThemeSwitcher />
         <BoardList></BoardList>
+        <div style={{ height: '100vh' }}></div>
       </Container>
     </>
   );

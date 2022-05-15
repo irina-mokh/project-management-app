@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { WelcomeHeader } from './WelcomeHeader';
 import './Header.scss';
+import Typography from '@mui/material/Typography/Typography';
+import { ThemeSwitcher } from 'components/ThemeSwitcher';
+import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
 import { UserHeader } from './UserHeader';
@@ -23,9 +26,19 @@ export const Header = () => {
       window.removeEventListener('scroll', checkSticky);
     };
   });
+  const { palette } = useTheme();
+
   return (
-    <header ref={headerLine} className={isSticky ? 'header sticky' : 'header'}>
-      <h1 className="h1">Project Management App</h1>
+    <header
+      ref={headerLine}
+      className={isSticky ? 'header sticky' : 'header'}
+      style={{
+        backgroundColor: palette.background.paper,
+      }}
+    >
+      <Typography variant="h5" component="h1">
+        Project Management App
+      </Typography>
       <div className="switch">
         <input
           id="language-toggle"
@@ -36,6 +49,7 @@ export const Header = () => {
         <span className="on">RU</span>
         <span className="off">EN</span>
       </div>
+      <ThemeSwitcher />
       {token && token.length ? <UserHeader /> : <WelcomeHeader />}
     </header>
   );

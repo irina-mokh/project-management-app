@@ -23,7 +23,7 @@ export const routes = {
     path: 'boards',
     element: <Main />,
   },
-  /*signUp: {
+  signUp: {
     title: `${prefixTitle} Sign up`,
     path: 'signup',
     element: <SignUpForm />,
@@ -32,7 +32,7 @@ export const routes = {
     title: `${prefixTitle} Sign in`,
     path: 'signin',
     element: <SignInForm />,
-  },*/
+  },
   editProfile: {
     title: `${prefixTitle} Edit profile`,
     path: 'edit-profile',

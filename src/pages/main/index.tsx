@@ -2,7 +2,6 @@ import { setPageTitle } from 'utils/setPageTitle';
 import { BoardList } from 'components/BoardList';
 import { Search } from 'components/Search';
 import { Container } from '@mui/material';
-import { ThemeSwitcher } from 'components/ThemeSwitcher';
 
 export const Main = () => {
   setPageTitle();
@@ -11,9 +10,7 @@ export const Main = () => {
       <h2 className="visually-hidden">Main page</h2>
       <Container>
         <Search />
-        <ThemeSwitcher />
         <BoardList></BoardList>
-        <div style={{ height: '100vh' }}></div>
       </Container>
     </>
   );

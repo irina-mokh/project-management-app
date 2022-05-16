@@ -36,7 +36,7 @@ export function CreateColumn({ isVisible, setVisible, boardId, orderIdx }: ICrea
     //отправляем POST запрос с созданием колонки
     dispatch(
       createColumn({
-        boardId: boardId || '',
+        boardId: boardId || '', // ругается что в useParams может быть undefined, из-за этого приходится использовать так
         requestBody: {
           title: title,
           order: orderIdx,
@@ -44,7 +44,8 @@ export function CreateColumn({ isVisible, setVisible, boardId, orderIdx }: ICrea
       })
     );
 
-    // закрываем окошко
+    // обнуляем строку с именем и закрываем окошко
+    setTitle('');
     handleClose();
   };
 

@@ -20,13 +20,13 @@ export const getBoard = createAsyncThunk(
 );
 
 // !!! добавляю в board т.к мне по идее нужен доступ к board store при работе с колонкой и колонка непосредственно связана с доской -> создаётся в ней
-// Если что - пиши, обсудим
+// Если что - напиши, обсудим
 export const createColumn = createAsyncThunk(
   'column/createColumn',
   async function ({ boardId, requestBody }: ICreateColumnRequest, { rejectWithValue }) {
     try {
       const response = await axiosClient.post(`boards/${boardId}/columns`, requestBody);
-      if (response.statusText !== 'OK') {
+      if (response.status !== 201) {
         throw new Error('Error');
       }
       return response.data;

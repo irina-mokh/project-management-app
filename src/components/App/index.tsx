@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from 'store';
 import { MainLayout } from 'components/MainLayout';
 
-function App() {
+export const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
@@ -11,6 +11,6 @@ function App() {
       </BrowserRouter>
     </Provider>
   );
-}
+};
 
 export default App;

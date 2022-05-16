@@ -1,6 +1,8 @@
-import { setPageTitle } from 'utils/setPageTitle';
+import { useTitle } from 'hooks';
+import { routes } from 'routes';
+//import { setPageTitle } from 'utils/setPageTitle';
 
 export const Welcome = () => {
-  setPageTitle();
+  useTitle(routes.welcome.title);
   return <div>Welcome page</div>;
 };

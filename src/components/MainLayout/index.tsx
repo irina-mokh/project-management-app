@@ -16,6 +16,10 @@ export const MainLayout = () => {
         sx={{
           backgroundColor: theme.palette.background.default,
           fontFamily: theme.typography.fontFamily,
+          display: 'grid',
+          height: '100vh',
+          gridTemplateRows: '10vh auto 7vh',
+          boxSizing: 'border-box',
         }}
       >
         <AppRouter />

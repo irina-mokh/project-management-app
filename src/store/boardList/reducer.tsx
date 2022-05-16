@@ -21,12 +21,10 @@ export const boardListSlice = createSlice({
   initialState,
   reducers: {
     // возвращаем state и меняем только hasModal
-    toggleModal: function (state) {
-      console.log('Current state: ');
-      console.log(state);
+    showModal: function (state, action) {
       return {
         ...state,
-        hasModal: !state.hasModal,
+        hasModal: action.payload,
       };
     },
   },
@@ -66,6 +64,6 @@ export const boardListSlice = createSlice({
   },
 });
 
-export const { toggleModal } = boardListSlice.actions;
+export const { showModal } = boardListSlice.actions;
 
 export default boardListSlice.reducer;

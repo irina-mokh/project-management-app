@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { getBoards, deleteBoard } from 'store/boardList/actions';
-import { toggleModal } from 'store/boardList/reducer';
+import { showModal } from 'store/boardList/reducer';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
@@ -39,7 +39,7 @@ export const BoardList = () => {
   let boards = null;
 
   const addBoardHandler = () => {
-    dispatch(toggleModal());
+    dispatch(showModal(true));
   };
 
   useEffect(() => {

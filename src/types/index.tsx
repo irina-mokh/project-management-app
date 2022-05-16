@@ -43,7 +43,7 @@ export interface Task {
   ];
 }
 
-export interface ICreateBoardRequestFields {
+export interface ICreateBoardFields {
   title: string;
   description: string;
 }

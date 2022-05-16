@@ -11,12 +11,12 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createBoard } from 'store/boardList/actions';
-import { ICreateBoardRequestFields } from 'types/index';
+import { ICreateBoardFields } from 'types/index';
 
 import { selectBoardList } from 'store/boardList/selectors';
 import { boardListSlice } from 'store/boardList/reducer';
 
-const defaultRequestValues: ICreateBoardRequestFields = {
+const defaultRequestValues: ICreateBoardFields = {
   title: '',
   description: '',
 };
@@ -26,7 +26,7 @@ const defaultErrorsValues = {
   description: false,
 };
 
-export function CreateBoardModal() {
+export function CreateBoard() {
   // показ зависит от состояния глобального стора
   const { hasModal } = useSelector(selectBoardList);
   const { showModal } = boardListSlice.actions;

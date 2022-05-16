@@ -1,14 +1,17 @@
-import { TextField, useTheme } from '@mui/material';
+import { TextField, Box } from '@mui/material';
 
 export const Search = () => {
-  const { palette } = useTheme();
   return (
-    <TextField
-      type="search"
-      variant="outlined"
-      label="Search"
-      size="medium"
-      sx={{ color: 'inherit', borderColor: palette.background.paper, mb: 1 }}
-    />
+    <Box ml="auto" mb="1em" width="300px">
+      <TextField
+        variant="standard"
+        type="search"
+        label="Search"
+        size="medium"
+        color="primary"
+        fullWidth
+        sx={{ mb: 1, mt: 1, ml: 'auto' }}
+      />
+    </Box>
   );
 };

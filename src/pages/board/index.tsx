@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AppDispatch } from 'store';
 import { useParams } from 'react-router-dom';
 import { getBoard } from 'store/board/actions';
@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Card, Paper, Typography, Container } from '@mui/material';
 import { Column, Task } from 'types';
 import { AddButton } from 'components/AddButton';
+import { CreateColumn } from 'components/Modals/createColumn';
+
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
 
@@ -15,12 +17,13 @@ export const Board = () => {
   useTitle(routes.board.title);
   const { id } = useParams();
 
+  const [showModal, setShowModal] = useState(false);
+
   const { data, isLoading, error } = useSelector(selectBoard);
-  let columns: Column[] = [];
-  if (data) {
-    columns = data.columns;
-  }
+  const columns: Column[] = data ? data.columns : [];
+
   const dispatch: AppDispatch = useDispatch();
+
   useEffect(() => {
     if (id) {
       dispatch(getBoard(id));
@@ -34,6 +37,7 @@ export const Board = () => {
   if (error) {
     return <>{error}</>;
   }
+
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
       <Typography variant="h3" color="primary" fontSize="1.8em">
@@ -75,9 +79,16 @@ export const Board = () => {
           </Card>
         ))}
         <Card sx={{ minWidth: '300px', padding: '10px' }}>
-          <AddButton text="add column" />
+          <AddButton text="add column" addHandler={() => setShowModal(true)} />
         </Card>
       </List>
+
+      <CreateColumn
+        boardId={id}
+        isVisible={showModal}
+        setVisible={setShowModal}
+        orderIdx={columns.length}
+      />
     </Container>
   );
 };

@@ -7,118 +7,72 @@ import {
   Button,
   TextField,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { createBoard } from 'store/boardList/actions';
-import { ICreateBoardFields } from 'types/index';
+import { createColumn } from 'store/board/actions';
 
-import { selectBoardList } from 'store/boardList/selectors';
-import { boardListSlice } from 'store/boardList/reducer';
+interface ICreateColumn {
+  isVisible: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  boardId: string | undefined;
+  orderIdx: number;
+}
 
-const defaultRequestValues: ICreateBoardFields = {
-  title: '',
-  description: '',
-};
-
-const defaultErrorsValues = {
-  title: false,
-  description: false,
-};
-
-export function CreateColumn() {
-  // показ зависит от состояния глобального стора
-  const { hasModal } = useSelector(selectBoardList);
-  const { showModal } = boardListSlice.actions;
+export function CreateColumn({ isVisible, setVisible, boardId, orderIdx }: ICreateColumn) {
   const dispatch: AppDispatch = useDispatch();
 
-  const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
-  const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
+  const [title, setTitle] = useState('');
+  const [hasErrors, setHasErrors] = useState(false);
 
   const handleClose = () => {
-    dispatch(showModal(false));
+    setVisible(false);
   };
-  /*
-  // однократно ставим eventListener на window через костыль
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleClose, { once: true });
-    return () => {
-      window.removeEventListener('beforeunload', handleClose);
-    };
-  }, []);
-*/
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (hasErrors.title || hasErrors.description) return;
+    if (hasErrors) return;
 
-    const { title, description } = boardRequestFields;
-
-    //отправляем POST запрос с созданием доски
+    //отправляем POST запрос с созданием колонки
     dispatch(
-      createBoard({
-        title: title.trim(),
-        description: description.trim(),
+      createColumn({
+        boardId: boardId || '',
+        requestBody: {
+          title: title,
+          order: orderIdx,
+        },
       })
     );
-
-    // возвращаем дефолтные значения (reset)
-    setBoardRequestFields(defaultRequestValues);
 
     // закрываем окошко
     handleClose();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    const { value, name } = target;
+    const value = (event.target as HTMLInputElement).value;
 
-    // смотрим, откуда получили значения и выставляем значения
-    setBoardRequestFields({
-      title: name == 'title' ? value : boardRequestFields.title,
-      description: name == 'description' ? value : boardRequestFields.description,
-    });
+    setTitle(value);
+    setHasErrors(value.trim().length > 0 && value.trim().length < 3 ? true : false);
   };
 
-  // валидация значений
-  useEffect(() => {
-    // в самих компонентах ошибки показываем только если пользователь что-то ввёл в это поле
-    setHasErrors({
-      title: boardRequestFields.title.trim().length < 3,
-      description: boardRequestFields.description.trim().length < 3,
-    });
-  }, [boardRequestFields]);
-
   return (
-    <Dialog open={hasModal} onClose={handleClose} maxWidth="sm" fullWidth={true}>
+    <Dialog open={isVisible} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Create new board</DialogTitle>
+        <DialogTitle>Add new column</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Add name</DialogContentText>
+          <DialogContentText>Set title</DialogContentText>
           <TextField
             name="title"
             autoFocus
             required
-            value={boardRequestFields.title}
+            autoComplete="off"
+            value={title}
             onChange={handleChange}
             margin="dense"
             fullWidth
             variant="standard"
-            error={hasErrors.title && boardRequestFields.title.length > 0}
-          ></TextField>
-
-          <DialogContentText>Add description</DialogContentText>
-          <TextField
-            name="description"
-            required
-            multiline
-            rows="3"
-            value={boardRequestFields.description}
-            onChange={handleChange}
-            margin="dense"
-            fullWidth
-            variant="standard"
-            error={hasErrors.description && boardRequestFields.description.length > 0}
+            error={hasErrors}
           ></TextField>
         </DialogContent>
 

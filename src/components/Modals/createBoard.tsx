@@ -99,6 +99,7 @@ export function CreateBoard() {
             name="title"
             autoFocus
             required
+            autoComplete="off"
             value={boardRequestFields.title}
             onChange={handleChange}
             margin="dense"
@@ -112,6 +113,7 @@ export function CreateBoard() {
             name="description"
             required
             multiline
+            autoComplete="off"
             rows="3"
             value={boardRequestFields.description}
             onChange={handleChange}

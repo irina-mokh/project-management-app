@@ -38,3 +38,16 @@ export const updateColumn = createAsyncThunk(
     }
   }
 );
+
+export const deleteColumn = createAsyncThunk(
+  'board/deleteColumn',
+  async function ([boardId, columnId]: [string, string], { rejectWithValue }) {
+    try {
+      await axiosClient.delete(`boards/${boardId}/columns/${columnId}`);
+
+      return columnId;
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);

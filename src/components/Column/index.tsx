@@ -13,7 +13,8 @@ import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateColumn } from 'store/board/actions';
+import { updateColumn, deleteColumn } from 'store/board/actions';
+import { DeleteButton } from 'components/DeleteButton';
 
 interface IColumnProps {
   column: IColumn;
@@ -50,14 +51,14 @@ export const Column = (props: IColumnProps) => {
     <Card
       component="li"
       style={{
-        marginRight: '10px',
+        marginRight: '1rem',
         height: '100%',
         minWidth: '300px',
         padding: '10px',
+        position: 'relative',
       }}
     >
       <TextField
-        fullWidth
         variant="standard"
         value={curTitle}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +67,7 @@ export const Column = (props: IColumnProps) => {
         onFocus={() => setIsSelected(true)}
         onBlur={() => setIsSelected(false)}
         InputProps={{
-          style: { fontSize: '1.5rem', fontWeight: 700, padding: '5px' },
+          style: { fontSize: '1.5rem', fontWeight: 700, padding: '5px', width: '90%' },
           startAdornment: <InputAdornment position="start">{inputButtons}</InputAdornment>,
         }}
       />
@@ -84,6 +85,10 @@ export const Column = (props: IColumnProps) => {
         ))}
         <AddButton text="add task" />
       </List>
+      <DeleteButton
+        confirmText="Delete a column?"
+        deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
+      />
     </Card>
   );
 };

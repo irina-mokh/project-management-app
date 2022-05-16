@@ -19,6 +19,7 @@ import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
 import { AddButton } from 'components/AddButton';
+import { IBoard } from 'types';
 
 // temp sign in
 const signin = () => {
@@ -48,7 +49,7 @@ export const BoardList = () => {
   const { palette } = useTheme();
 
   if (data?.length) {
-    boards = data?.map((item) => {
+    boards = data?.map((item: IBoard) => {
       const { id, title, description } = item;
       return (
         <Card

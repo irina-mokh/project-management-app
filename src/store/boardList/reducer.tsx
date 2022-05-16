@@ -55,6 +55,7 @@ export const boardListSlice = createSlice({
         state.error = String(action.payload);
       })
 
+      // createBoard
       .addCase(createBoard.fulfilled, (state, action) => {
         state.data = [...state.data, action.payload];
       })

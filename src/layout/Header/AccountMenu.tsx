@@ -8,10 +8,13 @@ import Logout from '@mui/icons-material/Logout';
 import { LetterAvatar } from './Avatar';
 import { Link } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { routes } from 'routes';
-import { RootState } from 'store';
+import { AppDispatch, RootState } from 'store';
+import ConfirmDialog from 'components/ConfirmDialog';
+import { useState } from 'react';
+import { authSlice } from 'store/auth/reducer';
 
 export const AccountMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -23,6 +26,10 @@ export const AccountMenu = () => {
     setAnchorEl(null);
   };
   const { login } = useSelector((state: RootState) => state.auth);
+  //const { setConfirmOpen } = authSlice.actions;
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const { logOut } = authSlice.actions;
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <React.Fragment>
@@ -69,7 +76,7 @@ export const AccountMenu = () => {
           {login}
         </MenuItem>
         <MenuItem>
-          <Link to={routes.editProfile.path} className="userMenu_link">
+          <Link to={routes.editProfile.path} style={{ display: 'flex', alignItems: 'center' }}>
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>
@@ -77,13 +84,22 @@ export const AccountMenu = () => {
           </Link>
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem
+          //onClick={() => dispatch(setConfirmOpen(true))}
+          onClick={() => setConfirmOpen(true)}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Sign Out
         </MenuItem>
       </Menu>
+      <ConfirmDialog
+        elemToDelete="signout"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={() => dispatch(logOut())}
+      ></ConfirmDialog>
     </React.Fragment>
   );
 };

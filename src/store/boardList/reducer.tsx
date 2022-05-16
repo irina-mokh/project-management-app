@@ -45,20 +45,18 @@ export const boardListSlice = createSlice({
         state.error = String(action.payload);
       })
 
+      // deleteBoard
       .addCase(deleteBoard.fulfilled, (state, action) => {
         if (state.data?.length) {
           state.data = state.data?.filter((board) => board.id !== action.payload);
         }
       })
-
-      // createBoard
-      .addCase(createBoard.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+      .addCase(deleteBoard.rejected, (state, action) => {
+        state.error = String(action.payload);
       })
+
       .addCase(createBoard.fulfilled, (state, action) => {
         state.data = [...state.data, action.payload];
-        state.isLoading = false;
       })
       .addCase(createBoard.rejected, (state, action) => {
         state.error = String(action.payload);

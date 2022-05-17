@@ -95,7 +95,7 @@ export const AccountMenu = () => {
         </MenuItem>
       </Menu>
       <ConfirmDialog
-        elemToDelete="signout"
+        confirmText="Ready to leave?"
         open={confirmOpen}
         setOpen={setConfirmOpen}
         onConfirm={() => dispatch(logOut())}

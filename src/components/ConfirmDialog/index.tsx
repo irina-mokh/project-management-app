@@ -6,14 +6,14 @@ import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 
 export type ConfirmDialogPropsType = {
-  elemToDelete: string;
+  confirmText: string;
   open: boolean;
   setOpen: (arg: boolean) => void;
   onConfirm: () => void;
 };
 
 export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
-  const { elemToDelete, open, setOpen, onConfirm } = props;
+  const { confirmText, open, setOpen, onConfirm } = props;
   return (
     <Dialog
       open={open}
@@ -24,9 +24,7 @@ export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
       <DialogTitle id="confirm-dialog">
         <h4>Confirm your decision</h4>
       </DialogTitle>
-      <DialogContent>
-        {elemToDelete === 'signout' ? ' Sign out?' : `Delete this ${elemToDelete}?`}
-      </DialogContent>
+      <DialogContent>{confirmText}</DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={() => setOpen(false)}>
           No, cancel

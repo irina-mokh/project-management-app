@@ -11,6 +11,7 @@ export type ConfirmDialogPropsType = {
   setOpen: (arg: boolean) => void;
   onConfirm: () => void;
 };
+
 export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
   const { elemToDelete, open, setOpen, onConfirm } = props;
   return (

@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { routes } from 'routes';
 import { AppDispatch, RootState } from 'store';
-import ConfirmDialog from 'components/ConfirmDialog';
+import { ConfirmDialog } from 'components/ConfirmDialog';
 import { useState } from 'react';
 import { authSlice } from 'store/auth/reducer';
 

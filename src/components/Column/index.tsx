@@ -34,18 +34,19 @@ export const Column = (props: IColumnProps) => {
 
   const inputButtons = isSelected ? (
     <>
-      <IconButton onMouseDown={handleTitleChangeCancel}>
+      <IconButton onMouseDown={handleTitleChangeCancel} size="small">
         <Clear aria-label="cancel" />
       </IconButton>
       <IconButton
         aria-label="submit"
+        size="small"
         onMouseDown={() => dispatch(updateColumn([boardId, column.id, curOrder, curTitle]))}
       >
         <Check />
       </IconButton>
     </>
   ) : (
-    <Edit aria-label="edit" />
+    <Edit aria-label="edit" color="disabled" sx={{ width: '0.8em', height: '0.8em' }} />
   );
   return (
     <Card
@@ -54,7 +55,7 @@ export const Column = (props: IColumnProps) => {
         marginRight: '1rem',
         height: '100%',
         minWidth: '300px',
-        padding: '10px',
+        padding: '5px 15px 10px 15px',
         position: 'relative',
       }}
     >
@@ -67,7 +68,7 @@ export const Column = (props: IColumnProps) => {
         onFocus={() => setIsSelected(true)}
         onBlur={() => setIsSelected(false)}
         InputProps={{
-          style: { fontSize: '1.5rem', fontWeight: 700, padding: '5px', width: '90%' },
+          style: { fontSize: '1.5rem', fontWeight: 700, width: '90%', marginBottom: '10px' },
           startAdornment: <InputAdornment position="start">{inputButtons}</InputAdornment>,
         }}
       />
@@ -75,10 +76,21 @@ export const Column = (props: IColumnProps) => {
         sx={{
           height: '90%',
           overflowY: 'scroll',
+          padding: '0 10px 0 0',
+          '&::-webkit-scrollbar': {
+            width: 7,
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: '#7b9c8480',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2,
+          },
         }}
       >
         {column.tasks.map((task: ITask) => (
-          <Paper component="li" key={task.id} sx={{ margin: '10px 0', padding: '10px' }}>
+          <Paper component="li" key={task.id} sx={{ margin: '0 0 10px 0', padding: '10px' }}>
             <Typography variant="h5">{task.title}</Typography>
             <Typography>{task.description}</Typography>
           </Paper>
@@ -86,6 +98,7 @@ export const Column = (props: IColumnProps) => {
         <AddButton text="add task" />
       </List>
       <DeleteButton
+        // size="small"
         confirmText="Delete a column?"
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />

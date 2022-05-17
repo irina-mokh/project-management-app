@@ -18,7 +18,6 @@ import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
 import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
-
 import { IBoard } from 'types';
 
 // temp sign in
@@ -28,10 +27,6 @@ const signin = () => {
     password: '07007pswrd',
   });
 };
-
-// interface IAddBoard {
-//   addBoard?: () => void;
-// }
 
 export const BoardList = () => {
   signin();

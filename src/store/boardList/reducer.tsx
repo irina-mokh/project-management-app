@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Board } from 'types';
+import { IBoard } from 'types';
 import { getBoards, deleteBoard, createBoard } from './actions';
 
 type IBoardsState = {
   isLoading: boolean;
   error: string | null;
-  data: Array<Board>;
+  data: Array<IBoard>;
   hasModal: boolean;
 };
 

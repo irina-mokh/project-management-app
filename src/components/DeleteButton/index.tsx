@@ -1,4 +1,4 @@
-import { DeleteOutlined } from '@mui/icons-material';
+import { Clear } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { ConfirmDialog } from 'components/ConfirmDialog';
 import { useState } from 'react';
@@ -21,7 +21,17 @@ export const DeleteButton = (props: IDeleteButtonProps) => {
         //onClick={deleteHandler}
         onClick={() => setConfirmOpen(true)}
       >
-        <DeleteOutlined color="error" sx={{ height: 20, width: 20, zIndex: 5 }} />
+        <Clear
+          sx={{
+            height: 14,
+            width: 14,
+            zIndex: 5,
+            color: 'gray',
+            '&:hover': {
+              color: '#e84b1c',
+            },
+          }}
+        />
       </IconButton>
       <ConfirmDialog
         open={confirmOpen}

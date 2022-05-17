@@ -26,7 +26,7 @@ const defaultErrorsValues = {
   description: false,
 };
 
-export function CreateBoard() {
+export function CreateBoardModal() {
   // показ зависит от состояния глобального стора
   const { hasModal } = useSelector(selectBoardList);
   const { showModal } = boardListSlice.actions;

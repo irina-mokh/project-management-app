@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Card, Paper, Typography, Container } from '@mui/material';
 import { Column, Task } from 'types';
 import { AddButton } from 'components/AddButton';
-import { CreateColumn } from 'components/Modals/createColumn';
+import { CreateColumnModal } from 'components/Modals';
 
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
@@ -85,7 +85,7 @@ export const Board = () => {
         </Card>
       </List>
 
-      <CreateColumn
+      <CreateColumnModal
         boardId={id}
         isVisible={showModal}
         setVisible={setShowModal}

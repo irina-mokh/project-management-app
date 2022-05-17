@@ -1,4 +1,4 @@
-import { CreateBoard } from './createBoard';
-import { CreateColumn } from './createColumn';
+import { CreateBoardModal } from './createBoardModal';
+import { CreateColumnModal } from './createColumnModal';
 
-export { CreateBoard, CreateColumn };
+export { CreateBoardModal, CreateColumnModal };

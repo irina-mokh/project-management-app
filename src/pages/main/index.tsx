@@ -2,7 +2,7 @@ import { BoardList } from 'components/BoardList';
 import { Search } from 'components/Search';
 import { Container } from '@mui/material';
 import { ThemeSwitcher } from 'components/ThemeSwitcher';
-import { CreateBoard } from 'components/Modals';
+import { CreateBoardModal } from 'components/Modals';
 import { routes } from 'routes';
 import { useTitle } from 'hooks';
 
@@ -15,7 +15,7 @@ export const Main = () => {
       <Container>
         <Search />
         <ThemeSwitcher />
-        <CreateBoard />
+        <CreateBoardModal />
         <BoardList />
       </Container>
     </>

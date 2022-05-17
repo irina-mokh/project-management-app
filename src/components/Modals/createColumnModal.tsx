@@ -19,7 +19,7 @@ interface ICreateColumn {
   orderIdx: number;
 }
 
-export function CreateColumn({ isVisible, setVisible, boardId, orderIdx }: ICreateColumn) {
+export function CreateColumnModal({ isVisible, setVisible, boardId, orderIdx }: ICreateColumn) {
   const dispatch: AppDispatch = useDispatch();
 
   const [title, setTitle] = useState('');

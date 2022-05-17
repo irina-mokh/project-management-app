@@ -1,19 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { routes } from 'routes';
 import { createUser, signInUser } from './actions';
 
 export type IAuthState = {
   userId: null | string;
-  login: string;
+  login: null | string;
   error: null | string;
   isLoading: boolean;
   token: null | string;
+  isConfirmOpen: boolean;
 };
 const initialState: IAuthState = {
   userId: null,
-  login: '',
+  login: null,
   error: null,
   isLoading: false,
   token: null,
+  isConfirmOpen: false,
 };
 
 export const authSlice = createSlice({
@@ -22,6 +25,14 @@ export const authSlice = createSlice({
   reducers: {
     remError: (state) => {
       state.error = null;
+    },
+    setConfirmOpen: (state, action: PayloadAction<boolean>) => {
+      state.isConfirmOpen = action.payload;
+    },
+    logOut: (state) => {
+      state.login = null;
+      state.token = null;
+      state.userId = null;
     },
   },
   extraReducers: (builder) => {
@@ -47,6 +58,7 @@ export const authSlice = createSlice({
         state.token = action.payload.token;
         state.login = action.payload.login;
         state.isLoading = false;
+        window.location.href = `${routes.main.path}`;
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -55,6 +67,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const remError = authSlice.actions;
+export const { remError, setConfirmOpen, logOut } = authSlice.actions;
 
 export default authSlice.reducer;

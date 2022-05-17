@@ -59,8 +59,14 @@ export const AppRouter = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         {appRoutes}
-        <Route path="/signin" element={token ? <Navigate to="/main" replace /> : <SignInForm />} />
-        <Route path="/signup" element={token ? <Navigate to="/main" replace /> : <SignUpForm />} />
+        <Route
+          path="/signin"
+          element={token ? <Navigate to={routes.main.path} replace /> : <SignInForm />}
+        />
+        <Route
+          path="/signup"
+          element={token ? <Navigate to={routes.main.path} replace /> : <SignUpForm />}
+        />
       </Route>
     </Routes>
   );

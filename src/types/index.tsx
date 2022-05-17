@@ -12,23 +12,23 @@ export interface TokenUserType {
   password: string;
 }
 
-export interface Board {
+export interface IBoard {
   id: string;
   title: string;
   description: string;
 }
-export interface BoardDetails extends Board {
-  columns: Column[];
+export interface IBoardDetails extends IBoard {
+  columns: IColumn[];
 }
 
-export interface Column {
+export interface IColumn {
   id: string;
   title: string;
   order: number;
-  tasks: Task[];
+  tasks: ITask[];
 }
 
-export interface Task {
+export interface ITask {
   id: string;
   title: string;
   order: number;

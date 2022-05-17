@@ -1,5 +1,4 @@
 import {
-  IconButton,
   Card,
   CardHeader,
   CardContent,
@@ -8,7 +7,6 @@ import {
   useTheme,
   Typography,
 } from '@mui/material';
-import { DeleteOutlined } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,6 +17,8 @@ import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { axiosClient } from 'utils/axios';
 import { AddButton } from 'components/AddButton';
+import { DeleteButton } from 'components/DeleteButton';
+import { IBoard } from 'types';
 
 // temp sign in
 const signin = () => {
@@ -27,10 +27,6 @@ const signin = () => {
     password: '07007pswrd',
   });
 };
-
-// interface IAddBoard {
-//   addBoard?: () => void;
-// }
 
 export const BoardList = () => {
   signin();
@@ -48,7 +44,7 @@ export const BoardList = () => {
   const { palette } = useTheme();
 
   if (data?.length) {
-    boards = data?.map((item) => {
+    boards = data?.map((item: IBoard) => {
       const { id, title, description } = item;
       return (
         <Card
@@ -67,13 +63,10 @@ export const BoardList = () => {
               <Typography variant="body2">{description}</Typography>
             </CardContent>
           </CardActionArea>
-          <IconButton
-            aria-label="delete"
-            sx={{ position: 'absolute', right: 0, bottom: 0 }}
-            onClick={() => dispatch(deleteBoard(id))}
-          >
-            <DeleteOutlined color="error" sx={{ height: 20, width: 20, zIndex: 5 }} />
-          </IconButton>
+          <DeleteButton
+            confirmText="Delete a board?"
+            deleteHandler={() => dispatch(deleteBoard(id))}
+          />
         </Card>
       );
     });

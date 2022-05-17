@@ -5,13 +5,14 @@ import { getBoard } from 'store/board/actions';
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Card, Paper, Typography, Container } from '@mui/material';
-import { Column, Task } from 'types';
+import { List, Card, Typography, Container } from '@mui/material';
+import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
 import { CreateColumnModal } from 'components/Modals';
 
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
+import { Column } from 'components/Column';
 
 export const Board = () => {
   useTitle(routes.board.title);
@@ -20,7 +21,7 @@ export const Board = () => {
   const [showModal, setShowModal] = useState(false);
 
   const { data, isLoading, error } = useSelector(selectBoard);
-  const columns: Column[] = data ? data.columns : [];
+  const columns: IColumn[] = data ? data.columns : [];
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -46,39 +47,8 @@ export const Board = () => {
         {data?.title}
       </Typography>
       <List sx={{ width: '100%', height: '100%', display: 'flex' }}>
-        {columns.map((column: Column) => (
-          <Card
-            component="li"
-            key={column.id}
-            sx={{ marginRight: '10px', height: '100%', minWidth: '300px' }}
-          >
-            <Typography
-              variant="h4"
-              sx={{
-                borderBottom: 2,
-                borderColor: 'palette.primary',
-                fontSize: '1.5em',
-                marginBottom: '10px',
-              }}
-            >
-              {column.title}
-            </Typography>
-            <List
-              sx={{
-                width: 300,
-                height: '90%',
-                overflowY: 'scroll',
-              }}
-            >
-              {column.tasks.map((task: Task) => (
-                <Paper component="li" key={task.id} sx={{ margin: '10px 0', padding: '10px' }}>
-                  <Typography variant="h5">{task.title}</Typography>
-                  <Typography>{task.description}</Typography>
-                </Paper>
-              ))}
-              <AddButton text="add task" />
-            </List>
-          </Card>
+        {columns.map((column: IColumn) => (
+          <Column column={column} boardId={String(id)} key={column.id} />
         ))}
         <Card sx={{ minWidth: '300px', padding: '10px' }}>
           <AddButton text="add column" addHandler={() => setShowModal(true)} />

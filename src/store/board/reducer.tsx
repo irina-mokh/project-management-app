@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BoardDetails } from 'types';
-import { createColumn, getBoard } from './actions';
+import { IBoardDetails } from 'types';
+import { createColumn, getBoard, updateColumn, deleteColumn } from './actions';
 
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
-  data: BoardDetails;
+  data: IBoardDetails;
 };
 
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
-  data: {} as BoardDetails,
+  data: {} as IBoardDetails,
 };
 
 export const boardSlice = createSlice({
@@ -20,6 +20,7 @@ export const boardSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // getBoard
       .addCase(getBoard.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -40,6 +41,24 @@ export const boardSlice = createSlice({
         };
       })
       .addCase(createColumn.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // updateColumn {
+      .addCase(updateColumn.fulfilled, () => {
+        // state.data = action.payload;
+      })
+      .addCase(updateColumn.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // deleteColumn
+      .addCase(deleteColumn.fulfilled, (state, action) => {
+        if (state.data?.columns) {
+          state.data.columns = state.data?.columns.filter((column) => column.id !== action.payload);
+        }
+      })
+      .addCase(deleteColumn.rejected, (state, action) => {
         state.error = String(action.payload);
       });
   },

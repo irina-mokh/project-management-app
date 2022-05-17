@@ -79,11 +79,6 @@ export const SignInForm = () => {
       password: data.get('password') as string,
     };
     dispatch(signInUser(curUser));
-
-    /*if (token?.length) {
-      setSuccess(true);
-      setTimeout(() => navigate('/main'), 700);
-    }*/
   };
 
   return (

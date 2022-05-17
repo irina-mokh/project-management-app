@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { routes } from 'routes';
-import { createUser, signInUser } from './actions';
+import { createUser, getUserId, signInUser } from './actions';
 
 export type IAuthState = {
   userId: null | string;
@@ -53,14 +53,21 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      // axios sets token to LS
       .addCase(signInUser.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.login = action.payload.login;
         state.isLoading = false;
-        window.location.href = `${routes.main.path}`;
+        window.location.href = `/${routes.main.path}`;
       })
       .addCase(signInUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = String(action.payload);
+      })
+      .addCase(getUserId.fulfilled, (state, action) => {
+        state.userId = action.payload;
+        console.log('action', action.payload);
+      })
+      .addCase(getUserId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = String(action.payload);
       });

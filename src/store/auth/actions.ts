@@ -52,3 +52,27 @@ export const signInUser = createAsyncThunk(
     }
   }
 );
+export const getUserId = createAsyncThunk(
+  'auth/getUserId',
+  async function (login: null | string, { rejectWithValue }) {
+    const url = `users`;
+    try {
+      const response = await axiosClient.get(url);
+      if (response.status !== 200) {
+        throw new Error('Error');
+      }
+      const arrUser = response.data.filter((item: NewUserType) => {
+        return item.login === login;
+      });
+      return arrUser[0].id;
+    } catch (err) {
+      /*let errorMessage;
+      if ((err as AxiosError).response?.status === 400) {
+        errorMessage = 'Fill fields to sign in';
+      } else if ((err as AxiosError).response?.status === 403) {
+        errorMessage = 'User with such login/password was not found';
+      }*/
+      return rejectWithValue(err as AxiosError);
+    }
+  }
+);

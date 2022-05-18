@@ -37,6 +37,7 @@ export const Board = () => {
   }
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
+      <h2 className="visually-hidden">Board page</h2>
       <Typography variant="h3" color="primary" fontSize="1.8em">
         {data?.title}
       </Typography>

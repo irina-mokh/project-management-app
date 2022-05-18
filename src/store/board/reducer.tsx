@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IBoardDetails, IColumn } from 'types';
+import { IBoardDetails } from 'types';
 import { getBoard, updateColumn, deleteColumn, deleteTask } from './actions';
 
 type IBoardState = {
@@ -55,11 +55,7 @@ export const boardSlice = createSlice({
         const column = state.data?.columns.find((column) => column.id === action.payload.columnId);
         if (column) {
           const tasks = column.tasks.filter((task) => task.id !== action.payload.taskId);
-          state.data?.columns.forEach((column: IColumn) => {
-            if (column && column.id === action.payload.columnId) {
-              column.tasks = tasks;
-            }
-          });
+          column.tasks = tasks;
         }
       })
       .addCase(deleteTask.rejected, (state, action) => {

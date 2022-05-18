@@ -39,6 +39,7 @@ export const signInUser = createAsyncThunk(
       const resData = {
         token: response.data.token,
         login: user.login,
+        password: user.password,
       };
       return resData;
     } catch (err) {
@@ -102,6 +103,33 @@ export const deleteUser = createAsyncThunk(
         errorMessage = 'User with such login/password was not found';
       }*/
       console.log('err', err);
+      return rejectWithValue(err as AxiosError);
+    }
+  }
+);
+
+export const editUser = createAsyncThunk(
+  'auth/editUser',
+  async function (
+    { userId, newData }: { userId: null | string; newData: NewUserType },
+    { rejectWithValue }
+  ) {
+    const url = `users/${userId}`;
+    try {
+      const response = await axiosClient.put(url, newData);
+      if (response.status !== 200) {
+        throw new Error('Error');
+      }
+      console.log('nansn', response);
+      return response;
+    } catch (err) {
+      /*let errorMessage;
+      if ((err as AxiosError).response?.status === 400) {
+        errorMessage = 'Fill fields to sign in';
+      } else if ((err as AxiosError).response?.status === 403) {
+        errorMessage = 'User with such login/password was not found';
+      }*/
+      console.log('errEdit', err);
       return rejectWithValue(err as AxiosError);
     }
   }

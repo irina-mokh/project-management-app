@@ -8,12 +8,12 @@ import { selectTheme } from 'store/theme/selectors';
 import { AppDispatch, RootState } from 'store';
 import { ChangeEvent, useState } from 'react';
 import { ConfirmDialog } from 'components/ConfirmDialog';
-import { deleteUser } from 'store/auth/actions';
+import { deleteUser, editUser } from 'store/auth/actions';
 
 export const EditProfile = () => {
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
-  const { userName, login, userId } = useSelector((state: RootState) => state.auth);
+  const { userName, login, userId, userPassword } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
@@ -24,6 +24,10 @@ export const EditProfile = () => {
   const [curLogin, setCurLogin] = useState<string | null>(login);
   const [loginError, setLoginError] = useState(false);
   const [loginErrorText, setLoginErrorText] = useState('');
+
+  const [curPassword, setPassword] = useState('');
+  const [passError, setPassError] = useState(false);
+  const [passErrorText, setPassErrorText] = useState('');
 
   const nameValidation = (inputName: string) => {
     if (inputName && inputName.length > 3) {
@@ -54,10 +58,30 @@ export const EditProfile = () => {
     loginValidation(event.target.value);
   };
 
+  const passValidation = (inputPass: string) => {
+    if (inputPass && inputPass.length > 7) {
+      setPassError(false);
+      setPassErrorText('');
+    } else {
+      setPassError(true);
+      setPassErrorText('Password should contain at least 8 symbols');
+    }
+  };
+
+  const handlePasswordChange = (event: React.SyntheticEvent) => {
+    const inputPass = (event.target as HTMLInputElement).value;
+    setPassword(inputPass);
+    passValidation(inputPass);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    console.log('dataForm', curName);
+    const newData = {
+      name: curName,
+      login: curLogin,
+      password: curPassword && curPassword.length ? curPassword : userPassword,
+    };
+    dispatch(editUser({ userId, newData }));
   };
 
   return (
@@ -76,13 +100,7 @@ export const EditProfile = () => {
         </Typography>
 
         <Box component="form" onSubmit={handleSubmit}>
-          <Typography
-            sx={{
-              textAlign: 'right',
-            }}
-          >
-            User Name:
-          </Typography>
+          <Typography>User Name:</Typography>
           <TextField
             error={nameError}
             helperText={nameErrorText}
@@ -99,16 +117,8 @@ export const EditProfile = () => {
             autoComplete="name"
             autoFocus
           />
-
-          <Grid item></Grid>
           <Grid item xs>
-            <Typography
-              sx={{
-                textAlign: 'right',
-              }}
-            >
-              User Login:
-            </Typography>
+            <Typography>User Login:</Typography>
           </Grid>
           <Grid item>
             <TextField
@@ -128,6 +138,26 @@ export const EditProfile = () => {
               autoFocus
             />
           </Grid>
+          <Grid item xs>
+            <Typography>User Password:</Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              error={passError}
+              helperText={passErrorText}
+              onChange={(e) => {
+                handlePasswordChange(e);
+              }}
+              value={curPassword}
+              margin="normal"
+              fullWidth
+              id="password"
+              name="password"
+              label="New password"
+              autoComplete="password"
+              autoFocus
+            />
+          </Grid>
 
           <Grid
             container
@@ -141,7 +171,7 @@ export const EditProfile = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                disabled={nameError || loginError}
+                disabled={nameError || loginError || passError}
               >
                 Submit changes
               </Button>

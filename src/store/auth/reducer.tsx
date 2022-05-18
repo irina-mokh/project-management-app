@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { routes } from 'routes';
-import { createUser, getUserId, signInUser } from './actions';
+import { createUser, deleteUser, getUserPersData, signInUser } from './actions';
 
 export type IAuthState = {
+  userName: null | string;
   userId: null | string;
   login: null | string;
   error: null | string;
@@ -11,6 +12,7 @@ export type IAuthState = {
   isConfirmOpen: boolean;
 };
 const initialState: IAuthState = {
+  userName: null,
   userId: null,
   login: null,
   error: null,
@@ -63,13 +65,24 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = String(action.payload);
       })
-      .addCase(getUserId.fulfilled, (state, action) => {
-        state.userId = action.payload;
-        console.log('action', action.payload);
+      .addCase(getUserPersData.fulfilled, (state, action) => {
+        state.userId = action.payload.userId;
+        state.userName = action.payload.userName;
+        console.log('action1', action.payload);
       })
-      .addCase(getUserId.rejected, (state, action) => {
+      .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;
-        state.error = String(action.payload);
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.userId = null;
+        state.userName = null;
+        state.token = null;
+        state.login = null;
+        window.location.href = `${routes.welcome.path}`;
+        console.log('action2', action.payload);
+      })
+      .addCase(deleteUser.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });

@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'store';
 import { UserHeader } from './UserHeader';
-import { getUserId } from 'store/auth/actions';
+import { getUserPersData } from 'store/auth/actions';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
@@ -31,8 +31,7 @@ export const Header = () => {
   });
   useEffect(() => {
     if (login && login.length) {
-      dispatch(getUserId(login));
-      console.log('login', login);
+      dispatch(getUserPersData(login));
     }
   }, [dispatch, login]);
 

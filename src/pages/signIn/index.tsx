@@ -79,6 +79,14 @@ export const SignInForm = () => {
       password: data.get('password') as string,
     };
     dispatch(signInUser(curUser));
+    /*.unwrap()
+      .then(() => {
+        dispatch(getUserPersData(curUser.login));
+      })
+      .catch((e) => {
+        // error in case of rejection inside createAsyncThunk second argument
+        console.log('e', e);
+      });*/
   };
 
   return (

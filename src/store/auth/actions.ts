@@ -52,7 +52,7 @@ export const signInUser = createAsyncThunk(
     }
   }
 );
-export const getUserId = createAsyncThunk(
+export const getUserPersData = createAsyncThunk(
   'auth/getUserId',
   async function (login: null | string, { rejectWithValue }) {
     const url = `users`;
@@ -64,7 +64,12 @@ export const getUserId = createAsyncThunk(
       const arrUser = response.data.filter((item: NewUserType) => {
         return item.login === login;
       });
-      return arrUser[0].id;
+      const persData = {
+        userId: arrUser[0].id,
+        userName: arrUser[0].name,
+      };
+      console.log('aa', arrUser);
+      return persData;
     } catch (err) {
       /*let errorMessage;
       if ((err as AxiosError).response?.status === 400) {
@@ -72,6 +77,31 @@ export const getUserId = createAsyncThunk(
       } else if ((err as AxiosError).response?.status === 403) {
         errorMessage = 'User with such login/password was not found';
       }*/
+      console.log('err', err);
+      return rejectWithValue(err as AxiosError);
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  'auth/deleteUser',
+  async function (userId: null | string, { rejectWithValue }) {
+    const url = `users/${userId}`;
+    try {
+      const response = await axiosClient.delete(url);
+      if (response.status !== 204) {
+        throw new Error('Error');
+      }
+      console.log('nansn', response);
+      return response;
+    } catch (err) {
+      /*let errorMessage;
+      if ((err as AxiosError).response?.status === 400) {
+        errorMessage = 'Fill fields to sign in';
+      } else if ((err as AxiosError).response?.status === 403) {
+        errorMessage = 'User with such login/password was not found';
+      }*/
+      console.log('err', err);
       return rejectWithValue(err as AxiosError);
     }
   }

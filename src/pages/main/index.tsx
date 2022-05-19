@@ -7,13 +7,14 @@ import { useTitle } from 'hooks';
 
 export const Main = () => {
   useTitle(routes.main.title);
+
   return (
     <>
       <h2 className="visually-hidden">Main page</h2>
       <Container>
         <Search />
-        <CreateBoardModal />
         <BoardList />
+        <CreateBoardModal />
       </Container>
     </>
   );

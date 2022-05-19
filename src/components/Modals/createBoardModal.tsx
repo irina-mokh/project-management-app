@@ -8,13 +8,11 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createBoard } from 'store/boardList/actions';
 import { ICreateBoardFields } from 'types/index';
-
-import { selectBoardList } from 'store/boardList/selectors';
-import { boardListSlice } from 'store/boardList/reducer';
+import { useSearchParams } from 'react-router-dom';
 
 const defaultRequestValues: ICreateBoardFields = {
   title: '',
@@ -28,24 +26,20 @@ const defaultErrorsValues = {
 
 export function CreateBoardModal() {
   // показ зависит от состояния глобального стора
-  const { hasModal } = useSelector(selectBoardList);
-  const { showModal } = boardListSlice.actions;
   const dispatch: AppDispatch = useDispatch();
 
   const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
   const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // показ зависит от queryParams. Если есть create-modal - показываем
+  const hasModal = searchParams.has('create-board');
+
+  // для закрытия удаляем query param из строки
   const handleClose = () => {
-    dispatch(showModal(false));
+    searchParams.delete('create-board');
+    setSearchParams(searchParams);
   };
-
-  // однократно ставим eventListener на window через костыль
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleClose, { once: true });
-    return () => {
-      window.removeEventListener('beforeunload', handleClose);
-    };
-  }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

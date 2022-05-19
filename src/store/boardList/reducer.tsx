@@ -6,14 +6,12 @@ type IBoardsState = {
   isLoading: boolean;
   error: string | null;
   data: Array<IBoard>;
-  hasModal: boolean;
 };
 
 const initialState: IBoardsState = {
   isLoading: true,
   error: null,
   data: [],
-  hasModal: false,
 };
 
 export const boardListSlice = createSlice({

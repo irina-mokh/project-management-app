@@ -7,6 +7,7 @@ import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
 import { UserHeader } from './UserHeader';
+import { CreateBoardModal } from 'components/Modals';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
@@ -51,6 +52,7 @@ export const Header = () => {
       </div>
       <ThemeSwitcher />
       {token && token.length ? <UserHeader /> : <WelcomeHeader />}
+      <CreateBoardModal />
     </header>
   );
 };

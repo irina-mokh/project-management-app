@@ -23,8 +23,8 @@ import { useSearchParams } from 'react-router-dom';
 // temp sign in
 const signin = () => {
   axiosClient.post('/signin', {
-    login: 'caltu123', //'mokh-user',
-    password: 'caltu123', //'07007pswrd',
+    login: 'mokh-user',
+    password: '07007pswrd',
   });
 };
 

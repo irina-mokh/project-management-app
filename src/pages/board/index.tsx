@@ -5,7 +5,7 @@ import { getBoard } from 'store/board/actions';
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Card, Typography, Container } from '@mui/material';
+import { List, Card, Typography, Container, Breadcrumbs, Link } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
 import { CreateColumnModal } from 'components/Modals';
@@ -43,10 +43,19 @@ export const Board = () => {
 
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
-      <Typography variant="h3" color="primary" fontSize="1.8em">
+      <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '5px 0' }}>
+        <Link underline="hover" color="inherit" href="/">
+          Home
+        </Link>
+        <Link underline="hover" color="inherit" href="/boards">
+          Boards
+        </Link>
+        <Typography color="text.primary">{`Board: ${data?.title}`}</Typography>
+      </Breadcrumbs>
+      <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '10px 0 5px 0' }}>
         {data?.title}
       </Typography>
-      <List sx={{ width: '100%', height: '100%', display: 'flex' }}>
+      <List sx={{ width: '100%', height: '90%', display: 'flex' }}>
         {columns.map((column: IColumn) => (
           <Column column={column} boardId={String(id)} key={column.id} />
         ))}

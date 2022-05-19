@@ -41,6 +41,7 @@ export const boardListSlice = createSlice({
       })
       .addCase(getBoards.rejected, (state, action) => {
         state.error = String(action.payload);
+        state.isLoading = false;
       })
 
       // deleteBoard

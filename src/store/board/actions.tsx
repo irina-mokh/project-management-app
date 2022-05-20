@@ -30,3 +30,17 @@ export const deleteColumn = createAsyncThunk(
     }
   }
 );
+
+// deleteTask
+export const deleteTask = createAsyncThunk(
+  'board/deleteTask',
+  async function ([boardId, columnId, taskId]: [string, string, string], { rejectWithValue }) {
+    try {
+      await axiosClient.delete(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`);
+
+      return { taskId: taskId, columnId: columnId };
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);

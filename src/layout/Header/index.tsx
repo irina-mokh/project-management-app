@@ -4,14 +4,17 @@ import './Header.scss';
 import Typography from '@mui/material/Typography/Typography';
 import { ThemeSwitcher } from 'components/ThemeSwitcher';
 import { useTheme } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'store';
 import { UserHeader } from './UserHeader';
+import { getUserPersData } from 'store/auth/actions';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
   const headerLine = useRef<HTMLElement>(null);
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { token, login } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+
   const checkSticky = () => {
     if (headerLine.current?.clientHeight && window.pageYOffset > headerLine.current?.clientHeight) {
       setSticky(true);
@@ -26,6 +29,12 @@ export const Header = () => {
       window.removeEventListener('scroll', checkSticky);
     };
   });
+  useEffect(() => {
+    if (login && login.length) {
+      dispatch(getUserPersData(login));
+    }
+  }, [dispatch, login]);
+
   const { palette } = useTheme();
 
   return (

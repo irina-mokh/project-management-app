@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IBoardDetails, IColumn } from 'types';
-import { getBoard, deleteColumn } from './actions';
+import { getBoard, deleteColumn, deleteTask } from './actions';
 
 type IBoardState = {
   isLoading: boolean;
@@ -66,6 +66,18 @@ export const boardSlice = createSlice({
         }
       })
       .addCase(deleteColumn.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // deleteTask
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const column = state.data?.columns.find((column) => column.id === action.payload.columnId);
+        if (column) {
+          const tasks = column.tasks.filter((task) => task.id !== action.payload.taskId);
+          column.tasks = tasks;
+        }
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
         state.error = String(action.payload);
         state.isLoading = false;
       });

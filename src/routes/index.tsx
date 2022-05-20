@@ -4,12 +4,12 @@ import { Layout } from 'layout';
 import { Main } from 'pages/main';
 import { Welcome } from 'pages/welcome';
 import { Board } from 'pages/board';
-import { EditProfileForm } from 'components/Forms/EditProfileForm';
 import { NotFound } from 'pages/notFound';
 import { SignUpForm } from 'pages/signUp';
 import { SignInForm } from 'pages/signIn';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
+import { EditProfile } from 'pages/editProfile';
 
 const prefixTitle = 'PMA';
 export const routes = {
@@ -36,7 +36,7 @@ export const routes = {
   editProfile: {
     title: `${prefixTitle} Edit profile`,
     path: 'edit-profile',
-    element: <EditProfileForm />,
+    element: <EditProfile />,
   },
   board: {
     title: `${prefixTitle} Board`,
@@ -60,8 +60,14 @@ export const AppRouter = () => {
       <Route path="/" element={<Layout />}>
         {appRoutes}
         <Route
-          path="/signin"
-          element={token ? <Navigate to={routes.main.path} replace /> : <SignInForm />}
+          path="signin"
+          element={
+            token && token.length ? (
+              <Navigate to={`/${routes.welcome.path}`} replace />
+            ) : (
+              <SignInForm />
+            )
+          }
         />
         <Route
           path="/signup"

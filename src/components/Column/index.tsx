@@ -1,12 +1,4 @@
-import {
-  List,
-  Card,
-  Paper,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
+import { List, Card, TextField, InputAdornment, IconButton } from '@mui/material';
 import { IColumn, ITask } from 'types';
 import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
@@ -19,6 +11,7 @@ import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
+import { Task } from 'components/Task';
 
 interface IColumnProps {
   column: IColumn;
@@ -156,10 +149,7 @@ export const Column = (props: IColumnProps) => {
         }}
       >
         {column.tasks.map((task: ITask) => (
-          <Paper component="li" key={task.id} sx={{ margin: '0 0 10px 0', padding: '10px' }}>
-            <Typography variant="h5">{task.title}</Typography>
-            <Typography>{task.description}</Typography>
-          </Paper>
+          <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
         <AddButton text="add task" />
       </List>

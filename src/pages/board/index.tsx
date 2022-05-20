@@ -39,6 +39,7 @@ export const Board = () => {
 
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
+      <h2 className="visually-hidden">Board page</h2>
       <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '5px 0' }}>
         <Link underline="hover" color="inherit" href="/">
           Home

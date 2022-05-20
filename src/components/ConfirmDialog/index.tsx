@@ -21,9 +21,7 @@ export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
       aria-labelledby="confirm-dialog"
       sx={{ justifyContent: 'center' }}
     >
-      <DialogTitle id="confirm-dialog">
-        <h4>Confirm your decision</h4>
-      </DialogTitle>
+      <DialogTitle id="confirm-dialog">Confirm your decision</DialogTitle>
       <DialogContent>{confirmText}</DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={() => setOpen(false)}>

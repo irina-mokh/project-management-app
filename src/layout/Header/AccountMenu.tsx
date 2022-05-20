@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { LetterAvatar } from './Avatar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { authSlice } from 'store/auth/reducer';
 
 export const AccountMenu = () => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -98,7 +99,10 @@ export const AccountMenu = () => {
         confirmText="Ready to leave?"
         open={confirmOpen}
         setOpen={setConfirmOpen}
-        onConfirm={() => dispatch(logOut())}
+        onConfirm={() => {
+          dispatch(logOut());
+          navigate(`/${routes.welcome.path}`);
+        }}
       ></ConfirmDialog>
     </React.Fragment>
   );

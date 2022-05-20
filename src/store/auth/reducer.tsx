@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { routes } from 'routes';
-import { createUser, signInUser } from './actions';
+import { createUser, deleteUser, editUser, getUserPersData, signInUser } from './actions';
 
 export type IAuthState = {
+  userName: null | string;
   userId: null | string;
+  userPassword: null | string;
   login: null | string;
   error: null | string;
   isLoading: boolean;
@@ -11,7 +13,9 @@ export type IAuthState = {
   isConfirmOpen: boolean;
 };
 const initialState: IAuthState = {
+  userName: null,
   userId: null,
+  userPassword: null,
   login: null,
   error: null,
   isLoading: false,
@@ -53,16 +57,45 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      // axios sets token to LS
       .addCase(signInUser.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.login = action.payload.login;
         state.isLoading = false;
-        window.location.href = `${routes.main.path}`;
+        state.userPassword = action.payload.password;
+        window.location.href = `/${routes.main.path}`;
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = String(action.payload);
+      })
+      .addCase(getUserPersData.fulfilled, (state, action) => {
+        state.userId = action.payload.userId;
+        state.userName = action.payload.userName;
+        console.log('action1', action.payload);
+      })
+      .addCase(getUserPersData.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.userId = null;
+        state.userName = null;
+        state.token = null;
+        state.login = null;
+        window.location.href = `${routes.welcome.path}`;
+        console.log('action2', action.payload);
+      })
+      .addCase(deleteUser.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(editUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        console.log('actionEdit', action.payload);
+      })
+      .addCase(editUser.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });

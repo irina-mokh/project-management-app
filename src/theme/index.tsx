@@ -30,6 +30,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           '& fieldset': {
             border: 'none',
           },
+          '& .MuiOutlinedInput-input + fieldset': {
+            border: '2px solid #009688',
+          },
           '& .MuiOutlinedInput-input:hover + fieldset': {
             border: `2px solid #ced4da`,
           },
@@ -57,7 +60,16 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          width: '1.2em',
+          height: '1.2em',
+        },
+      },
+    },
   },
+
   palette: {
     primary: teal,
     secondary: amber,

@@ -20,7 +20,7 @@ export const CustomSnackBar = (props: CustomSnackBarProps) => {
       <Alert
         onClose={props.onClose}
         severity="success"
-        sx={{ width: '100%', backgroundColor: '#009688' }}
+        sx={{ width: '100%', backgroundColor: '#009688', color: '#fff' }}
       >
         {props.snackText}
       </Alert>

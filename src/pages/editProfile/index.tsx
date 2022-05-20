@@ -6,7 +6,7 @@ import { getDesignTokens } from 'theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTheme } from 'store/theme/selectors';
 import { AppDispatch, RootState } from 'store';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ConfirmDialog } from 'components/ConfirmDialog';
 import { deleteUser, editUser } from 'store/auth/actions';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ export const EditProfile = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const [snackOpen, setSnackOpen] = useState<boolean>(editSuccess && deleteSuccess);
+  const [snackOpen, setSnackOpen] = useState<boolean>(false);
   const { remSnackState } = authSlice.actions;
 
   const navigate = useNavigate();
@@ -94,6 +94,9 @@ export const EditProfile = () => {
     dispatch(editUser({ userId, newData }));
   };
 
+  useEffect(() => {
+    editSuccess || deleteSuccess ? setSnackOpen(true) : setSnackOpen(false);
+  }, [editSuccess, deleteSuccess]);
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -200,7 +203,7 @@ export const EditProfile = () => {
         setOpen={setConfirmOpen}
         onConfirm={() => {
           dispatch(deleteUser(userId));
-          setTimeout(() => navigate(`${routes.welcome.path}`), 10000);
+          setTimeout(() => navigate(`${routes.welcome.path}`), 1000);
         }}
       />
       <CustomSnackBar

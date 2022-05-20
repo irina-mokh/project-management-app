@@ -12,9 +12,11 @@ import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
 import React, { useState, useRef, MutableRefObject } from 'react';
-import { useDispatch } from 'react-redux';
+import { selectBoard } from 'store/board/selectors';
+import { useDispatch, useSelector } from 'react-redux';
 import { moveColumn } from 'store/board/reducer';
-import { updateColumn, deleteColumn } from 'store/board/actions';
+import { deleteColumn } from 'store/board/actions';
+import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 
@@ -25,49 +27,69 @@ interface IColumnProps {
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
   const { boardId, column } = props;
+  const { data } = useSelector(selectBoard);
+  let columns: IColumn[] = [];
+  if (data) {
+    columns = data.columns;
+  }
 
   const [curTitle, setCurTitle] = useState(column.title);
   const [curOrder] = useState(column.order);
   const [isSelected, setIsSelected] = useState(false);
 
-  const ref = useRef() as MutableRefObject<HTMLDivElement>;
-
   const handleTitleChangeCancel = () => {
     setCurTitle(column.title);
   };
 
-  const [{ isOver, canDrop }, drop] = useDrop(() => ({
-    accept: 'column',
-    drop: (item: IColumn, monitor: DropTargetMonitor) => {
-      console.log(item);
-      const dragIndex = item.order - 1;
-      const hoverIndex = props.column.order - 1;
+  // ref for DnD
+  const ref = useRef() as MutableRefObject<HTMLDivElement>;
 
-      dispatch(moveColumn({ dragIndex, hoverIndex }));
-      console.log(monitor);
-      console.log(item);
-    },
-    collect: (monitor: DropTargetMonitor) => ({
-      isOver: !!monitor.isOver(),
-      canDrop: !!monitor.canDrop(),
-    }),
-  }));
+  // Drop
+  const [{ isOver, canDrop }, drop] = useDrop(
+    () => ({
+      accept: 'column',
+      drop: (item: IColumn) => {
+        const dragIndex = item.order;
+        const hoverIndex = props.column.order;
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: 'column',
-    item: column,
-    collect: (monitor: DragSourceMonitor) => ({
-      isDragging: monitor.isDragging(),
+        dispatch(moveColumn({ dragIndex, hoverIndex }));
+        columns.forEach(async (column: IColumn, i: number) => {
+          if (data) {
+            // set temporary unique orders
+            await updateColumn(data.id, column.id, i + columns.length, column.title);
+            // set correct order from 0
+            await updateColumn(data.id, column.id, i, column.title);
+          }
+        });
+      },
+      collect: (monitor: DropTargetMonitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
     }),
-  }));
+    [props]
+  );
+
+  // Drag
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: 'column',
+      item: column,
+      collect: (monitor: DragSourceMonitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [column]
+  );
 
   drag(drop(ref));
+
   const opacity = isDragging ? 0.5 : 1;
 
   const isActive = canDrop && isOver;
   let borderColor = 'transparent';
   if (isActive) {
-    borderColor = 'red';
+    borderColor = 'teal';
   } else if (canDrop) {
     borderColor = 'gray';
   }
@@ -80,7 +102,7 @@ export const Column = (props: IColumnProps) => {
       <IconButton
         aria-label="submit"
         size="small"
-        onMouseDown={() => dispatch(updateColumn([boardId, column.id, curOrder, curTitle]))}
+        onMouseDown={() => updateColumn(boardId, column.id, curOrder, curTitle)}
       >
         <Check />
       </IconButton>

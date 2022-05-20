@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getDesignTokens } from 'theme';
 import { useSelector } from 'react-redux';
 import { selectTheme } from 'store/theme/selectors';
@@ -22,6 +22,7 @@ import { Loading } from 'components/Loading';
 import { createUser, signInUser } from 'store/auth/actions';
 import { AppDispatch, RootState } from 'store';
 import { authSlice } from 'store/auth/reducer';
+import { routes } from 'routes';
 
 export interface NewUserType {
   name: string;
@@ -39,6 +40,7 @@ export const SignUpForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
   const { remError } = authSlice.actions;
+  const navigate = useNavigate();
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
@@ -114,6 +116,7 @@ export const SignUpForm = () => {
       .unwrap()
       .then(() => {
         dispatch(signInUser({ login: newUser.login, password: newUser.password }));
+        navigate(`${routes.welcome.path}`);
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
@@ -204,7 +207,7 @@ export const SignUpForm = () => {
             <Grid container>
               <Grid item>
                 <span>Already have an account? </span>
-                <Link to={'/signin'}>
+                <Link to={'/signin'} onClick={() => dispatch(remError)}>
                   <span>Sign In</span>
                 </Link>
               </Grid>

@@ -60,6 +60,7 @@ export const boardSlice = createSlice({
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.error = String(action.payload);
+        state.isLoading = false;
       });
   },
 });

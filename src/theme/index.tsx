@@ -43,6 +43,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
       styleOverrides: {
         root: {
           borderRadius: '0',
+          border: '1px solid #88888833',
         },
       },
     },
@@ -50,7 +51,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
       styleOverrides: {
         root: {
           borderRadius: '0',
-          backgroundColor: 'transparent',
+          // backgroundColor: 'transparent',
           // border: '1',
           boxShadow: 'none',
         },

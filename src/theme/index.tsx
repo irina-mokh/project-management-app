@@ -30,6 +30,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           '& fieldset': {
             border: 'none',
           },
+          '& .MuiOutlinedInput-input + fieldset': {
+            border: '2px solid #009688',
+          },
           '& .MuiOutlinedInput-input:hover + fieldset': {
             border: `2px solid #ced4da`,
           },

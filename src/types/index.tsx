@@ -1,7 +1,7 @@
 export interface NewUserType {
-  name: string;
-  login: string;
-  password: string;
+  name: null | string;
+  login: null | string;
+  password: null | string;
 }
 export interface CurUserType {
   login: string;

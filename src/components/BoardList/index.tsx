@@ -15,21 +15,21 @@ import { getBoards, deleteBoard } from 'store/boardList/actions';
 import { toggleModal } from 'store/boardList/reducer';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
-import { axiosClient } from 'utils/axios';
+// import { axiosClient } from 'utils/axios';
 import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
 import { IBoard } from 'types';
 
 // temp sign in
-const signin = () => {
-  axiosClient.post('/signin', {
-    login: 'mokh-user',
-    password: '07007pswrd',
-  });
-};
+// const signin = () => {
+//   axiosClient.post('/signin', {
+//     login: 'mokh-user',
+//     password: '07007pswrd',
+//   });
+// };
 
 export const BoardList = () => {
-  signin();
+  // signin();
   const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;

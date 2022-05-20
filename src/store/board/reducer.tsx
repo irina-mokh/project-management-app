@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IBoardDetails } from 'types';
+import { IBoardDetails, IColumn } from 'types';
 import { getBoard, updateColumn, deleteColumn } from './actions';
 
 type IBoardState = {
@@ -16,7 +16,22 @@ const initialState: IBoardState = {
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
-  reducers: {},
+  reducers: {
+    moveColumn: (state, action) => {
+      const { dragIndex, hoverIndex } = action.payload;
+      console.log(dragIndex, hoverIndex);
+      if (state.data?.columns) {
+        const columns = state.data.columns;
+        const dragColumn = columns[dragIndex];
+        columns.splice(dragIndex, 1);
+        columns.splice(hoverIndex, 0, dragColumn);
+        // update columns order
+        for (let i = 0; i < columns.length; i += 1) {
+          columns[i].order = i;
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       // getBoard
@@ -25,7 +40,18 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
+        const sortedColumns = action.payload.columns.sort((a: IColumn, b: IColumn) => {
+          if (a.order > b.order) {
+            return 1;
+          }
+          if (a.order < b.order) {
+            return -1;
+          }
+        });
         state.data = action.payload;
+        if (state.data?.columns) {
+          state.data.columns = sortedColumns;
+        }
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
@@ -53,6 +79,6 @@ export const boardSlice = createSlice({
   },
 });
 
-// export const {  } = boardSlice.actions;
+export const { moveColumn } = boardSlice.actions;
 
 export default boardSlice.reducer;

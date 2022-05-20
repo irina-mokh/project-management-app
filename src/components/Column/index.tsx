@@ -11,10 +11,12 @@ import { IColumn, ITask } from 'types';
 import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
-import React, { useState } from 'react';
+import React, { useState, useRef, MutableRefObject } from 'react';
 import { useDispatch } from 'react-redux';
+import { moveColumn } from 'store/board/reducer';
 import { updateColumn, deleteColumn } from 'store/board/actions';
 import { DeleteButton } from 'components/DeleteButton';
+import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 
 interface IColumnProps {
   column: IColumn;
@@ -28,9 +30,47 @@ export const Column = (props: IColumnProps) => {
   const [curOrder] = useState(column.order);
   const [isSelected, setIsSelected] = useState(false);
 
+  const ref = useRef() as MutableRefObject<HTMLDivElement>;
+
   const handleTitleChangeCancel = () => {
     setCurTitle(column.title);
   };
+
+  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+    accept: 'column',
+    drop: (item: IColumn, monitor: DropTargetMonitor) => {
+      console.log(item);
+      const dragIndex = item.order - 1;
+      const hoverIndex = props.column.order - 1;
+
+      dispatch(moveColumn({ dragIndex, hoverIndex }));
+      console.log(monitor);
+      console.log(item);
+    },
+    collect: (monitor: DropTargetMonitor) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+    }),
+  }));
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'column',
+    item: column,
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  drag(drop(ref));
+  const opacity = isDragging ? 0.5 : 1;
+
+  const isActive = canDrop && isOver;
+  let borderColor = 'transparent';
+  if (isActive) {
+    borderColor = 'red';
+  } else if (canDrop) {
+    borderColor = 'gray';
+  }
 
   const inputButtons = isSelected ? (
     <>
@@ -51,12 +91,16 @@ export const Column = (props: IColumnProps) => {
   return (
     <Card
       component="li"
+      ref={ref}
       style={{
         marginRight: '1rem',
         height: '100%',
         minWidth: '300px',
         padding: '5px 15px 10px 15px',
         position: 'relative',
+        opacity: opacity,
+        cursor: 'grab',
+        border: `1px dashed ${borderColor}`,
       }}
     >
       <TextField

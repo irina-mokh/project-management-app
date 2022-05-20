@@ -16,17 +16,18 @@ export const Board = () => {
   useTitle(routes.board.title);
   const { id } = useParams();
 
-  const { data, isLoading, error } = useSelector(selectBoard);
-  let columns: IColumn[] = [];
-  if (data) {
-    columns = data.columns;
-  }
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     if (id) {
       dispatch(getBoard(id));
     }
   }, [id, dispatch]);
+
+  const { data, isLoading, error } = useSelector(selectBoard);
+  let columns: IColumn[] = [];
+  if (data) {
+    columns = data.columns;
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -35,6 +36,7 @@ export const Board = () => {
   if (error) {
     return <>{error}</>;
   }
+
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '5px 0' }}>

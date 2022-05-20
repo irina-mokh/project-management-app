@@ -57,7 +57,16 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          width: '1.2em',
+          height: '1.2em',
+        },
+      },
+    },
   },
+
   palette: {
     primary: teal,
     secondary: amber,

@@ -40,14 +40,9 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
-        const sortedColumns = action.payload.columns.sort((a: IColumn, b: IColumn) => {
-          if (a.order > b.order) {
-            return 1;
-          }
-          if (a.order < b.order) {
-            return -1;
-          }
-        });
+        const sortedColumns = action.payload.columns.sort(
+          (a: IColumn, b: IColumn) => a.order - b.order
+        );
 
         state.data = action.payload;
         if (state.data?.columns) {

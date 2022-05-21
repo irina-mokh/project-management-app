@@ -46,7 +46,6 @@ export const updateColumn = async (
   title: string
 ) => {
   try {
-    console.log('update column...');
     await axiosClient.put(`boards/${boardId}/columns/${columnId}`, {
       title: title,
       order: order,

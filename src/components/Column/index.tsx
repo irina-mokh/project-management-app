@@ -4,8 +4,8 @@ import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
 import React, { useState, useRef, MutableRefObject } from 'react';
-import { selectBoard } from 'store/board/selectors';
-import { useDispatch, useSelector } from 'react-redux';
+// import { selectBoard } from 'store/board/selectors';
+import { useDispatch } from 'react-redux';
 import { moveColumn } from 'store/board/reducer';
 import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
@@ -20,11 +20,11 @@ interface IColumnProps {
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
   const { boardId, column } = props;
-  const { data } = useSelector(selectBoard);
-  let columns: IColumn[] = [];
-  if (data) {
-    columns = data.columns;
-  }
+  // const { data } = useSelector(selectBoard);
+  // let columns: IColumn[] = [];
+  // if (data) {
+  //   columns = data.columns;
+  // }
 
   const [curTitle, setCurTitle] = useState(column.title);
   const [curOrder] = useState(column.order);
@@ -41,19 +41,21 @@ export const Column = (props: IColumnProps) => {
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: 'column',
-      drop: (item: IColumn) => {
+      drop: async (item: IColumn) => {
         const dragIndex = item.order;
         const hoverIndex = props.column.order;
-
+        console.log(dragIndex, hoverIndex);
         dispatch(moveColumn({ dragIndex, hoverIndex }));
-        columns.forEach(async (column: IColumn, i: number) => {
-          if (data) {
-            // set temporary unique orders
-            await updateColumn(data.id, column.id, i + columns.length, column.title);
-            // set correct order from 0
-            await updateColumn(data.id, column.id, i, column.title);
-          }
-        });
+        await updateColumn(boardId, item.id, hoverIndex, item.title);
+
+        // columns.forEach(async (column: IColumn, i: number) => {
+        //   if (data) {
+        //     // set temporary unique orders
+        //     await updateColumn(data.id, column.id, i + columns.length, column.title);
+        //     // set correct order from 0
+        //     await updateColumn(data.id, column.id, i, column.title);
+        //   }
+        // });
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),

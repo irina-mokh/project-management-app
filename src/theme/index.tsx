@@ -48,9 +48,6 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           borderRadius: '0',
           border: '1px solid #88888833',
         },
-        '& .MuiAlert-icon': {
-          color: '#fff',
-        },
       },
     },
     MuiCard: {

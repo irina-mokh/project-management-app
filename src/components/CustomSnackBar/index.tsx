@@ -12,15 +12,22 @@ export const CustomSnackBar = (props: CustomSnackBarProps) => {
   return (
     <Snackbar
       open={props.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={props.onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       sx={{ width: '50vw' }}
     >
       <Alert
         onClose={props.onClose}
-        severity="success"
-        sx={{ width: '100%', backgroundColor: '#009688', color: '#fff' }}
+        //severity="success"
+        sx={{
+          width: '100%',
+          backgroundColor: '#009688',
+          color: '#fff',
+          '& .MuiAlert-icon': {
+            color: '#fff',
+          },
+        }}
       >
         {props.snackText}
       </Alert>

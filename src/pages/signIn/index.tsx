@@ -15,9 +15,10 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { Loading } from 'components/Loading';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { routes } from 'routes';
 import { AppDispatch, RootState } from 'store';
-import { signInUser } from 'store/auth/actions';
+import { getUserPersData, signInUser } from 'store/auth/actions';
 import { authSlice } from 'store/auth/reducer';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
@@ -27,7 +28,9 @@ export const SignInForm = () => {
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
   const { error, isLoading, token } = useSelector((state: RootState) => state.auth);
-  const { remError } = authSlice.actions;
+  const { removeError } = authSlice.actions;
+
+  const navigate = useNavigate();
 
   const [loginInput, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -41,7 +44,7 @@ export const SignInForm = () => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
-    dispatch(remError());
+    dispatch(removeError());
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
@@ -67,7 +70,7 @@ export const SignInForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
-    dispatch(remError());
+    dispatch(removeError());
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -78,15 +81,16 @@ export const SignInForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-    dispatch(signInUser(curUser));
-    /*.unwrap()
+    dispatch(signInUser(curUser))
+      .unwrap()
       .then(() => {
+        navigate(`${routes.welcome.path}`);
         dispatch(getUserPersData(curUser.login));
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
         console.log('e', e);
-      });*/
+      });
   };
 
   return (
@@ -163,7 +167,7 @@ export const SignInForm = () => {
             <Grid container>
               <Grid item>
                 <span>For the first time on the site? </span>
-                <Link to={'/signup'}>
+                <Link to={'/signup'} onClick={() => dispatch(removeError)}>
                   <span>Create an account</span>
                 </Link>
               </Grid>

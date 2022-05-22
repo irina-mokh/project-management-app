@@ -6,16 +6,26 @@ import { getDesignTokens } from 'theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTheme } from 'store/theme/selectors';
 import { AppDispatch, RootState } from 'store';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ConfirmDialog } from 'components/ConfirmDialog';
 import { deleteUser, editUser } from 'store/auth/actions';
+import { useNavigate } from 'react-router-dom';
+import { routes } from 'routes';
+import { CustomSnackBar } from 'components/CustomSnackBar';
+import { authSlice } from 'store/auth/reducer';
 
 export const EditProfile = () => {
   const mode = useSelector(selectTheme);
   const theme = createTheme(getDesignTokens(mode));
-  const { userName, login, userId, userPassword } = useSelector((state: RootState) => state.auth);
+  const { userName, login, userId, userPassword, editSuccess, deleteSuccess } = useSelector(
+    (state: RootState) => state.auth
+  );
   const dispatch = useDispatch<AppDispatch>();
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [snackOpen, setSnackOpen] = useState<boolean>(false);
+  const { removeSnackState } = authSlice.actions;
+
+  const navigate = useNavigate();
 
   const [curName, setCurName] = useState<string | null>(userName);
   const [nameError, setNameError] = useState(false);
@@ -84,6 +94,9 @@ export const EditProfile = () => {
     dispatch(editUser({ userId, newData }));
   };
 
+  useEffect(() => {
+    editSuccess || deleteSuccess ? setSnackOpen(true) : setSnackOpen(false);
+  }, [editSuccess, deleteSuccess]);
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -188,7 +201,18 @@ export const EditProfile = () => {
         confirmText={'Delete this account?'}
         open={confirmOpen}
         setOpen={setConfirmOpen}
-        onConfirm={() => dispatch(deleteUser(userId))}
+        onConfirm={() => {
+          dispatch(deleteUser(userId));
+          setTimeout(() => navigate(`${routes.welcome.path}`), 1000);
+        }}
+      />
+      <CustomSnackBar
+        open={snackOpen}
+        snackText={
+          editSuccess ? 'Account data was changed successfully' : 'Account was deleted successfully'
+        }
+        setOpen={setSnackOpen}
+        onClose={() => dispatch(removeSnackState())}
       />
     </ThemeProvider>
   );

@@ -1,16 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IBoardDetails } from 'types';
-import { getBoard, updateColumn, deleteColumn, deleteTask } from './actions';
+import { getBoard, createColumn, updateColumn, deleteColumn, deleteTask } from './actions';
 
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
-  data: IBoardDetails | null;
+  data: IBoardDetails;
 };
+
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
-  data: null,
+  data: {} as IBoardDetails,
 };
 
 export const boardSlice = createSlice({
@@ -29,6 +30,17 @@ export const boardSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      .addCase(createColumn.fulfilled, (state, action) => {
+        state.data = {
+          ...state.data,
+          // добавляем к колонке tasks, т.к к ответе при создании приходит без этого массива
+          columns: [...state.data.columns, { ...action.payload, tasks: [] }],
+        };
+      })
+      .addCase(createColumn.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 

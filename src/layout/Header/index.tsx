@@ -7,6 +7,7 @@ import { useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'store';
 import { UserHeader } from './UserHeader';
+import { CreateBoardModal } from 'components/Modals';
 import { getUserPersData } from 'store/auth/actions';
 
 export const Header = () => {
@@ -60,6 +61,7 @@ export const Header = () => {
       </div>
       <ThemeSwitcher />
       {token && token.length ? <UserHeader /> : <WelcomeHeader />}
+      <CreateBoardModal />
     </header>
   );
 };

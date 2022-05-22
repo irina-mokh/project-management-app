@@ -6,14 +6,12 @@ type IBoardsState = {
   isLoading: boolean;
   error: string | null;
   data: Array<IBoard>;
-  hasModal: boolean;
 };
 
 const initialState: IBoardsState = {
   isLoading: true,
   error: null,
   data: [],
-  hasModal: false,
 };
 
 export const boardListSlice = createSlice({
@@ -21,12 +19,10 @@ export const boardListSlice = createSlice({
   initialState,
   reducers: {
     // возвращаем state и меняем только hasModal
-    toggleModal: function (state) {
-      console.log('Current state: ');
-      console.log(state);
+    showModal: function (state, action) {
       return {
         ...state,
-        hasModal: !state.hasModal,
+        hasModal: action.payload,
       };
     },
   },
@@ -66,6 +62,6 @@ export const boardListSlice = createSlice({
   },
 });
 
-export const { toggleModal } = boardListSlice.actions;
+export const { showModal } = boardListSlice.actions;
 
 export default boardListSlice.reducer;

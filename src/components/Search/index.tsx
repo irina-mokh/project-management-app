@@ -3,32 +3,50 @@ import { Clear, Search } from '@mui/icons-material';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { searchBoards, clearSearch } from 'store/boardList/reducer';
+import { toggleSearchFocus } from 'store/board/reducer';
 
-export const SearchBar = () => {
-  const dispatch: AppDispatch = useDispatch();
+interface SearchProps {
+  searchHandler: (value: string) => void;
+  searchClear: () => void;
+  placeholder: string;
+}
+export const SearchBar = (props: SearchProps) => {
   const [value, setValue] = useState('');
+  const dispatch: AppDispatch = useDispatch();
+
   return (
     <Box ml="auto" mb="1em" width="300px">
       <TextField
         variant="standard"
         type="text"
-        placeholder="Search board"
+        placeholder={props.placeholder}
+        aria-label={props.placeholder}
         size="medium"
         color="primary"
         fullWidth
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          if (e.target.value) {
+            setValue(e.target.value);
+          } else {
+            setValue(e.target.value);
+            props.searchHandler(value);
+          }
+        }}
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            dispatch(searchBoards(value));
+            props.searchHandler(value);
           }
         }}
+        onFocus={() => {
+          dispatch(toggleSearchFocus(true));
+        }}
+        onBlur={() => dispatch(toggleSearchFocus(false))}
         sx={{ mb: 1, mt: 1, ml: 'auto' }}
         InputProps={{
           startAdornment: (
-            <IconButton aria-label="search" onClick={() => dispatch(searchBoards(value))}>
+            <IconButton aria-label="search" onClick={() => props.searchHandler(value)}>
               <Search />
             </IconButton>
           ),
@@ -37,7 +55,7 @@ export const SearchBar = () => {
               aria-label="clear search"
               onClick={() => {
                 setValue('');
-                dispatch(clearSearch());
+                props.searchClear();
               }}
             >
               <Clear />

@@ -42,7 +42,7 @@ export const boardListSlice = createSlice({
       );
       state.boardsOnClient = result;
     },
-    clearSearch: (state) => {
+    clearBoardsSearch: (state) => {
       state.boardsOnClient = state.data;
     },
   },
@@ -83,6 +83,6 @@ export const boardListSlice = createSlice({
   },
 });
 
-export const { toggleModal, searchBoards, clearSearch } = boardListSlice.actions;
+export const { toggleModal, searchBoards, clearBoardsSearch } = boardListSlice.actions;
 
 export default boardListSlice.reducer;

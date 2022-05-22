@@ -3,10 +3,14 @@ import { IColumn, ITask } from 'types';
 import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
-import React, { useState } from 'react';
+import React, { useState, useRef, MutableRefObject } from 'react';
+// import { selectBoard } from 'store/board/selectors';
 import { useDispatch } from 'react-redux';
-import { updateColumn, deleteColumn } from 'store/board/actions';
+import { moveColumn } from 'store/board/reducer';
+import { deleteColumn } from 'store/board/actions';
+import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
+import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { Task } from 'components/Task';
 
 interface IColumnProps {
@@ -25,6 +29,51 @@ export const Column = (props: IColumnProps) => {
     setCurTitle(column.title);
   };
 
+  // ref for DnD
+  const ref = useRef() as MutableRefObject<HTMLDivElement>;
+
+  // Drop
+  const [{ isOver, canDrop }, drop] = useDrop(
+    () => ({
+      accept: 'column',
+      drop: async (item: IColumn) => {
+        const dragIndex = item.order;
+        const hoverIndex = props.column.order;
+        dispatch(moveColumn({ dragIndex, hoverIndex }));
+        await updateColumn(boardId, item.id, hoverIndex, item.title);
+      },
+      collect: (monitor: DropTargetMonitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
+    }),
+    [props]
+  );
+
+  // Drag
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: 'column',
+      item: column,
+      collect: (monitor: DragSourceMonitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [column]
+  );
+
+  drag(drop(ref));
+
+  const opacity = isDragging ? 0.5 : 1;
+
+  const isActive = canDrop && isOver;
+  let borderColor = 'transparent';
+  if (isActive) {
+    borderColor = 'teal';
+  } else if (canDrop) {
+    borderColor = 'gray';
+  }
+
   const inputButtons = isSelected ? (
     <>
       <IconButton onMouseDown={handleTitleChangeCancel} size="small">
@@ -33,7 +82,7 @@ export const Column = (props: IColumnProps) => {
       <IconButton
         aria-label="submit"
         size="small"
-        onMouseDown={() => dispatch(updateColumn([boardId, column.id, curOrder, curTitle]))}
+        onMouseDown={() => updateColumn(boardId, column.id, curOrder, curTitle)}
       >
         <Check />
       </IconButton>
@@ -44,12 +93,16 @@ export const Column = (props: IColumnProps) => {
   return (
     <Card
       component="li"
+      ref={ref}
       style={{
         marginRight: '1rem',
         height: '100%',
         minWidth: '300px',
         padding: '5px 15px 10px 15px',
         position: 'relative',
+        opacity: opacity,
+        cursor: 'grab',
+        border: `1px dashed ${borderColor}`,
       }}
     >
       <TextField

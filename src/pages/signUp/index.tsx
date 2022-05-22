@@ -39,7 +39,7 @@ export const SignUpForm = () => {
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
-  const { remError } = authSlice.actions;
+  const { removeError } = authSlice.actions;
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -58,7 +58,7 @@ export const SignUpForm = () => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
       setNameErrorText('');
-      dispatch(remError());
+      dispatch(removeError());
     } else {
       setNameError(true);
       setNameErrorText('Name should contain more then 3 symbols');
@@ -69,7 +69,7 @@ export const SignUpForm = () => {
     const inputName = (event.target as HTMLInputElement).value;
     setName(inputName);
     nameValidation(inputName);
-    dispatch(remError());
+    dispatch(removeError());
   };
 
   const loginHandler = (event: React.SyntheticEvent) => {
@@ -207,7 +207,7 @@ export const SignUpForm = () => {
             <Grid container>
               <Grid item>
                 <span>Already have an account? </span>
-                <Link to={'/signin'} onClick={() => dispatch(remError)}>
+                <Link to={'/signin'} onClick={() => dispatch(removeError)}>
                   <span>Sign In</span>
                 </Link>
               </Grid>

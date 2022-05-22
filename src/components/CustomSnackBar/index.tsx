@@ -12,7 +12,7 @@ export const CustomSnackBar = (props: CustomSnackBarProps) => {
   return (
     <Snackbar
       open={props.open}
-      autoHideDuration={10000}
+      autoHideDuration={1000}
       onClose={props.onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       sx={{ width: '50vw' }}

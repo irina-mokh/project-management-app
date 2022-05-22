@@ -28,7 +28,7 @@ export const SignInForm = () => {
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
   const { error, isLoading, token } = useSelector((state: RootState) => state.auth);
-  const { remError } = authSlice.actions;
+  const { removeError } = authSlice.actions;
 
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ export const SignInForm = () => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
-    dispatch(remError());
+    dispatch(removeError());
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
@@ -70,7 +70,7 @@ export const SignInForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
-    dispatch(remError());
+    dispatch(removeError());
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -167,7 +167,7 @@ export const SignInForm = () => {
             <Grid container>
               <Grid item>
                 <span>For the first time on the site? </span>
-                <Link to={'/signup'} onClick={() => dispatch(remError)}>
+                <Link to={'/signup'} onClick={() => dispatch(removeError)}>
                   <span>Create an account</span>
                 </Link>
               </Grid>

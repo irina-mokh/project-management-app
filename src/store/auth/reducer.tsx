@@ -28,7 +28,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    remError: (state) => {
+    removeError: (state) => {
       state.error = null;
     },
     logOut: (state) => {
@@ -36,7 +36,7 @@ export const authSlice = createSlice({
       state.token = null;
       state.userId = null;
     },
-    remSnackState: (state) => {
+    removeSnackState: (state) => {
       state.editSuccess = false;
       state.deleteSuccess = false;
     },
@@ -104,6 +104,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { remError, remSnackState, logOut } = authSlice.actions;
+export const { removeError, removeSnackState, logOut } = authSlice.actions;
 
 export default authSlice.reducer;

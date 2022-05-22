@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
 import { AppDispatch } from 'store';
-import { remError } from 'store/auth/reducer';
+import { removeError } from 'store/auth/reducer';
 import './Header.scss';
 
 export const WelcomeHeader = () => {
@@ -17,7 +17,7 @@ export const WelcomeHeader = () => {
         variant="contained"
         onClick={() => {
           navigate(routes.signUp.path);
-          dispatch(remError);
+          dispatch(removeError);
         }}
         sx={{ marginLeft: '5px' }}
       >
@@ -27,7 +27,7 @@ export const WelcomeHeader = () => {
         variant="contained"
         onClick={() => {
           navigate(routes.signIn.path);
-          dispatch(remError);
+          dispatch(removeError);
         }}
         sx={{ marginLeft: '5px' }}
       >

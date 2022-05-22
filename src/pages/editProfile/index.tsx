@@ -23,7 +23,7 @@ export const EditProfile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [snackOpen, setSnackOpen] = useState<boolean>(false);
-  const { remSnackState } = authSlice.actions;
+  const { removeSnackState } = authSlice.actions;
 
   const navigate = useNavigate();
 
@@ -212,7 +212,7 @@ export const EditProfile = () => {
           editSuccess ? 'Account data was changed successfully' : 'Account was deleted successfully'
         }
         setOpen={setSnackOpen}
-        onClose={() => dispatch(remSnackState())}
+        onClose={() => dispatch(removeSnackState())}
       />
     </ThemeProvider>
   );

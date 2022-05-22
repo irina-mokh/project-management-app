@@ -12,12 +12,12 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { getBoards, deleteBoard } from 'store/boardList/actions';
-import { toggleModal } from 'store/boardList/reducer';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
 import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
 import { IBoard } from 'types';
+import { useSearchParams } from 'react-router-dom';
 
 export const BoardList = () => {
   console.log('render board list');
@@ -25,8 +25,12 @@ export const BoardList = () => {
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const addBoardHandler = () => {
-    dispatch(toggleModal());
+    // добавляем в url search параметр create-modal
+    searchParams.set('create-board', 'true');
+    setSearchParams(searchParams);
   };
 
   useEffect(() => {

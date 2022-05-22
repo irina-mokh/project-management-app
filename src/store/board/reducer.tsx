@@ -1,18 +1,19 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 import { IBoardDetails, IColumn, ITask } from 'types';
-import { getBoard, updateColumn, deleteColumn, deleteTask } from './actions';
+import { getBoard, createColumn, deleteColumn, deleteTask } from './actions';
 
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
-  data: IBoardDetails | null;
+  data: IBoardDetails;
   searchResults: Array<ITask>;
   isSearchFocus: boolean;
 };
+
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
-  data: null,
+  data: {} as IBoardDetails,
   searchResults: [],
   isSearchFocus: false,
 };
@@ -23,9 +24,9 @@ export const boardSlice = createSlice({
   reducers: {
     searchTasks: (state, action) => {
       const search = action.payload.toLowerCase();
-      const columns = current(state.data?.columns);
+      const columns = current(state.data.columns);
 
-      const allTasks: ITask[] = columns ? columns.map((col: IColumn) => col.tasks).flat() : [];
+      const allTasks: ITask[] = columns.map((col: IColumn) => col.tasks).flat();
 
       const result: ITask[] = allTasks.filter(
         (task) =>
@@ -57,19 +58,20 @@ export const boardSlice = createSlice({
         state.error = String(action.payload);
       })
 
-      // updateColumn {
-      .addCase(updateColumn.fulfilled, () => {
-        // state.data = action.payload;
+      .addCase(createColumn.fulfilled, (state, action) => {
+        state.data = {
+          ...state.data,
+          // добавляем к колонке tasks, т.к к ответе при создании приходит без этого массива
+          columns: [...state.data.columns, { ...action.payload, tasks: [] }],
+        };
       })
-      .addCase(updateColumn.rejected, (state, action) => {
+      .addCase(createColumn.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 
       // deleteColumn
       .addCase(deleteColumn.fulfilled, (state, action) => {
-        if (state.data?.columns) {
-          state.data.columns = state.data?.columns.filter((column) => column.id !== action.payload);
-        }
+        state.data.columns = state.data.columns.filter((column) => column.id !== action.payload);
       })
       .addCase(deleteColumn.rejected, (state, action) => {
         state.error = String(action.payload);

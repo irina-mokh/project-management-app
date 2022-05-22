@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AppDispatch } from 'store';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBoard } from 'store/board/actions';
@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Card, Typography, Container, Breadcrumbs, Link } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
+import { CreateColumnModal } from 'components/Modals';
+
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
 import { Column } from 'components/Column';
@@ -20,14 +22,11 @@ export const Board = () => {
   const { id } = useParams();
 
   const { searchResults, data, isLoading, error, isSearchFocus } = useSelector(selectBoard);
-
-  let columns: IColumn[] = [];
-  if (data) {
-    columns = data.columns;
-  }
-
+  const [showModal, setShowModal] = useState(false);
+  const columns: IColumn[] = data.columns;
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+
   useEffect(() => {
     if (id) {
       dispatch(getBoard(id));
@@ -45,6 +44,9 @@ export const Board = () => {
   if (error) {
     return <>{error}</>;
   }
+
+  console.log(`params id: ${id}`);
+
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
       <h2 className="visually-hidden">Board page</h2>
@@ -103,9 +105,16 @@ export const Board = () => {
           <Column column={column} boardId={String(id)} key={column.id} />
         ))}
         <Card sx={{ minWidth: '300px', padding: '10px' }}>
-          <AddButton text="add column" />
+          <AddButton text="add column" addHandler={() => setShowModal(true)} />
         </Card>
       </List>
+
+      <CreateColumnModal
+        boardId={id}
+        isVisible={showModal}
+        setVisible={setShowModal}
+        orderIdx={columns.length}
+      />
     </Container>
   );
 };

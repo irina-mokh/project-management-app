@@ -8,15 +8,13 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createBoard } from 'store/boardList/actions';
-import { ICreateBoardRequestFields } from 'types/index';
+import { ICreateBoardFields } from 'types/index';
+import { useSearchParams } from 'react-router-dom';
 
-import { selectBoardList } from 'store/boardList/selectors';
-import { boardListSlice } from 'store/boardList/reducer';
-
-const defaultRequestValues: ICreateBoardRequestFields = {
+const defaultRequestValues: ICreateBoardFields = {
   title: '',
   description: '',
 };
@@ -28,15 +26,19 @@ const defaultErrorsValues = {
 
 export function CreateBoardModal() {
   // показ зависит от состояния глобального стора
-  const { hasModal } = useSelector(selectBoardList);
-  const { toggleModal } = boardListSlice.actions;
   const dispatch: AppDispatch = useDispatch();
 
   const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
   const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // показ зависит от queryParams. Если есть create-modal - показываем
+  const hasModal = searchParams.has('create-board');
+
+  // для закрытия удаляем query param из строки
   const handleClose = () => {
-    dispatch(toggleModal());
+    searchParams.delete('create-board');
+    setSearchParams(searchParams);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -91,6 +93,7 @@ export function CreateBoardModal() {
             name="title"
             autoFocus
             required
+            autoComplete="off"
             value={boardRequestFields.title}
             onChange={handleChange}
             margin="dense"
@@ -104,6 +107,7 @@ export function CreateBoardModal() {
             name="description"
             required
             multiline
+            autoComplete="off"
             rows="3"
             value={boardRequestFields.description}
             onChange={handleChange}
@@ -115,7 +119,7 @@ export function CreateBoardModal() {
         </DialogContent>
 
         <DialogActions>
-          <Button type="submit" color="success" size="medium" variant="contained">
+          <Button type="submit" size="medium" variant="contained">
             Submit
           </Button>
         </DialogActions>

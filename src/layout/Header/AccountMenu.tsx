@@ -101,7 +101,7 @@ export const AccountMenu = () => {
         setOpen={setConfirmOpen}
         onConfirm={() => {
           dispatch(logOut());
-          navigate(`/${routes.welcome.path}`);
+          navigate(`${routes.welcome.path}`);
         }}
       ></ConfirmDialog>
     </React.Fragment>

@@ -19,6 +19,25 @@ export const getBoard = createAsyncThunk(
   }
 );
 
+export const getAllUsers = createAsyncThunk(
+  'auth/getAllUsers',
+  async function (arg, { rejectWithValue }) {
+    const url = 'users';
+
+    try {
+      const response = await axiosClient.get(url);
+
+      if (response.status !== 200) {
+        throw new Error("Can't' fetch users");
+      }
+
+      return response.data;
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);
+
 export const createColumn = createAsyncThunk(
   'column/createColumn',
   async function ({ boardId, title }: ICreateColumnRequest, { rejectWithValue }) {

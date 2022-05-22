@@ -6,100 +6,96 @@ import {
   DialogActions,
   Button,
   TextField,
+  Select,
+  MenuItem,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { createBoard } from 'store/boardList/actions';
-import { ICreateBoardFields } from 'types/index';
-import { useSearchParams } from 'react-router-dom';
+import { createColumn } from 'store/board/actions';
+import { useParams } from 'react-router-dom';
 
-const defaultRequestValues: ICreateBoardFields = {
-  title: '',
-  description: '',
-};
+interface ICreateColumn {
+  isVisible: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  columnId: string | undefined;
+}
 
-const defaultErrorsValues = {
-  title: false,
-  description: false,
-};
+/*
+Что должно быть в таске? 
+Пользователь(член команды) может ставить задачи, выполнять задачи, просматривать задачи, удалять собственные задачи, быть ответственным (виноватым) в чужих задачах.
 
-export function TaskModal() {
-  // показ зависит от состояния глобального стора
+Для создания таска используется форма отображаемая в модальном окне.
+Для создания колонки / таска используются формы, отображаемые в модальных окнах. 3 балла
+Реализован функционал просмотра, и редактирования всего содержимого таски. 3 балла
+
+Таск не может быть НЕ привязан к колонке.
+
+POST
+{
+  "title": "Task: pet the cat",
+  "description": "Domestic cat needs to be stroked gently",
+  "userId": "40af606c-c0bb-47d1-bc20-a2857242cde3"
+}
+*/
+
+export function TaskModal({ isVisible, setVisible, columnId }: ICreateColumn) {
   const dispatch: AppDispatch = useDispatch();
 
-  const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
-  const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { id } = useParams();
 
-  // показ зависит от queryParams. Если есть create-modal - показываем
-  const hasModal = searchParams.has('create-board');
+  console.log(id);
 
-  // для закрытия удаляем query param из строки
+  const [title, setTitle] = useState('');
+  const [hasErrors, setHasErrors] = useState(false);
+  const [responsible, setResponsible] = useState('');
+
   const handleClose = () => {
-    searchParams.delete('create-board');
-    setSearchParams(searchParams);
+    setVisible(false);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (hasErrors.title || hasErrors.description) return;
+    if (hasErrors) return;
 
-    const { title, description } = boardRequestFields;
-
-    //отправляем POST запрос с созданием доски
+    //отправляем POST запрос с созданием колонки
     dispatch(
-      createBoard({
-        title: title.trim(),
-        description: description.trim(),
+      createColumn({
+        boardId: columnId || '', // ругается что в useParams может быть undefined, из-за этого приходится использовать так
+        title: title,
       })
     );
 
-    // возвращаем дефолтные значения (reset)
-    setBoardRequestFields(defaultRequestValues);
-
-    // закрываем окошко
+    // обнуляем строку с именем и закрываем окошко
+    setTitle('');
     handleClose();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    const { value, name } = target;
+    const value = (event.target as HTMLInputElement).value;
 
-    // смотрим, откуда получили значения и выставляем значения
-    setBoardRequestFields({
-      title: name == 'title' ? value : boardRequestFields.title,
-      description: name == 'description' ? value : boardRequestFields.description,
-    });
+    setTitle(value);
+    setHasErrors(value.trim().length > 0 && value.trim().length < 3 ? true : false);
   };
 
-  // валидация значений
-  useEffect(() => {
-    // в самих компонентах ошибки показываем только если пользователь что-то ввёл в это поле
-    setHasErrors({
-      title: boardRequestFields.title.trim().length < 3,
-      description: boardRequestFields.description.trim().length < 3,
-    });
-  }, [boardRequestFields]);
-
   return (
-    <Dialog open={hasModal} onClose={handleClose} maxWidth="sm" fullWidth={true}>
+    <Dialog open={isVisible} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Create new board</DialogTitle>
+        <DialogTitle>Create task</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Add name</DialogContentText>
+          <DialogContentText>Set title</DialogContentText>
           <TextField
             name="title"
             autoFocus
             required
             autoComplete="off"
-            value={boardRequestFields.title}
+            value={title}
             onChange={handleChange}
             margin="dense"
             fullWidth
             variant="standard"
-            error={hasErrors.title && boardRequestFields.title.length > 0}
+            error={hasErrors}
           ></TextField>
 
           <DialogContentText>Add description</DialogContentText>
@@ -109,18 +105,29 @@ export function TaskModal() {
             multiline
             autoComplete="off"
             rows="3"
-            value={boardRequestFields.description}
+            value={'description'}
             onChange={handleChange}
             margin="dense"
             fullWidth
             variant="standard"
-            error={hasErrors.description && boardRequestFields.description.length > 0}
+            error={hasErrors}
           ></TextField>
+
+          <DialogContent>Add responsible</DialogContent>
+
+          <Select
+            value={responsible}
+            onChange={() => setResponsible((event?.target as HTMLSelectElement).value)}
+          >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
         </DialogContent>
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            Submit
+            Create task
           </Button>
         </DialogActions>
       </form>

@@ -1,3 +1,9 @@
+export interface IUser {
+  id: string;
+  name: string;
+  login: string;
+}
+
 export interface NewUserType {
   name: null | string;
   login: null | string;

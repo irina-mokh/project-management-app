@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IBoardDetails, ITask } from 'types';
+import { IBoardDetails, IUser, ITask } from 'types';
 import {
   getBoard,
+  getAllUsers,
   createColumn,
   updateColumn,
   deleteColumn,
@@ -18,12 +19,14 @@ type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
+  usersList: Array<IUser>;
 };
 
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
   data: {} as IBoardDetails,
+  usersList: [] as Array<IUser>,
 };
 
 export const boardSlice = createSlice({
@@ -43,6 +46,14 @@ export const boardSlice = createSlice({
       })
       .addCase(getBoard.rejected, (state, action) => {
         state.error = String(action.payload);
+      })
+
+      // getAllUsers
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.usersList = action.payload;
+      })
+      .addCase(getAllUsers.rejected, () => {
+        console.error('Something went wrong while fetching getAllUsers endpoint :( ');
       })
 
       // createColumn

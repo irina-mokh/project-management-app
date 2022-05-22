@@ -53,6 +53,7 @@ export const signInUser = createAsyncThunk(
     }
   }
 );
+
 export const getUserPersData = createAsyncThunk(
   'auth/getUserId',
   async function (login: null | string, { rejectWithValue }) {

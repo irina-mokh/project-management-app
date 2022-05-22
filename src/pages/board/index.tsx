@@ -39,8 +39,6 @@ export const Board = () => {
     return <>{error}</>;
   }
 
-  console.log(`params id: ${id}`);
-
   return (
     <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
       <h2 className="visually-hidden">Board page</h2>

@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { updateColumn, deleteColumn } from 'store/board/actions';
 import { DeleteButton } from 'components/DeleteButton';
 import { Task } from 'components/Task';
+import { TaskModal } from 'components/Modals';
 
 interface IColumnProps {
   column: IColumn;
@@ -20,6 +21,7 @@ export const Column = (props: IColumnProps) => {
   const [curTitle, setCurTitle] = useState(column.title);
   const [curOrder] = useState(column.order);
   const [isSelected, setIsSelected] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleTitleChangeCancel = () => {
     setCurTitle(column.title);
@@ -85,13 +87,15 @@ export const Column = (props: IColumnProps) => {
         {column.tasks.map((task: ITask) => (
           <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
-        <AddButton text="add task" addHandler={() => console.log('clicked')} />
+        <AddButton text="add task" addHandler={() => setShowModal(true)} />
       </List>
       <DeleteButton
         // size="small"
         confirmText="Delete a column?"
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
+
+      <TaskModal columnId={column.id} isVisible={showModal} setVisible={setShowModal} />
     </Card>
   );
 };

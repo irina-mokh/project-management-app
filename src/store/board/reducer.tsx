@@ -21,13 +21,13 @@ export const boardSlice = createSlice({
       const { dragIndex, hoverIndex } = action.payload;
       if (state.data) {
         const columns = state.data.columns;
-        const dragColumn = columns[dragIndex];
-        columns.splice(dragIndex, 1);
-        columns.splice(hoverIndex, 0, dragColumn);
+        const dragColumn = columns[dragIndex - 1];
+        columns.splice(dragIndex - 1, 1);
+        columns.splice(hoverIndex - 1, 0, dragColumn);
 
         columns.forEach(async (column, i) => {
           // set state column order
-          column.order = i;
+          column.order = i + 1;
         });
       }
     },

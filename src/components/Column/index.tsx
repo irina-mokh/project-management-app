@@ -20,11 +20,6 @@ interface IColumnProps {
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
   const { boardId, column } = props;
-  // const { data } = useSelector(selectBoard);
-  // let columns: IColumn[] = [];
-  // if (data) {
-  //   columns = data.columns;
-  // }
 
   const [curTitle, setCurTitle] = useState(column.title);
   const [curOrder] = useState(column.order);
@@ -44,18 +39,8 @@ export const Column = (props: IColumnProps) => {
       drop: async (item: IColumn) => {
         const dragIndex = item.order;
         const hoverIndex = props.column.order;
-        console.log(dragIndex, hoverIndex);
         dispatch(moveColumn({ dragIndex, hoverIndex }));
         await updateColumn(boardId, item.id, hoverIndex, item.title);
-
-        // columns.forEach(async (column: IColumn, i: number) => {
-        //   if (data) {
-        //     // set temporary unique orders
-        //     await updateColumn(data.id, column.id, i + columns.length, column.title);
-        //     // set correct order from 0
-        //     await updateColumn(data.id, column.id, i, column.title);
-        //   }
-        // });
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),

@@ -85,7 +85,7 @@ export const Column = (props: IColumnProps) => {
         {column.tasks.map((task: ITask) => (
           <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
-        <AddButton text="add task" />
+        <AddButton text="add task" addHandler={() => console.log('clicked')} />
       </List>
       <DeleteButton
         // size="small"

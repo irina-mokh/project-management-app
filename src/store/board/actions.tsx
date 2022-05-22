@@ -2,7 +2,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { axiosClient } from 'utils/axios';
-import { ICreateColumnRequest } from 'types';
+import { ICreateColumnRequest, ICreateTask } from 'types';
 
 export const getBoard = createAsyncThunk(
   'board/getBoard',
@@ -19,13 +19,11 @@ export const getBoard = createAsyncThunk(
   }
 );
 
-// !!! добавляю в board т.к мне по идее нужен доступ к board store при работе с колонкой и колонка непосредственно связана с доской -> создаётся в ней
-// Если что - напиши, обсудим
 export const createColumn = createAsyncThunk(
   'column/createColumn',
-  async function ({ boardId, requestBody }: ICreateColumnRequest, { rejectWithValue }) {
+  async function ({ boardId, title }: ICreateColumnRequest, { rejectWithValue }) {
     try {
-      const response = await axiosClient.post(`boards/${boardId}/columns`, requestBody);
+      const response = await axiosClient.post(`boards/${boardId}/columns`, { title });
       if (response.status !== 201) {
         throw new Error('Error');
       }
@@ -64,6 +62,40 @@ export const deleteColumn = createAsyncThunk(
       await axiosClient.delete(`boards/${boardId}/columns/${columnId}`);
 
       return columnId;
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);
+
+type ICreateTaskArgs = {
+  url: { boardId: string; columnId: string };
+  data: ICreateTask;
+};
+
+// createTask
+export const createTask = createAsyncThunk(
+  'board/createTask',
+  async function ({ url, data }: ICreateTaskArgs, { rejectWithValue }) {
+    const { boardId, columnId } = url;
+    try {
+      const response = await axiosClient.post(`boards/${boardId}/columns/${columnId}/tasks`, data);
+
+      if (response.status != 201) {
+        throw new Error();
+      }
+
+      /*
+      {
+        "id": "e21ef376-eef6-45ca-9d3c-dfa19944429c",
+        "title": "Task: pet the cat --- ",
+        "description": "Domestic cat needs to be stroked gently",
+        "userId": "5d83b5e1-d725-41e4-af79-51a6df6d4e26"
+      }
+      */
+
+      console.log(response.data.json());
+      return response.data.json();
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);
     }

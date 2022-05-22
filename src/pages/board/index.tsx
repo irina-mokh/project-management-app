@@ -65,12 +65,7 @@ export const Board = () => {
         </Card>
       </List>
 
-      <CreateColumnModal
-        boardId={id}
-        isVisible={showModal}
-        setVisible={setShowModal}
-        orderIdx={columns.length}
-      />
+      <CreateColumnModal boardId={id} isVisible={showModal} setVisible={setShowModal} />
     </Container>
   );
 };

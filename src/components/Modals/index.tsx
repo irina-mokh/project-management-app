@@ -1,4 +1,5 @@
 import { CreateBoardModal } from './createBoardModal';
 import { CreateColumnModal } from './createColumnModal';
+import { TaskModal } from './taskModal';
 
-export { CreateBoardModal, CreateColumnModal };
+export { TaskModal, CreateBoardModal, CreateColumnModal };

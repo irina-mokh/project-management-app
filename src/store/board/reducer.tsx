@@ -1,6 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IBoardDetails } from 'types';
-import { getBoard, createColumn, updateColumn, deleteColumn, deleteTask } from './actions';
+import { IBoardDetails, ITask } from 'types';
+import {
+  getBoard,
+  createColumn,
+  updateColumn,
+  deleteColumn,
+  createTask,
+  deleteTask,
+} from './actions';
+
+type ICreateTaskArgs = {
+  columnId: string;
+  taskDetails: ITask;
+};
 
 type IBoardState = {
   isLoading: boolean;
@@ -33,6 +45,7 @@ export const boardSlice = createSlice({
         state.error = String(action.payload);
       })
 
+      // createColumn
       .addCase(createColumn.fulfilled, (state, action) => {
         state.data = {
           ...state.data,
@@ -59,6 +72,23 @@ export const boardSlice = createSlice({
         }
       })
       .addCase(deleteColumn.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // createTask
+      .addCase(createTask.fulfilled, (state, action) => {
+        const { columnId, taskDetails } = action.payload as ICreateTaskArgs;
+        // создаём копию массива из state
+        const columns = Array.from(state.data.columns);
+
+        // в копию массива добавляем новый таск
+        const updatedColumn = columns.find((column) => column.id === columnId);
+        updatedColumn?.tasks.push(taskDetails);
+
+        // присваиваем копию массива в state.columns
+        state.data.columns = columns;
+      })
+      .addCase(createTask.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 

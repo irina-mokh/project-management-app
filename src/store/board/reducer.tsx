@@ -42,6 +42,20 @@ export const boardSlice = createSlice({
       state.isSearchFocus = action.payload;
       state.searchResults = [];
     },
+    moveColumn: (state, action) => {
+      const { dragIndex, hoverIndex } = action.payload;
+      if (state.data) {
+        const columns = state.data.columns;
+        const dragColumn = columns[dragIndex - 1];
+        columns.splice(dragIndex - 1, 1);
+        columns.splice(hoverIndex - 1, 0, dragColumn);
+
+        columns.forEach(async (column, i) => {
+          // set state column order
+          column.order = i + 1;
+        });
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -51,7 +65,14 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
+        const sortedColumns = action.payload.columns.sort(
+          (a: IColumn, b: IColumn) => a.order - b.order
+        );
+
         state.data = action.payload;
+        if (state.data?.columns) {
+          state.data.columns = sortedColumns;
+        }
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
@@ -92,6 +113,6 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { clearTasksSearch, searchTasks, toggleSearchFocus } = boardSlice.actions;
+export const { moveColumn, clearTasksSearch, searchTasks, toggleSearchFocus } = boardSlice.actions;
 
 export default boardSlice.reducer;

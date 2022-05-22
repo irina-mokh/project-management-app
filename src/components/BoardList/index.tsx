@@ -20,8 +20,8 @@ import { IBoard } from 'types';
 import { useSearchParams } from 'react-router-dom';
 
 export const BoardList = () => {
-  console.log('render board list');
   const { isLoading, error, boardsOnClient } = useSelector(selectBoardList);
+
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
 

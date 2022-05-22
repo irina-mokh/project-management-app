@@ -38,3 +38,20 @@ axiosClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const updateColumn = async (
+  boardId: string,
+  columnId: string,
+  order: number,
+  title: string
+) => {
+  console.log(`update column: ${order}`);
+  try {
+    await axiosClient.put(`boards/${boardId}/columns/${columnId}`, {
+      title: title,
+      order: order,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};

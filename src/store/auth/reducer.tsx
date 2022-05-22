@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { routes } from 'routes';
+import { createSlice } from '@reduxjs/toolkit';
 import { createUser, deleteUser, editUser, getUserPersData, signInUser } from './actions';
 
 export type IAuthState = {
@@ -10,7 +9,8 @@ export type IAuthState = {
   error: null | string;
   isLoading: boolean;
   token: null | string;
-  isConfirmOpen: boolean;
+  editSuccess: boolean;
+  deleteSuccess: boolean;
 };
 const initialState: IAuthState = {
   userName: null,
@@ -20,23 +20,25 @@ const initialState: IAuthState = {
   error: null,
   isLoading: false,
   token: null,
-  isConfirmOpen: false,
+  editSuccess: false,
+  deleteSuccess: false,
 };
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    remError: (state) => {
+    removeError: (state) => {
       state.error = null;
-    },
-    setConfirmOpen: (state, action: PayloadAction<boolean>) => {
-      state.isConfirmOpen = action.payload;
     },
     logOut: (state) => {
       state.login = null;
       state.token = null;
       state.userId = null;
+    },
+    removeSnackState: (state) => {
+      state.editSuccess = false;
+      state.deleteSuccess = false;
     },
   },
   extraReducers: (builder) => {
@@ -62,7 +64,7 @@ export const authSlice = createSlice({
         state.login = action.payload.login;
         state.isLoading = false;
         state.userPassword = action.payload.password;
-        window.location.href = `/${routes.main.path}`;
+        state.error = null;
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -71,18 +73,17 @@ export const authSlice = createSlice({
       .addCase(getUserPersData.fulfilled, (state, action) => {
         state.userId = action.payload.userId;
         state.userName = action.payload.userName;
-        console.log('action1', action.payload);
+        console.log('action1-getUserPersData', action.payload);
       })
       .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;
       })
-      .addCase(deleteUser.fulfilled, (state, action) => {
+      .addCase(deleteUser.fulfilled, (state) => {
         state.userId = null;
         state.userName = null;
         state.token = null;
         state.login = null;
-        window.location.href = `${routes.welcome.path}`;
-        console.log('action2', action.payload);
+        state.deleteSuccess = true;
       })
       .addCase(deleteUser.rejected, (state) => {
         state.isLoading = false;
@@ -92,6 +93,9 @@ export const authSlice = createSlice({
       })
       .addCase(editUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.userName = action.payload.name;
+        state.login = action.payload.login;
+        state.editSuccess = true;
         console.log('actionEdit', action.payload);
       })
       .addCase(editUser.rejected, (state) => {
@@ -100,6 +104,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { remError, setConfirmOpen, logOut } = authSlice.actions;
+export const { removeError, removeSnackState, logOut } = authSlice.actions;
 
 export default authSlice.reducer;

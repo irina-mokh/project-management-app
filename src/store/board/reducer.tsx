@@ -63,6 +63,7 @@ export const boardSlice = createSlice({
         if (state.data?.columns) {
           state.data.columns = sortedColumns;
         }
+
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {

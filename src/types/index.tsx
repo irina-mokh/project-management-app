@@ -25,7 +25,7 @@ export interface IBoard {
 }
 
 export interface IBoardDetails extends IBoard {
-  columns: IColumn[];
+  columns: Array<IColumn>;
 }
 
 export interface IColumn {

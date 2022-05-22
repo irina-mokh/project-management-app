@@ -92,6 +92,7 @@ export const Column = (props: IColumnProps) => {
   ) : (
     <Edit aria-label="edit" color="disabled" sx={{ width: '0.8em', height: '0.8em' }} />
   );
+
   return (
     <Card
       component="li"

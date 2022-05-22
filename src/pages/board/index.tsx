@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppDispatch } from 'store';
 import { useParams } from 'react-router-dom';
-import { getBoard } from 'store/board/actions';
+import { getBoard, getAllUsers } from 'store/board/actions';
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,12 +18,19 @@ export const Board = () => {
   useTitle(routes.board.title);
   const { id } = useParams();
 
+  console.log(id);
+
   const [showModal, setShowModal] = useState(false);
 
   const { data, isLoading, error } = useSelector(selectBoard);
   const columns: IColumn[] = data ? data.columns : [];
 
   const dispatch: AppDispatch = useDispatch();
+
+  // обновляем список доступных пользователей при загрузке доски
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {

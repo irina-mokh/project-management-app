@@ -7,15 +7,17 @@ import {
   Button,
   TextField,
   Select,
+  SelectChangeEvent,
   MenuItem,
 } from '@mui/material';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'store';
-import { createColumn } from 'store/board/actions';
+import { createTask } from 'store/board/actions';
+import { selectBoard } from 'store/board/selectors';
 import { useParams } from 'react-router-dom';
 
-interface ICreateColumn {
+interface ICreateTask {
   isVisible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   columnId: string | undefined;
@@ -39,16 +41,28 @@ POST
 }
 */
 
-export function TaskModal({ isVisible, setVisible, columnId }: ICreateColumn) {
+export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
   const dispatch: AppDispatch = useDispatch();
+  const usersList = useSelector(selectBoard).usersList;
+
+  const useresListElement = usersList.map(function (user, idx) {
+    return (
+      <MenuItem value={user.id} key={idx}>
+        {user.name}
+      </MenuItem>
+    );
+  });
 
   const { id } = useParams();
 
-  console.log(id);
-
   const [title, setTitle] = useState('');
-  const [hasErrors, setHasErrors] = useState(false);
+  const [description, setDescription] = useState('');
   const [responsible, setResponsible] = useState('');
+  const [hasSelectError, setHasSelectError] = useState(false);
+  const [hasErrors, setHasErrors] = useState({
+    title: true,
+    description: true,
+  });
 
   const handleClose = () => {
     setVisible(false);
@@ -56,27 +70,48 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateColumn) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (hasErrors) return;
+    if (hasErrors.title || hasErrors.description) return;
+
+    if (responsible == '') {
+      setHasSelectError(true);
+      return;
+    }
 
     //отправляем POST запрос с созданием колонки
     dispatch(
-      createColumn({
-        boardId: columnId || '', // ругается что в useParams может быть undefined, из-за этого приходится использовать так
-        title: title,
+      createTask({
+        url: {
+          boardId: id || '',
+          columnId: columnId || '',
+        },
+        data: {
+          title: title,
+          description: description,
+          userId: responsible,
+        },
       })
     );
 
     // обнуляем строку с именем и закрываем окошко
     setTitle('');
+    setDescription('');
+    setResponsible('');
     handleClose();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = (event.target as HTMLInputElement).value;
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
 
-    setTitle(value);
-    setHasErrors(value.trim().length > 0 && value.trim().length < 3 ? true : false);
+    target.name == 'title' ? setTitle(value) : setDescription(value);
   };
+
+  useEffect(() => {
+    setHasErrors({
+      title: title.trim().length < 3 ? true : false,
+      description: description.trim().length < 3 ? true : false,
+    });
+  }, [title, description]);
 
   return (
     <Dialog open={isVisible} onClose={handleClose} maxWidth="sm" fullWidth={true}>
@@ -95,33 +130,38 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateColumn) {
             margin="dense"
             fullWidth
             variant="standard"
-            error={hasErrors}
+            error={title.length > 0 && hasErrors.title}
           ></TextField>
 
-          <DialogContentText>Add description</DialogContentText>
+          <DialogContentText sx={{ mt: 2 }}>Add description</DialogContentText>
           <TextField
             name="description"
             required
             multiline
             autoComplete="off"
             rows="3"
-            value={'description'}
+            value={description}
             onChange={handleChange}
             margin="dense"
             fullWidth
             variant="standard"
-            error={hasErrors}
+            error={description.length > 0 && hasErrors.description}
           ></TextField>
 
-          <DialogContent>Add responsible</DialogContent>
-
+          <DialogContentText sx={{ mt: 2, mb: 2 }}>Add responsible</DialogContentText>
           <Select
+            sx={{ minWidth: 120 }}
+            error={hasSelectError}
             value={responsible}
-            onChange={() => setResponsible((event?.target as HTMLSelectElement).value)}
+            displayEmpty
+            variant="standard"
+            renderValue={responsible !== '' ? undefined : () => <MenuItem>Select</MenuItem>}
+            onChange={(event: SelectChangeEvent) => {
+              setResponsible(event.target.value as string);
+              setHasSelectError(false);
+            }}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {useresListElement}
           </Select>
         </DialogContent>
 

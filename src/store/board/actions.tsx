@@ -4,6 +4,11 @@ import { AxiosError } from 'axios';
 import { axiosClient } from 'utils/axios';
 import { ICreateColumnRequest, ICreateTask } from 'types';
 
+type ICreateTaskArgs = {
+  url: { boardId: string; columnId: string };
+  data: ICreateTask;
+};
+
 export const getBoard = createAsyncThunk(
   'board/getBoard',
   async function (id: string, { rejectWithValue }) {
@@ -12,6 +17,10 @@ export const getBoard = createAsyncThunk(
       if (response.statusText !== 'OK') {
         throw new Error('Error');
       }
+
+      console.log('recived from BE');
+      console.log(response);
+
       return response.data;
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);
@@ -66,11 +75,6 @@ export const deleteColumn = createAsyncThunk(
   }
 );
 
-type ICreateTaskArgs = {
-  url: { boardId: string; columnId: string };
-  data: ICreateTask;
-};
-
 // createTask
 export const createTask = createAsyncThunk(
   'board/createTask',
@@ -92,8 +96,8 @@ export const createTask = createAsyncThunk(
       }
       */
 
-      console.log(response.data.json());
-      return response.data.json();
+      console.log(response.data);
+      return { columnId: columnId, taskDetails: response.data };
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);
     }

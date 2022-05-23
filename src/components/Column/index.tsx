@@ -4,7 +4,6 @@ import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
 import React, { useState, useRef, MutableRefObject } from 'react';
-// import { selectBoard } from 'store/board/selectors';
 import { useDispatch } from 'react-redux';
 import { moveColumn } from 'store/board/reducer';
 import { deleteColumn } from 'store/board/actions';
@@ -30,10 +29,11 @@ export const Column = (props: IColumnProps) => {
   };
 
   // ref for DnD
-  const ref = useRef() as MutableRefObject<HTMLDivElement>;
+  const colRef = useRef() as MutableRefObject<HTMLDivElement>;
+  // const taskRef = useRef() as MutableRefObject<HTMLDivElement>;
 
-  // Drop
-  const [{ isOver, canDrop }, drop] = useDrop(
+  // Drop column
+  const [{ isOver, canDrop }, dropCol] = useDrop(
     () => ({
       accept: 'column',
       drop: async (item: IColumn) => {
@@ -50,8 +50,8 @@ export const Column = (props: IColumnProps) => {
     [props]
   );
 
-  // Drag
-  const [{ isDragging }, drag] = useDrag(
+  // Drag column
+  const [{ isDragging }, dragCol] = useDrag(
     () => ({
       type: 'column',
       item: column,
@@ -61,8 +61,18 @@ export const Column = (props: IColumnProps) => {
     }),
     [column]
   );
+  // column ref
+  dragCol(dropCol(colRef));
 
-  drag(drop(ref));
+  // Drop task
+  // const [, dropTask] = useDrop(
+  //   () => ({
+  //     accept: 'task',
+  //     drop: async (item: ITask, monitor) => {},
+  //     collect: () => ({}),
+  //   }),
+  //   [props]
+  // );
 
   const opacity = isDragging ? 0.5 : 1;
 
@@ -93,8 +103,9 @@ export const Column = (props: IColumnProps) => {
   return (
     <Card
       component="li"
-      ref={ref}
-      style={{
+      ref={colRef}
+      sx={{
+        order: `${column.order}`,
         marginRight: '1rem',
         height: '100%',
         minWidth: '300px',
@@ -119,7 +130,10 @@ export const Column = (props: IColumnProps) => {
         }}
       />
       <List
+        // ref={dropTask}
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
           height: '90%',
           overflowY: 'scroll',
           padding: '0 10px 0 0',
@@ -127,10 +141,12 @@ export const Column = (props: IColumnProps) => {
             width: 7,
           },
           '&::-webkit-scrollbar-track': {
-            backgroundColor: '#7b9c8480',
+            backgroundColor: 'transparent',
+            border: '1px solid #bdbdbd4D',
+            borderRadius: 2,
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: 'gray',
+            backgroundColor: '#bdbdbdCC',
             borderRadius: 2,
           },
         }}
@@ -138,7 +154,7 @@ export const Column = (props: IColumnProps) => {
         {column.tasks.map((task: ITask) => (
           <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
-        <AddButton text="add task" />
+        <AddButton text="add task" order={column.tasks.length + 1} />
       </List>
       <DeleteButton
         // size="small"

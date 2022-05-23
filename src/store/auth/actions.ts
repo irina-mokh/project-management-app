@@ -69,7 +69,7 @@ export const getUserPersData = createAsyncThunk(
         userId: arrUser[0].id,
         userName: arrUser[0].name,
       };
-      console.log('aa', arrUser);
+      // console.log('aa', arrUser);
       return persData;
     } catch (err) {
       /*let errorMessage;

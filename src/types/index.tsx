@@ -32,7 +32,6 @@ export interface ITask {
   id: string;
   title: string;
   order: number;
-  done: boolean;
   description: string;
   userId: string;
   files?: [
@@ -41,6 +40,15 @@ export interface ITask {
       fileSize: number;
     }
   ];
+}
+
+export interface ITaskPut {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  boardId: string;
+  columnId: string;
 }
 
 export interface ICreateBoardRequestFields {

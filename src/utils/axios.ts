@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ITaskPut } from 'types';
 
 export const axiosClient = axios.create({
   baseURL: 'https://thawing-spire-17017.herokuapp.com/',
@@ -45,12 +46,39 @@ export const updateColumn = async (
   order: number,
   title: string
 ) => {
-  console.log(`update column: ${order}`);
   try {
     await axiosClient.put(`boards/${boardId}/columns/${columnId}`, {
       title: title,
       order: order,
     });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getTask = async (boardId: string, columnId: string, taskId: string) => {
+  try {
+    const response = await axiosClient.get(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getColumn = async (boardId: string, columnId: string) => {
+  try {
+    const response = await axiosClient.get(`boards/${boardId}/columns/${columnId}`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateTask = async (task: ITaskPut, taskId: string) => {
+  console.log(`update task: ${task}`);
+  const { boardId, columnId } = task;
+  try {
+    await axiosClient.put(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`, task);
   } catch (err) {
     console.log(err);
   }

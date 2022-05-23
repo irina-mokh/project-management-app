@@ -17,10 +17,7 @@ export const Board = () => {
   const { id } = useParams();
 
   const { data, isLoading, error } = useSelector(selectBoard);
-  let columns: IColumn[] = [];
-  if (data) {
-    columns = data.columns;
-  }
+  const columns: IColumn[] = data.columns;
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     if (id) {
@@ -36,7 +33,7 @@ export const Board = () => {
     return <>{error}</>;
   }
   return (
-    <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
+    <Container sx={{ width: '98vw', height: '83vh', padding: '5px' }}>
       <h2 className="visually-hidden">Board page</h2>
       <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '5px 0' }}>
         <Link underline="hover" color="inherit" href="/">
@@ -50,11 +47,30 @@ export const Board = () => {
       <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '10px 0 5px 0' }}>
         {data?.title}
       </Typography>
-      <List sx={{ width: '100%', height: '90%', display: 'flex' }}>
+      <List
+        sx={{
+          width: '100%',
+          height: '90%',
+          display: 'flex',
+          overflowX: 'scroll',
+          '&::-webkit-scrollbar': {
+            width: 7,
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'transparent',
+            border: '1px solid #bdbdbd4D',
+            borderRadius: 2,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#bdbdbdCC',
+            borderRadius: 2,
+          },
+        }}
+      >
         {columns.map((column: IColumn) => (
           <Column column={column} boardId={String(id)} key={column.id} />
         ))}
-        <Card sx={{ minWidth: '300px', padding: '10px' }}>
+        <Card sx={{ order: `${columns.length + 1}`, minWidth: '250px', padding: '10px' }}>
           <AddButton text="add column" />
         </Card>
       </List>

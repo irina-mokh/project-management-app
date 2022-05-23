@@ -30,27 +30,25 @@ export const Task = (props: ITaskProps) => {
         const dragIndex = item.order;
         const dropIndex = task.order;
         // ?? get drag column order
-        const dragTaskDetails = await getTask(boardId, columnId, item.id);
         const dragColumnDetails = await getColumn(boardId, columnId);
-
         const dragColumnIndex = dragColumnDetails.order;
 
         // ?? get drop column Id and order
         // wrong column id
         const dropTaskDetails = await getTask(boardId, columnId, task.id);
         const dropColumnId = dropTaskDetails.columnId;
-        const dropColumnDetails = await getColumn(boardId, dropTaskDetails.columnId);
+        const dropColumnDetails = await getColumn(boardId, columnId);
 
         const dropColumnIndex = dropColumnDetails.order;
 
         dispatch(moveTask({ dragIndex, dropIndex, dragColumnIndex, dropColumnIndex }));
 
         const newTask = {
-          title: dragTaskDetails.title,
+          title: item.title,
           order: dropIndex,
-          description: dragTaskDetails.description,
-          userId: dragTaskDetails.userId,
-          boardId: dragTaskDetails.boardId,
+          description: item.description,
+          userId: item.userId,
+          boardId: boardId,
           columnId: dropColumnId,
         };
         await updateTask(newTask, item.id);

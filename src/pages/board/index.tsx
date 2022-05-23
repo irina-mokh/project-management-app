@@ -13,6 +13,7 @@ import { CreateColumnModal } from 'components/Modals';
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
 import { Column } from 'components/Column';
+import { useTranslation } from 'react-i18next';
 
 export const Board = () => {
   useTitle(routes.board.title);
@@ -24,6 +25,8 @@ export const Board = () => {
   const columns: IColumn[] = data ? data.columns : [];
 
   const dispatch: AppDispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (id) {
@@ -46,12 +49,12 @@ export const Board = () => {
       <h2 className="visually-hidden">Board page</h2>
       <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '5px 0' }}>
         <Link underline="hover" color="inherit" href="/">
-          Home
+          {t('homePage')}
         </Link>
         <Link underline="hover" color="inherit" href="/boards">
-          Boards
+          {t('boardsPage')}
         </Link>
-        <Typography color="text.primary">{`Board: ${data?.title}`}</Typography>
+        <Typography color="text.primary">{`${t('board')}: ${data?.title}`}</Typography>
       </Breadcrumbs>
       <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '10px 0 5px 0' }}>
         {data?.title}
@@ -61,7 +64,7 @@ export const Board = () => {
           <Column column={column} boardId={String(id)} key={column.id} />
         ))}
         <Card sx={{ minWidth: '300px', padding: '10px' }}>
-          <AddButton text="add column" addHandler={() => setShowModal(true)} />
+          <AddButton text={t('addNewColumn')} addHandler={() => setShowModal(true)} />
         </Card>
       </List>
 

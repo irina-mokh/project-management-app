@@ -123,7 +123,7 @@ export function CreateBoardModal() {
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            {t('submit')}
+            {t('createNewBoard')}
           </Button>
         </DialogActions>
       </form>

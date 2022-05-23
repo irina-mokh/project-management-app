@@ -4,6 +4,7 @@ import { ITask } from 'types';
 import { useDispatch } from 'react-redux';
 import { deleteTask } from 'store/board/actions';
 import { AppDispatch } from 'store';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskProps {
   columnId: string;
@@ -13,6 +14,7 @@ interface ITaskProps {
 export const Task = (props: ITaskProps) => {
   const dispatch: AppDispatch = useDispatch();
   const { task, columnId, boardId } = props;
+  const { t } = useTranslation();
   return (
     <Paper
       component="li"
@@ -25,7 +27,7 @@ export const Task = (props: ITaskProps) => {
       <Typography variant="h5">{task.title}</Typography>
       <Typography>{task.description}</Typography>
       <DeleteButton
-        confirmText="Delete a task?"
+        confirmText={t('deleteTask')}
         deleteHandler={() => dispatch(deleteTask([boardId, columnId, task.id]))}
       />
     </Paper>

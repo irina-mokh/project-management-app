@@ -97,7 +97,7 @@ export const BoardList = () => {
       }}
     >
       {data?.length && boards}
-      <AddButton text="add board" addHandler={addBoardHandler} />
+      <AddButton text={t('addBoard')} addHandler={addBoardHandler} />
     </List>
   );
 };

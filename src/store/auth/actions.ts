@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { CurUserType, NewUserType } from 'types';
 import { axiosClient } from 'utils/axios';
+import i18n from 'utils/translation/i18n';
 
 export const createUser = createAsyncThunk(
   'auth/createUser',
@@ -11,16 +12,16 @@ export const createUser = createAsyncThunk(
     try {
       const response = await axiosClient.post(url, user);
       if (response.status !== 201) {
-        throw new Error('Error');
+        throw new Error(i18n.t('error'));
       } else {
         return response.data;
       }
     } catch (err) {
       let errorMessage;
       if ((err as AxiosError).response?.status === 400) {
-        errorMessage = 'Fill fields to sign up';
+        errorMessage = i18n.t('errorUnfilled');
       } else if ((err as AxiosError).response?.status === 409) {
-        errorMessage = 'User login already exists!';
+        errorMessage = i18n.t('errorUserExist');
       }
       console.log('Something went wrong ->', errorMessage);
       return rejectWithValue(errorMessage);
@@ -46,9 +47,9 @@ export const signInUser = createAsyncThunk(
     } catch (err) {
       let errorMessage;
       if ((err as AxiosError).response?.status === 400) {
-        errorMessage = 'Fill fields to sign in';
+        errorMessage = i18n.t('errorUnfilled');
       } else if ((err as AxiosError).response?.status === 403) {
-        errorMessage = 'User with such login/password was not found';
+        errorMessage = i18n.t('errorUserNotFound');
       }
       console.log('Something went wrong while signin->', errorMessage);
       return rejectWithValue(errorMessage);
@@ -72,15 +73,8 @@ export const getUserPersData = createAsyncThunk(
         userId: arrUser[0].id,
         userName: arrUser[0].name,
       };
-      console.log('aa', arrUser);
       return persData;
     } catch (err) {
-      /*let errorMessage;
-      if ((err as AxiosError).response?.status === 400) {
-        errorMessage = 'Fill fields to sign in';
-      } else if ((err as AxiosError).response?.status === 403) {
-        errorMessage = 'User with such login/password was not found';
-      }*/
       console.log('Something went wrong while getting userData->', err as AxiosError);
       return rejectWithValue(err as AxiosError);
     }
@@ -96,15 +90,12 @@ export const deleteUser = createAsyncThunk(
       if (response.status !== 204) {
         throw new Error('Error');
       }
-      console.log('nansn', response);
       return response.data;
     } catch (err) {
       let errorMessage;
       if ((err as AxiosError).response?.status === 404) {
-        errorMessage = 'User was not found';
-      } /*else if ((err as AxiosError).response?.status === 403) {
-        errorMessage = 'User with such login/password was not found';
-      }*/
+        errorMessage = i18n.t('errorUserNotFound');
+      }
       console.log('Something went wrong while deleting userData->', errorMessage);
       return rejectWithValue(err as AxiosError);
     }

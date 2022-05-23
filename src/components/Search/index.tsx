@@ -1,12 +1,14 @@
 import { TextField, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export const Search = () => {
+  const { t } = useTranslation();
   return (
     <Box ml="auto" mb="1em" width="300px">
       <TextField
         variant="standard"
         type="search"
-        label="Search"
+        label={t('search')}
         size="medium"
         color="primary"
         fullWidth

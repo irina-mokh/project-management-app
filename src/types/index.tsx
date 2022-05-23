@@ -51,7 +51,15 @@ export interface ITaskPut {
   columnId: string;
 }
 
-export interface ICreateBoardRequestFields {
+export interface ICreateBoardFields {
   title: string;
   description: string;
+}
+
+export interface ICreateColumnRequest {
+  boardId: string;
+  requestBody: {
+    title: string;
+    order: number;
+  };
 }

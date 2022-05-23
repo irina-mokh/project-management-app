@@ -13,6 +13,7 @@ import { AppDispatch } from 'store';
 import { createBoard } from 'store/boardList/actions';
 import { ICreateBoardFields } from 'types/index';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const defaultRequestValues: ICreateBoardFields = {
   title: '',
@@ -31,6 +32,8 @@ export function CreateBoardModal() {
   const [boardRequestFields, setBoardRequestFields] = useState(defaultRequestValues);
   const [hasErrors, setHasErrors] = useState(defaultErrorsValues);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { t } = useTranslation();
 
   // показ зависит от queryParams. Если есть create-modal - показываем
   const hasModal = searchParams.has('create-board');
@@ -85,10 +88,10 @@ export function CreateBoardModal() {
   return (
     <Dialog open={hasModal} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Create new board</DialogTitle>
+        <DialogTitle>{t('createNewBoard')}</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Add name</DialogContentText>
+          <DialogContentText>{t('addBoardName')}</DialogContentText>
           <TextField
             name="title"
             autoFocus
@@ -102,7 +105,7 @@ export function CreateBoardModal() {
             error={hasErrors.title && boardRequestFields.title.length > 0}
           ></TextField>
 
-          <DialogContentText>Add description</DialogContentText>
+          <DialogContentText>{t('addBoarddescription')}</DialogContentText>
           <TextField
             name="description"
             required
@@ -120,7 +123,7 @@ export function CreateBoardModal() {
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            Submit
+            {t('submit')}
           </Button>
         </DialogActions>
       </form>

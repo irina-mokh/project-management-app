@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { updateColumn, deleteColumn } from 'store/board/actions';
 import { DeleteButton } from 'components/DeleteButton';
 import { Task } from 'components/Task';
+import { useTranslation } from 'react-i18next';
 
 interface IColumnProps {
   column: IColumn;
@@ -24,6 +25,8 @@ export const Column = (props: IColumnProps) => {
   const handleTitleChangeCancel = () => {
     setCurTitle(column.title);
   };
+
+  const { t } = useTranslation();
 
   const inputButtons = isSelected ? (
     <>
@@ -85,11 +88,11 @@ export const Column = (props: IColumnProps) => {
         {column.tasks.map((task: ITask) => (
           <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
-        <AddButton text="add task" />
+        <AddButton text={t('addTask')} />
       </List>
       <DeleteButton
         // size="small"
-        confirmText="Delete a column?"
+        confirmText={t('confirmTextButton')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
     </Card>

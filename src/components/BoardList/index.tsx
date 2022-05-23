@@ -19,6 +19,7 @@ import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
 import { IBoard } from 'types';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // temp sign in
 const signin = () => {
@@ -33,6 +34,8 @@ export const BoardList = () => {
   const { data, isLoading, error } = useSelector(selectBoardList);
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
+
+  const { t } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -68,7 +71,7 @@ export const BoardList = () => {
             </CardContent>
           </CardActionArea>
           <DeleteButton
-            confirmText="Delete a board?"
+            confirmText={t('confirmTextButton')}
             deleteHandler={() => dispatch(deleteBoard(id))}
           />
         </Card>

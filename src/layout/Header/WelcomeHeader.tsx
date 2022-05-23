@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button/Button';
 import Typography from '@mui/material/Typography/Typography';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
@@ -10,6 +11,7 @@ import './Header.scss';
 export const WelcomeHeader = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -21,7 +23,7 @@ export const WelcomeHeader = () => {
         }}
         sx={{ marginLeft: '5px' }}
       >
-        <Typography>Sign Up</Typography>
+        <Typography>{t('signUp')}</Typography>
       </Button>
       <Button
         variant="contained"
@@ -31,7 +33,7 @@ export const WelcomeHeader = () => {
         }}
         sx={{ marginLeft: '5px' }}
       >
-        <Typography>Sign In</Typography>
+        <Typography>{t('signIn')}</Typography>
       </Button>
     </div>
   );

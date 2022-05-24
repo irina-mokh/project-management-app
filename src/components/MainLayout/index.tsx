@@ -4,8 +4,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
 import { AppRouter } from 'routes';
-import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 export const MainLayout = () => {
   const mode = useSelector(selectTheme);
@@ -20,8 +20,9 @@ export const MainLayout = () => {
             backgroundColor: theme.palette.background.default,
             fontFamily: theme.typography.fontFamily,
             display: 'grid',
-            height: '100vh',
-            gridTemplateRows: '10vh auto 7vh',
+            minHeight: '100vh',
+            gridTemplateRows: 'auto 1fr auto',
+            gridTemplateColumns: '100%',
             boxSizing: 'border-box',
           }}
         >

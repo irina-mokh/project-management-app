@@ -14,23 +14,16 @@ import { AppDispatch } from 'store';
 import { getBoards, deleteBoard } from 'store/boardList/actions';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
-// import { axiosClient } from 'utils/axios';
 import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
 import { IBoard } from 'types';
 import { useSearchParams } from 'react-router-dom';
-
-// temp sign in
-// const signin = () => {
-//   axiosClient.post('/signin', {
-//     login: 'mokh-user',
-//     password: '07007pswrd',
-//   });
-// };
+import { useTranslation } from 'react-i18next';
 
 export const BoardList = () => {
-  // signin();
-  const { data, isLoading, error } = useSelector(selectBoardList);
+  const { t } = useTranslation();
+  const { isLoading, error, boardsOnClient } = useSelector(selectBoardList);
+
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
 
@@ -47,8 +40,8 @@ export const BoardList = () => {
   }, [dispatch]);
   const { palette } = useTheme();
 
-  if (data?.length) {
-    boards = data?.map((item: IBoard) => {
+  if (boardsOnClient?.length) {
+    boards = boardsOnClient?.map((item: IBoard) => {
       const { id, title, description } = item;
       return (
         <Card
@@ -93,8 +86,8 @@ export const BoardList = () => {
         gap: '1em',
       }}
     >
-      {data?.length && boards}
-      <AddButton text="add board" addHandler={addBoardHandler} />
+      {boardsOnClient?.length > 0 && boards}
+      <AddButton text={t('addBoard')} addHandler={addBoardHandler} />
     </List>
   );
 };

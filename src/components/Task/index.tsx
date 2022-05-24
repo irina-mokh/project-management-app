@@ -8,6 +8,7 @@ import { AppDispatch } from 'store';
 import React, { useRef, MutableRefObject, useState, useEffect } from 'react';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { updateTask } from 'utils/axios';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskProps {
   columnId: string;
@@ -100,6 +101,8 @@ export const Task = (props: ITaskProps) => {
 
   const backgroundColor = isEmpty ? 'transparent' : 'background.default';
   const height = isEmpty ? '100%' : 'auto';
+
+  const { t } = useTranslation();
   return (
     <Card
       component="li"
@@ -126,7 +129,7 @@ export const Task = (props: ITaskProps) => {
       </Typography>
       {!isEmpty && (
         <DeleteButton
-          confirmText="Delete a task?"
+          confirmText={t('deleteTask')}
           deleteHandler={() => dispatch(deleteTask([boardId, columnId, task.id]))}
         />
       )}

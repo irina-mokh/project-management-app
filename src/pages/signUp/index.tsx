@@ -23,6 +23,7 @@ import { createUser, signInUser } from 'store/auth/actions';
 import { AppDispatch, RootState } from 'store';
 import { authSlice } from 'store/auth/reducer';
 import { routes } from 'routes';
+import { useTranslation } from 'react-i18next';
 
 export interface NewUserType {
   name: string;
@@ -54,6 +55,8 @@ export const SignUpForm = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState('');
 
+  const { t } = useTranslation();
+
   const nameValidation = (inputName: string) => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
@@ -61,7 +64,7 @@ export const SignUpForm = () => {
       dispatch(removeError());
     } else {
       setNameError(true);
-      setNameErrorText('Name should contain more then 3 symbols');
+      setNameErrorText(`${t('nameErrorText')}`);
     }
   };
 
@@ -83,7 +86,7 @@ export const SignUpForm = () => {
       setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText('Name should contain more then 3 symbols');
+      setLoginErrorText(`${t('loginErrorText')}`);
     }
   };
 
@@ -93,7 +96,7 @@ export const SignUpForm = () => {
       setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText('Password should contain at least 8 symbols');
+      setPassErrorText(`${t('passwordErrorText')}`);
     }
   };
 
@@ -138,7 +141,7 @@ export const SignUpForm = () => {
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            {t('signUp')}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate id="formBox">
             <TextField
@@ -150,7 +153,7 @@ export const SignUpForm = () => {
               required
               fullWidth
               id="userName"
-              label="Name"
+              label={t('userName')}
               name="userName"
               autoFocus
             />
@@ -164,7 +167,7 @@ export const SignUpForm = () => {
               required
               fullWidth
               id="login"
-              label="Login"
+              label={t('userLogin')}
               name="login"
               autoComplete="userlogin"
             />
@@ -177,7 +180,7 @@ export const SignUpForm = () => {
               required
               fullWidth
               name="password"
-              label="Password"
+              label={t('userPassword')}
               type="password"
               id="password"
               autoComplete="current-password"
@@ -190,7 +193,7 @@ export const SignUpForm = () => {
                 style={{ backgroundColor: '#69D882' }}
                 disabled={passError || nameError || loginError}
               >
-                Registration complete!
+                {t('completeRegistration')}
               </Button>
             ) : (
               <Button
@@ -200,15 +203,15 @@ export const SignUpForm = () => {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={false || passError || nameError || loginError}
               >
-                Create an account
+                {t('signUp')}
               </Button>
             )}
 
             <Grid container>
               <Grid item>
-                <span>Already have an account? </span>
+                <span style={{ marginRight: '10px' }}>{t('existAccount')} </span>
                 <Link to={'/signin'} onClick={() => dispatch(removeError)}>
-                  <span>Sign In</span>
+                  <span>{t('signIn')}</span>
                 </Link>
               </Grid>
             </Grid>
@@ -217,7 +220,7 @@ export const SignUpForm = () => {
         {isLoading ? <Loading /> : null}
         {error ? (
           <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
+            <AlertTitle>{t('error')}</AlertTitle>
             {error}
           </Alert>
         ) : null}

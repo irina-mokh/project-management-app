@@ -9,8 +9,9 @@ import { moveColumn } from 'store/board/reducer';
 import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
-import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { Task } from 'components/Task';
+import { useTranslation } from 'react-i18next';
+import { DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 
 const emptyTask = {
   id: '0',
@@ -40,6 +41,7 @@ export const Column = (props: IColumnProps) => {
 
   // ref for column DnD
   const colRef = useRef() as MutableRefObject<HTMLDivElement>;
+  const { t } = useTranslation();
 
   // Drop column
   const [{ isOver, canDrop }, dropCol] = useDrop(
@@ -163,7 +165,7 @@ export const Column = (props: IColumnProps) => {
             columnOrder={column.order}
           ></Task>
         ))}
-        <AddButton text="add task" order={column.tasks.length + 1} />
+        <AddButton text={t('addTask')} order={column.tasks.length + 1} />
         {column.tasks.length == 0 && (
           <Task
             boardId={boardId}
@@ -176,7 +178,7 @@ export const Column = (props: IColumnProps) => {
         )}
       </List>
       <DeleteButton
-        confirmText="Delete a column?"
+        confirmText={t('confirmTextButton')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
     </Card>

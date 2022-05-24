@@ -15,6 +15,7 @@ import { AppDispatch, RootState } from 'store';
 import { ConfirmDialog } from 'components/ConfirmDialog';
 import { useState } from 'react';
 import { authSlice } from 'store/auth/reducer';
+import { useTranslation } from 'react-i18next';
 
 export const AccountMenu = () => {
   const navigate = useNavigate();
@@ -27,10 +28,10 @@ export const AccountMenu = () => {
     setAnchorEl(null);
   };
   const { login } = useSelector((state: RootState) => state.auth);
-  //const { setConfirmOpen } = authSlice.actions;
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const { logOut } = authSlice.actions;
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
@@ -81,22 +82,19 @@ export const AccountMenu = () => {
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>
-            Edit profile
+            {t('editProfile')}
           </Link>
         </MenuItem>
         <Divider />
-        <MenuItem
-          //onClick={() => dispatch(setConfirmOpen(true))}
-          onClick={() => setConfirmOpen(true)}
-        >
+        <MenuItem onClick={() => setConfirmOpen(true)}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Sign Out
+          {t('signOut')}
         </MenuItem>
       </Menu>
       <ConfirmDialog
-        confirmText="Ready to leave?"
+        confirmText={t('confirmOut')}
         open={confirmOpen}
         setOpen={setConfirmOpen}
         onConfirm={() => {

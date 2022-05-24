@@ -57,7 +57,6 @@ export function EditTaskModal({ boardId }: IEditTask) {
   });
 
   const column = boardDetails.data.columns.find((col) => col.id === columnId);
-  console.log(column);
   const taskDetails = column?.tasks.find((task) => task.id == taskId);
 
   const [title, setTitle] = useState(taskDetails?.title || '');

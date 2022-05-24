@@ -50,6 +50,15 @@ export interface ITask {
   ];
 }
 
+export interface ITaskPut {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  boardId: string;
+  columnId: string;
+}
+
 export interface ICreateTask {
   title: string;
   description: string;

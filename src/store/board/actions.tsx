@@ -2,7 +2,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { axiosClient } from 'utils/axios';
-import { ICreateColumnRequest, ICreateTask } from 'types';
+import { ICreateColumnRequest, ICreateTask, ITaskPut } from 'types';
 
 type ICreateTaskArgs = {
   url: { boardId: string; columnId: string };
@@ -87,17 +87,19 @@ export const createTask = createAsyncThunk(
         throw new Error();
       }
 
-      /*
-      {
-        "id": "e21ef376-eef6-45ca-9d3c-dfa19944429c",
-        "title": "Task: pet the cat --- ",
-        "description": "Domestic cat needs to be stroked gently",
-        "userId": "5d83b5e1-d725-41e4-af79-51a6df6d4e26"
-      }
-      */
-
-      console.log(response.data);
       return { columnId: columnId, taskDetails: response.data };
+    } catch (err) {
+      return rejectWithValue((err as AxiosError).message);
+    }
+  }
+);
+
+export const updateTask = createAsyncThunk(
+  'board/updateTask',
+  async function ([task, taskId, dragColumnId]: [ITaskPut, string, string], { rejectWithValue }) {
+    const { boardId } = task;
+    try {
+      await axiosClient.put(`boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`, task);
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);
     }

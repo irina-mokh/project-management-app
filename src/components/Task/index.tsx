@@ -14,11 +14,12 @@ interface ITaskProps {
   boardId: string;
   data: ITask;
   columnOrder: number;
+  isEmpty?: boolean;
 }
 export const Task = (props: ITaskProps) => {
-  console.log('render task');
   const dispatch: AppDispatch = useDispatch();
-  const { columnId, boardId, columnOrder } = props;
+  const [isPending, setPending] = useState(false);
+  const { columnId, boardId, columnOrder, isEmpty } = props;
 
   // add state to have columnId and boardId in state of Task
   const [task] = useState<ITaskDetail>({
@@ -35,23 +36,26 @@ export const Task = (props: ITaskProps) => {
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: 'task',
-      drop: async (item: ITaskDetail) => {
-        const dragIndex = item.order;
+      drop: async (drag: ITaskDetail) => {
+        setPending(true);
+        const dragIndex = drag.order;
         const dropIndex = task.order;
-        const dragColumnIndex = item.columnOrder;
+        const dragColumnIndex = drag.columnOrder;
         const dropColumnIndex = task.columnOrder;
 
         dispatch(moveTask({ dragIndex, dropIndex, dragColumnIndex, dropColumnIndex }));
 
         const newTask = {
-          title: item.title,
-          order: dropIndex,
-          description: item.description,
-          userId: item.userId,
-          boardId: task.boardId,
+          title: drag.title,
+          order: drag.order,
+          description: drag.description,
+          userId: drag.userId,
+          boardId: boardId,
           columnId: task.columnId,
         };
-        await updateTask(newTask, item.id, item.columnId);
+        updateTask(newTask, drag.id, drag.columnId).then(() => {
+          setPending(false);
+        });
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),
@@ -60,11 +64,13 @@ export const Task = (props: ITaskProps) => {
     }),
     [props]
   );
+
   // Drag task
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'task',
       item: task,
+      canDrag: isEmpty ? false : !isPending,
       collect: (monitor: DragSourceMonitor) => ({
         isDragging: monitor.isDragging(),
       }),
@@ -84,28 +90,38 @@ export const Task = (props: ITaskProps) => {
     borderColor = 'gray';
   }
 
+  const backgroundColor = isEmpty ? 'transparent' : 'background.default';
+  const height = isEmpty ? '100%' : 'auto';
   return (
     <Card
       component="li"
       ref={ref}
       sx={{
-        order: `${props.data.order}`,
-        margin: '10px 0',
+        order: props.data.order,
+        height: height,
+        margin: '8px 0',
         padding: '10px',
         position: 'relative',
-        border: `1px solid ${borderColor}`,
+        borderTop: `5px solid ${borderColor}`,
         zIndex: 5,
-        backgroundColor: 'background.default',
+        backgroundColor: backgroundColor,
         boxShadow: '0px 1px 8px 0px rgba(0, 0, 0, 0.2)',
         opacity: opacity,
+        cursor: !isEmpty ? 'pointer' : 'default',
       }}
     >
-      <Typography variant="h5">{task.title}</Typography>
-      <Typography>{task.description}</Typography>
-      <DeleteButton
-        confirmText="Delete a task?"
-        deleteHandler={() => dispatch(deleteTask([boardId, columnId, task.id]))}
-      />
+      <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
+        {task.title}
+      </Typography>
+      <Typography fontSize="0.9em" fontStyle="italic">
+        {task.description}
+      </Typography>
+      {!isEmpty && (
+        <DeleteButton
+          confirmText="Delete a task?"
+          deleteHandler={() => dispatch(deleteTask([boardId, columnId, task.id]))}
+        />
+      )}
     </Card>
   );
 };

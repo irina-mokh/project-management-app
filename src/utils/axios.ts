@@ -56,26 +56,7 @@ export const updateColumn = async (
   }
 };
 
-// export const getTask = async (boardId: string, columnId: string, taskId: string) => {
-//   try {
-//     const response = await axiosClient.get(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`);
-//     return response.data;
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
-// export const getColumn = async (boardId: string, columnId: string) => {
-//   try {
-//     const response = await axiosClient.get(`boards/${boardId}/columns/${columnId}`);
-//     return response.data;
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
 export const updateTask = async (task: ITaskPut, taskId: string, dragColumnId: string) => {
-  console.log(`update task: ${task}`);
   const { boardId } = task;
   try {
     await axiosClient.put(`boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`, task);

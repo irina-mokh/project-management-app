@@ -38,10 +38,8 @@ export const Board = () => {
     return <>{error}</>;
   }
 
-  // console.log(`params id: ${id}`);
-
   return (
-    <Container sx={{ width: '98vw', height: '83vh', padding: '5px' }}>
+    <Container maxWidth="xl" sx={{ height: '83vh', padding: '5px' }}>
       <h2 className="visually-hidden">Board page</h2>
       <Breadcrumbs aria-label="breadcrumb" sx={{ margin: '5px 0' }}>
         <Link underline="hover" color="inherit" href="/">

@@ -12,12 +12,22 @@ import { DeleteButton } from 'components/DeleteButton';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { Task } from 'components/Task';
 
+const emptyTask = {
+  id: '0',
+  title: '',
+  order: 1,
+  description: '',
+  userId: '',
+};
+
 interface IColumnProps {
   column: IColumn;
   boardId: string;
 }
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
+  const [isPending, setPending] = useState(false);
+
   const { boardId, column } = props;
 
   const [curTitle, setCurTitle] = useState(column.title);
@@ -28,19 +38,21 @@ export const Column = (props: IColumnProps) => {
     setCurTitle(column.title);
   };
 
-  // ref for DnD
+  // ref for column DnD
   const colRef = useRef() as MutableRefObject<HTMLDivElement>;
-  // const taskRef = useRef() as MutableRefObject<HTMLDivElement>;
 
   // Drop column
   const [{ isOver, canDrop }, dropCol] = useDrop(
     () => ({
       accept: 'column',
       drop: async (item: IColumn) => {
+        setPending(true);
         const dragIndex = item.order;
         const hoverIndex = props.column.order;
         dispatch(moveColumn({ dragIndex, hoverIndex }));
-        await updateColumn(boardId, item.id, hoverIndex, item.title);
+        updateColumn(boardId, item.id, hoverIndex, item.title).then(() => {
+          setPending(false);
+        });
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),
@@ -55,24 +67,16 @@ export const Column = (props: IColumnProps) => {
     () => ({
       type: 'column',
       item: column,
+      canDrag: !isPending,
       collect: (monitor: DragSourceMonitor) => ({
         isDragging: monitor.isDragging(),
+        canDrag: monitor.canDrag(),
       }),
     }),
     [column]
   );
   // column ref
   dragCol(dropCol(colRef));
-
-  // Drop task
-  // const [, dropTask] = useDrop(
-  //   () => ({
-  //     accept: 'task',
-  //     drop: async (item: ITask, monitor) => {},
-  //     collect: () => ({}),
-  //   }),
-  //   [props]
-  // );
 
   const opacity = isDragging ? 0.5 : 1;
 
@@ -98,7 +102,7 @@ export const Column = (props: IColumnProps) => {
       </IconButton>
     </>
   ) : (
-    <Edit aria-label="edit" color="disabled" sx={{ width: '0.8em', height: '0.8em' }} />
+    <Edit aria-label="edit" color="disabled" sx={{ width: '0.5em', height: '0.5em' }} />
   );
   return (
     <Card
@@ -108,12 +112,12 @@ export const Column = (props: IColumnProps) => {
         order: `${column.order}`,
         marginRight: '1rem',
         height: '100%',
-        minWidth: '300px',
-        padding: '5px 15px 10px 15px',
+        width: '300px',
+        padding: '5px 10px 10px 7px',
         position: 'relative',
         opacity: opacity,
         cursor: 'grab',
-        border: `1px dashed ${borderColor}`,
+        borderLeft: `7px solid ${borderColor}`,
       }}
     >
       <TextField
@@ -130,7 +134,6 @@ export const Column = (props: IColumnProps) => {
         }}
       />
       <List
-        // ref={dropTask}
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -161,9 +164,18 @@ export const Column = (props: IColumnProps) => {
           ></Task>
         ))}
         <AddButton text="add task" order={column.tasks.length + 1} />
+        {column.tasks.length == 0 && (
+          <Task
+            boardId={boardId}
+            columnId={column.id}
+            data={emptyTask}
+            key="0"
+            columnOrder={column.order}
+            isEmpty={true}
+          ></Task>
+        )}
       </List>
       <DeleteButton
-        // size="small"
         confirmText="Delete a column?"
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />

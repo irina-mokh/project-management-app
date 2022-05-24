@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, current } from '@reduxjs/toolkit';
 import { IBoardDetails, IColumn } from 'types';
 import { getBoard, createColumn, deleteColumn, deleteTask } from './actions';
 
@@ -6,12 +6,14 @@ type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
+  isPending: boolean;
 };
 
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
   data: {} as IBoardDetails,
+  isPending: false,
 };
 
 export const boardSlice = createSlice({
@@ -31,7 +33,6 @@ export const boardSlice = createSlice({
       });
     },
     moveTask: (state, action) => {
-      // console.log('moveTask');
       console.log(action.payload);
       const { dragIndex, hoverIndex, dragColumnIndex, dropColumnIndex } = action.payload;
       const columns = state.data.columns;
@@ -39,7 +40,7 @@ export const boardSlice = createSlice({
       const dragColumn = columns[dragColumnIndex - 1].tasks;
       const dropColumn = columns[dropColumnIndex - 1].tasks;
       const dragTask = dragColumn[dragIndex - 1];
-
+      console.log(current(dragTask));
       dragColumn.splice(dragIndex - 1, 1);
 
       if (dragColumnIndex == dropColumnIndex) {
@@ -83,6 +84,7 @@ export const boardSlice = createSlice({
         state.error = String(action.payload);
       })
 
+      // create column
       .addCase(createColumn.fulfilled, (state, action) => {
         state.data = {
           ...state.data,

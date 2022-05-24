@@ -8,6 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createColumn } from 'store/board/actions';
@@ -24,6 +25,8 @@ export function CreateColumnModal({ isVisible, setVisible, boardId, orderIdx }: 
 
   const [title, setTitle] = useState('');
   const [hasErrors, setHasErrors] = useState(false);
+
+  const { t } = useTranslation();
 
   const handleClose = () => {
     setVisible(false);
@@ -59,10 +62,10 @@ export function CreateColumnModal({ isVisible, setVisible, boardId, orderIdx }: 
   return (
     <Dialog open={isVisible} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Add new column</DialogTitle>
+        <DialogTitle>{t('addNewColumn')}</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Set title</DialogContentText>
+          <DialogContentText>{t('addTitleColumn')}</DialogContentText>
           <TextField
             name="title"
             autoFocus
@@ -79,7 +82,7 @@ export function CreateColumnModal({ isVisible, setVisible, boardId, orderIdx }: 
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            Submit
+            {t('submit')}
           </Button>
         </DialogActions>
       </form>

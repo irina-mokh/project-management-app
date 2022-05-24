@@ -18,8 +18,10 @@ import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
 import { IBoard } from 'types';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const BoardList = () => {
+  const { t } = useTranslation();
   const { isLoading, error, boardsOnClient } = useSelector(selectBoardList);
 
   const dispatch: AppDispatch = useDispatch();
@@ -85,7 +87,7 @@ export const BoardList = () => {
       }}
     >
       {boardsOnClient?.length > 0 && boards}
-      <AddButton text="add board" addHandler={addBoardHandler} />
+      <AddButton text={t('addBoard')} addHandler={addBoardHandler} />
     </List>
   );
 };

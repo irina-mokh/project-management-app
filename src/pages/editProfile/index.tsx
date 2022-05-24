@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
 import { CustomSnackBar } from 'components/CustomSnackBar';
 import { authSlice } from 'store/auth/reducer';
+import { useTranslation } from 'react-i18next';
 
 export const EditProfile = () => {
   const mode = useSelector(selectTheme);
@@ -29,7 +30,7 @@ export const EditProfile = () => {
 
   const [curName, setCurName] = useState<string | null>(userName);
   const [nameError, setNameError] = useState(false);
-  const [nameErrorText, setNameErrorText] = useState('');
+  const [nameErrorText, setNameErrorText] = useState<string>('');
 
   const [curLogin, setCurLogin] = useState<string | null>(login);
   const [loginError, setLoginError] = useState(false);
@@ -39,13 +40,15 @@ export const EditProfile = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState('');
 
+  const { t } = useTranslation();
+
   const nameValidation = (inputName: string) => {
     if (inputName && inputName.length > 3) {
       setNameError(false);
       setNameErrorText('');
     } else {
       setNameError(true);
-      setNameErrorText('Name should contain more then 3 symbols');
+      setNameErrorText(`${t('nameErrorText')}`);
     }
   };
   const handleNameChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,7 +62,7 @@ export const EditProfile = () => {
       setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText('Name should contain more then 3 symbols');
+      setLoginErrorText(`${t('loginErrorText')}`);
     }
   };
 
@@ -74,7 +77,7 @@ export const EditProfile = () => {
       setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText('Password should contain at least 8 symbols');
+      setPassErrorText(`${t('passwordErrorText')}`);
     }
   };
 
@@ -108,12 +111,12 @@ export const EditProfile = () => {
           marginTop: '20px',
         }}
       >
-        <Typography component="h1" variant="h5">
-          Edit account information
+        <Typography component="h1" variant="h5" sx={{ marginBottom: '20px' }}>
+          {t('editAccountInfo')}
         </Typography>
 
         <Box component="form" onSubmit={handleSubmit}>
-          <Typography>User Name:</Typography>
+          <Typography>{t('userName')}</Typography>
           <TextField
             error={nameError}
             helperText={nameErrorText}
@@ -126,12 +129,12 @@ export const EditProfile = () => {
             fullWidth
             id="name"
             name="Name"
-            label="Name"
+            label={t('userName')}
             autoComplete="name"
             autoFocus
           />
           <Grid item xs>
-            <Typography>User Login:</Typography>
+            <Typography>{t('userLogin')}</Typography>
           </Grid>
           <Grid item>
             <TextField
@@ -146,13 +149,13 @@ export const EditProfile = () => {
               fullWidth
               id="login"
               name="login"
-              label="Login"
+              label={t('userLogin')}
               autoComplete="login"
               autoFocus
             />
           </Grid>
           <Grid item xs>
-            <Typography>User Password:</Typography>
+            <Typography>{t('userPassword')}</Typography>
           </Grid>
           <Grid item>
             <TextField
@@ -166,7 +169,7 @@ export const EditProfile = () => {
               fullWidth
               id="password"
               name="password"
-              label="New password"
+              label={t('userNewPassword')}
               autoComplete="password"
               autoFocus
             />
@@ -186,19 +189,19 @@ export const EditProfile = () => {
                 variant="contained"
                 disabled={nameError || loginError || passError}
               >
-                Submit changes
+                {t('submit')}
               </Button>
             </Grid>
             <Grid>
               <Button fullWidth variant="contained" onClick={() => setConfirmOpen(true)}>
-                Delete account
+                {t('deleteAccount')}
               </Button>
             </Grid>
           </Grid>
         </Box>
       </Box>
       <ConfirmDialog
-        confirmText={'Delete this account?'}
+        confirmText={t('confirmDeleteAccount')}
         open={confirmOpen}
         setOpen={setConfirmOpen}
         onConfirm={() => {
@@ -208,9 +211,7 @@ export const EditProfile = () => {
       />
       <CustomSnackBar
         open={snackOpen}
-        snackText={
-          editSuccess ? 'Account data was changed successfully' : 'Account was deleted successfully'
-        }
+        snackText={editSuccess ? `${t('successEditText')}` : `${t('successDeleteText')}`}
         setOpen={setSnackOpen}
         onClose={() => dispatch(removeSnackState())}
       />

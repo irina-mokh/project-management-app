@@ -3,6 +3,7 @@ import authReducer from './auth/reducer';
 import boardListReducer from './boardList/reducer';
 import themeReducer from './theme/reducer';
 import boardReducer from './board/reducer';
+import langReducer from './lang/reducer';
 
 const persistedState = () => {
   let state;
@@ -22,6 +23,7 @@ export const store = configureStore({
     boardList: boardListReducer,
     theme: themeReducer,
     board: boardReducer,
+    lang: langReducer,
   },
 });
 

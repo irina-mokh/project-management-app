@@ -10,8 +10,10 @@ import { moveColumn } from 'store/board/reducer';
 import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
-import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
+//import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { Task } from 'components/Task';
+import { useTranslation } from 'react-i18next';
+import { DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 
 interface IColumnProps {
   column: IColumn;
@@ -29,6 +31,7 @@ export const Column = (props: IColumnProps) => {
     setCurTitle(column.title);
   };
 
+  const { t } = useTranslation();
   // ref for DnD
   const ref = useRef() as MutableRefObject<HTMLDivElement>;
 
@@ -138,11 +141,11 @@ export const Column = (props: IColumnProps) => {
         {column.tasks.map((task: ITask) => (
           <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
-        <AddButton text="add task" />
+        <AddButton text={t('addTask')} />
       </List>
       <DeleteButton
         // size="small"
-        confirmText="Delete a column?"
+        confirmText={t('confirmTextButton')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
     </Card>

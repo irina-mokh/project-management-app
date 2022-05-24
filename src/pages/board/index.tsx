@@ -38,7 +38,7 @@ export const Board = () => {
     return <>{error}</>;
   }
 
-  console.log(`params id: ${id}`);
+  // console.log(`params id: ${id}`);
 
   return (
     <Container sx={{ width: '98vw', height: '83vh', padding: '5px' }}>

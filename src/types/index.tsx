@@ -42,6 +42,12 @@ export interface ITask {
   ];
 }
 
+export interface ITaskDetail extends ITask {
+  boardId: string;
+  columnId: string;
+  columnOrder: number;
+}
+
 export interface ITaskPut {
   title: string;
   order: number;

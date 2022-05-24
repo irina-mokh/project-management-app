@@ -1,22 +1,32 @@
 import { Card, Typography } from '@mui/material';
 import { DeleteButton } from 'components/DeleteButton';
-import { ITask } from 'types';
+import { ITask, ITaskDetail } from 'types';
 import { useDispatch } from 'react-redux';
 import { deleteTask } from 'store/board/actions';
 import { moveTask } from 'store/board/reducer';
 import { AppDispatch } from 'store';
-import React, { useRef, MutableRefObject } from 'react';
+import React, { useRef, MutableRefObject, useState } from 'react';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
-import { getColumn, getTask, updateTask } from 'utils/axios';
+import { updateTask } from 'utils/axios';
 
 interface ITaskProps {
   columnId: string;
   boardId: string;
-  task: ITask;
+  data: ITask;
+  columnOrder: number;
 }
 export const Task = (props: ITaskProps) => {
+  console.log('render task');
   const dispatch: AppDispatch = useDispatch();
-  const { task, columnId, boardId } = props;
+  const { columnId, boardId, columnOrder } = props;
+
+  // add state to have columnId and boardId in state of Task
+  const [task] = useState<ITaskDetail>({
+    ...props.data,
+    columnId: columnId,
+    boardId: boardId,
+    columnOrder: columnOrder,
+  });
 
   // ref for DnD task
   const ref = useRef() as MutableRefObject<HTMLDivElement>;
@@ -25,21 +35,11 @@ export const Task = (props: ITaskProps) => {
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: 'task',
-      drop: async (item: ITask, monitor) => {
-        console.log(monitor.getItem());
+      drop: async (item: ITaskDetail) => {
         const dragIndex = item.order;
         const dropIndex = task.order;
-        // ?? get drag column order
-        const dragColumnDetails = await getColumn(boardId, columnId);
-        const dragColumnIndex = dragColumnDetails.order;
-
-        // ?? get drop column Id and order
-        // wrong column id
-        const dropTaskDetails = await getTask(boardId, columnId, task.id);
-        const dropColumnId = dropTaskDetails.columnId;
-        const dropColumnDetails = await getColumn(boardId, columnId);
-
-        const dropColumnIndex = dropColumnDetails.order;
+        const dragColumnIndex = item.columnOrder;
+        const dropColumnIndex = task.columnOrder;
 
         dispatch(moveTask({ dragIndex, dropIndex, dragColumnIndex, dropColumnIndex }));
 
@@ -48,10 +48,10 @@ export const Task = (props: ITaskProps) => {
           order: dropIndex,
           description: item.description,
           userId: item.userId,
-          boardId: boardId,
-          columnId: dropColumnId,
+          boardId: task.boardId,
+          columnId: task.columnId,
         };
-        await updateTask(newTask, item.id);
+        await updateTask(newTask, item.id, item.columnId);
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),
@@ -89,7 +89,7 @@ export const Task = (props: ITaskProps) => {
       component="li"
       ref={ref}
       sx={{
-        order: `${task.order}`,
+        order: `${props.data.order}`,
         margin: '10px 0',
         padding: '10px',
         position: 'relative',

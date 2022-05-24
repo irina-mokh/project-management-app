@@ -152,7 +152,13 @@ export const Column = (props: IColumnProps) => {
         }}
       >
         {column.tasks.map((task: ITask) => (
-          <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
+          <Task
+            boardId={boardId}
+            columnId={column.id}
+            data={task}
+            key={task.id}
+            columnOrder={column.order}
+          ></Task>
         ))}
         <AddButton text="add task" order={column.tasks.length + 1} />
       </List>

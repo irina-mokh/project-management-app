@@ -32,13 +32,12 @@ export const boardSlice = createSlice({
     },
     moveTask: (state, action) => {
       // console.log('moveTask');
-      // console.log(action.payload);
+      console.log(action.payload);
       const { dragIndex, hoverIndex, dragColumnIndex, dropColumnIndex } = action.payload;
       const columns = state.data.columns;
 
       const dragColumn = columns[dragColumnIndex - 1].tasks;
       const dropColumn = columns[dropColumnIndex - 1].tasks;
-
       const dragTask = dragColumn[dragIndex - 1];
 
       dragColumn.splice(dragIndex - 1, 1);

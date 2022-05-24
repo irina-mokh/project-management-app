@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, current } from '@reduxjs/toolkit';
 import { IBoardDetails, IColumn, IUser, ITask } from 'types';
 import {
   getBoard,
@@ -19,6 +19,8 @@ type IBoardState = {
   error: string | null;
   data: IBoardDetails;
   usersList: Array<IUser>;
+  searchResults: Array<ITask>;
+  isSearchFocus: boolean;
 };
 
 const initialState: IBoardState = {
@@ -26,12 +28,34 @@ const initialState: IBoardState = {
   error: null,
   data: {} as IBoardDetails,
   usersList: [] as Array<IUser>,
+  searchResults: [],
+  isSearchFocus: false,
 };
 
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
+    searchTasks: (state, action) => {
+      const search = action.payload.toLowerCase();
+      const columns = current(state.data.columns);
+
+      const allTasks: ITask[] = columns.map((col: IColumn) => col.tasks).flat();
+
+      const result: ITask[] = allTasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(search) ||
+          task.description.toLowerCase().includes(search)
+      );
+      state.searchResults = result;
+    },
+    clearTasksSearch: (state) => {
+      state.searchResults = [];
+    },
+    toggleSearchFocus: (state, action) => {
+      state.isSearchFocus = action.payload;
+      state.searchResults = [];
+    },
     moveColumn: (state, action) => {
       const { dragIndex, hoverIndex } = action.payload;
       if (state.data) {
@@ -92,9 +116,7 @@ export const boardSlice = createSlice({
 
       // deleteColumn
       .addCase(deleteColumn.fulfilled, (state, action) => {
-        if (state.data?.columns) {
-          state.data.columns = state.data?.columns.filter((column) => column.id !== action.payload);
-        }
+        state.data.columns = state.data.columns.filter((column) => column.id !== action.payload);
       })
       .addCase(deleteColumn.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -132,6 +154,6 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { moveColumn } = boardSlice.actions;
+export const { moveColumn, clearTasksSearch, searchTasks, toggleSearchFocus } = boardSlice.actions;
 
 export default boardSlice.reducer;

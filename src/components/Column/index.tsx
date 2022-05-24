@@ -4,15 +4,15 @@ import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
 import React, { useState, useRef, MutableRefObject } from 'react';
-// import { selectBoard } from 'store/board/selectors';
 import { useDispatch } from 'react-redux';
 import { moveColumn } from 'store/board/reducer';
 import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
-import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { Task } from 'components/Task';
 import { TaskModal } from 'components/Modals';
+import { useTranslation } from 'react-i18next';
+import { DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 
 interface IColumnProps {
   column: IColumn;
@@ -31,6 +31,7 @@ export const Column = (props: IColumnProps) => {
     setCurTitle(column.title);
   };
 
+  const { t } = useTranslation();
   // ref for DnD
   const ref = useRef() as MutableRefObject<HTMLDivElement>;
 
@@ -141,11 +142,11 @@ export const Column = (props: IColumnProps) => {
         {column.tasks.map((task: ITask) => (
           <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
         ))}
-        <AddButton text="add task" addHandler={() => setShowModal(true)} />
+        <AddButton text={t('addTask')} addHandler={() => setShowModal(true)} />
       </List>
       <DeleteButton
         // size="small"
-        confirmText="Delete a column?"
+        confirmText={t('confirmTextButton')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
 

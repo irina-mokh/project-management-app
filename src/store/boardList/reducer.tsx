@@ -6,24 +6,37 @@ type IBoardsState = {
   isLoading: boolean;
   error: string | null;
   data: Array<IBoard>;
+  hasModal: boolean;
+  boardsOnClient: Array<IBoard>;
 };
 
 const initialState: IBoardsState = {
   isLoading: true,
   error: null,
   data: [],
+  hasModal: false,
+  boardsOnClient: [],
 };
 
 export const boardListSlice = createSlice({
   name: 'boardList',
   initialState,
   reducers: {
-    // возвращаем state и меняем только hasModal
-    showModal: function (state, action) {
-      return {
-        ...state,
-        hasModal: action.payload,
-      };
+    showModal: (state, action) => {
+      state.hasModal = action.payload;
+    },
+    searchBoards: (state, action) => {
+      const search = action.payload.toLowerCase();
+
+      const result = state.data.filter(
+        (board) =>
+          board.title.toLowerCase().includes(search) ||
+          board.description.toLowerCase().includes(search)
+      );
+      state.boardsOnClient = result;
+    },
+    clearBoardsSearch: (state) => {
+      state.boardsOnClient = state.data;
     },
   },
   extraReducers: (builder) => {
@@ -35,6 +48,7 @@ export const boardListSlice = createSlice({
       })
       .addCase(getBoards.fulfilled, (state, action) => {
         state.data = action.payload;
+        state.boardsOnClient = action.payload;
         state.isLoading = false;
       })
       .addCase(getBoards.rejected, (state, action) => {
@@ -62,6 +76,6 @@ export const boardListSlice = createSlice({
   },
 });
 
-export const { showModal } = boardListSlice.actions;
+export const { showModal, searchBoards, clearBoardsSearch } = boardListSlice.actions;
 
 export default boardListSlice.reducer;

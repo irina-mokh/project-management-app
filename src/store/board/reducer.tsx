@@ -1,23 +1,62 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { IBoardDetails } from 'types';
-import { getBoard, createColumn, updateColumn, deleteColumn, deleteTask } from './actions';
+import { createSlice, current } from '@reduxjs/toolkit';
+import { IBoardDetails, IColumn, ITask } from 'types';
+import { getBoard, createColumn, deleteColumn, deleteTask } from './actions';
 
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
+  searchResults: Array<ITask>;
+  isSearchFocus: boolean;
 };
 
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
   data: {} as IBoardDetails,
+  searchResults: [],
+  isSearchFocus: false,
 };
 
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
-  reducers: {},
+  reducers: {
+    searchTasks: (state, action) => {
+      const search = action.payload.toLowerCase();
+      const columns = current(state.data.columns);
+
+      const allTasks: ITask[] = columns.map((col: IColumn) => col.tasks).flat();
+
+      const result: ITask[] = allTasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(search) ||
+          task.description.toLowerCase().includes(search)
+      );
+      state.searchResults = result;
+    },
+    clearTasksSearch: (state) => {
+      state.searchResults = [];
+    },
+    toggleSearchFocus: (state, action) => {
+      state.isSearchFocus = action.payload;
+      state.searchResults = [];
+    },
+    moveColumn: (state, action) => {
+      const { dragIndex, hoverIndex } = action.payload;
+      if (state.data) {
+        const columns = state.data.columns;
+        const dragColumn = columns[dragIndex - 1];
+        columns.splice(dragIndex - 1, 1);
+        columns.splice(hoverIndex - 1, 0, dragColumn);
+
+        columns.forEach(async (column, i) => {
+          // set state column order
+          column.order = i + 1;
+        });
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       // getBoard
@@ -26,7 +65,14 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
+        const sortedColumns = action.payload.columns.sort(
+          (a: IColumn, b: IColumn) => a.order - b.order
+        );
+
         state.data = action.payload;
+        if (state.data?.columns) {
+          state.data.columns = sortedColumns;
+        }
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
@@ -44,19 +90,9 @@ export const boardSlice = createSlice({
         state.error = String(action.payload);
       })
 
-      // updateColumn {
-      .addCase(updateColumn.fulfilled, () => {
-        // state.data = action.payload;
-      })
-      .addCase(updateColumn.rejected, (state, action) => {
-        state.error = String(action.payload);
-      })
-
       // deleteColumn
       .addCase(deleteColumn.fulfilled, (state, action) => {
-        if (state.data?.columns) {
-          state.data.columns = state.data?.columns.filter((column) => column.id !== action.payload);
-        }
+        state.data.columns = state.data.columns.filter((column) => column.id !== action.payload);
       })
       .addCase(deleteColumn.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -77,6 +113,6 @@ export const boardSlice = createSlice({
   },
 });
 
-// export const {  } = boardSlice.actions;
+export const { moveColumn, clearTasksSearch, searchTasks, toggleSearchFocus } = boardSlice.actions;
 
 export default boardSlice.reducer;

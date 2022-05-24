@@ -46,5 +46,6 @@ export const translationsEN = {
   errorUnfilled: 'Fill fields to sign up',
   errorUserExist: 'User login already exists!',
   errorUserNotFound: 'User with such login/password was not found',
-  search: 'Search',
+  searchBoardPlaceholder: 'Search board by title/description',
+  searchTaskPlaceholder: 'Search task by title/description',
 };

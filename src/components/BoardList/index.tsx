@@ -21,12 +21,11 @@ import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export const BoardList = () => {
+  const { t } = useTranslation();
   const { isLoading, error, boardsOnClient } = useSelector(selectBoardList);
 
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
-
-  const { t } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -62,7 +61,7 @@ export const BoardList = () => {
             </CardContent>
           </CardActionArea>
           <DeleteButton
-            confirmText={t('confirmTextButton')}
+            confirmText="Delete a board?"
             deleteHandler={() => dispatch(deleteBoard(id))}
           />
         </Card>
@@ -87,7 +86,7 @@ export const BoardList = () => {
         gap: '1em',
       }}
     >
-      {data?.length && boards}
+      {boardsOnClient?.length > 0 && boards}
       <AddButton text={t('addBoard')} addHandler={addBoardHandler} />
     </List>
   );

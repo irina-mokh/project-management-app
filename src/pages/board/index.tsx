@@ -19,6 +19,7 @@ import { SearchBar } from 'components/Search';
 import { Box } from '@mui/system';
 
 export const Board = () => {
+  const { t } = useTranslation();
   useTitle(routes.board.title);
   const { id } = useParams();
 
@@ -27,8 +28,6 @@ export const Board = () => {
   const columns: IColumn[] = data.columns;
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (id) {
@@ -51,21 +50,29 @@ export const Board = () => {
   console.log(`params id: ${id}`);
 
   return (
-    <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
+    <Container
+      sx={{
+        width: '100%',
+        height: '83vh',
+        padding: '5px',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <h2 className="visually-hidden">Board page</h2>
       <Box display="flex" justifyContent="space-between" sx={{ width: '100%' }}>
         <Breadcrumbs aria-label="breadcrumbs" sx={{ margin: '5px 0' }}>
           <Link underline="hover" color="inherit" href="/">
-            Home
+            {t('homePage')}
           </Link>
           <Link underline="hover" color="inherit" href="/boards">
-            Boards
+            {t('boardsPage')}
           </Link>
-          <Typography color="text.primary">{`Board: ${data?.title}`}</Typography>
+          <Typography color="text.primary">{`${t('board')}: ${data?.title}`}</Typography>
         </Breadcrumbs>
         <Box>
           <SearchBar
-            placeholder="search task by title or description"
+            placeholder={t('searchTaskPlaceholder')}
             searchClear={() => dispatch(clearTasksSearch())}
             searchHandler={(value) => dispatch(searchTasks(value))}
           />

@@ -76,7 +76,7 @@ export const Board = () => {
             searchClear={() => dispatch(clearTasksSearch())}
             searchHandler={(value) => dispatch(searchTasks(value))}
           />
-          {searchResults.length > 0 && isSearchFocus && (
+          {searchResults?.length > 0 && isSearchFocus && (
             <List
               sx={{
                 position: 'absolute',

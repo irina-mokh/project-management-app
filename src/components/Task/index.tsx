@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { deleteTask } from 'store/board/actions';
 import { moveTask } from 'store/board/reducer';
 import { AppDispatch } from 'store';
-import React, { useRef, MutableRefObject, useState } from 'react';
+import React, { useRef, MutableRefObject, useState, useEffect } from 'react';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { updateTask } from 'utils/axios';
 
@@ -19,15 +19,23 @@ interface ITaskProps {
 export const Task = (props: ITaskProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [isPending, setPending] = useState(false);
-  const { columnId, boardId, columnOrder, isEmpty } = props;
+  const { columnId, boardId, columnOrder, isEmpty, data } = props;
 
   // add state to have columnId and boardId in state of Task
-  const [task] = useState<ITaskDetail>({
+  const [task, setTask] = useState<ITaskDetail>({
     ...props.data,
     columnId: columnId,
     boardId: boardId,
     columnOrder: columnOrder,
   });
+  useEffect(() => {
+    setTask({
+      ...data,
+      columnId: columnId,
+      boardId: boardId,
+      columnOrder: columnOrder,
+    });
+  }, [data, boardId, columnId, columnOrder]);
 
   // ref for DnD task
   const ref = useRef() as MutableRefObject<HTMLDivElement>;
@@ -80,7 +88,7 @@ export const Task = (props: ITaskProps) => {
   // task Ref
   drag(drop(ref));
 
-  const opacity = isDragging ? 0.5 : 1;
+  const opacity = isDragging ? 0.2 : 1;
 
   const isActive = canDrop && isOver;
   let borderColor = 'transparent';

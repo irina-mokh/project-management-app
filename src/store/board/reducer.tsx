@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { IBoardDetails, IColumn } from 'types';
 import { getBoard, createColumn, deleteColumn, deleteTask } from './actions';
 
@@ -22,7 +22,6 @@ export const boardSlice = createSlice({
   reducers: {
     moveColumn: (state, action) => {
       const { dragIndex, hoverIndex } = action.payload;
-
       const columns = state.data.columns;
       const dragColumn = columns[dragIndex - 1];
       columns.splice(dragIndex - 1, 1);
@@ -33,14 +32,13 @@ export const boardSlice = createSlice({
       });
     },
     moveTask: (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       const { dragIndex, hoverIndex, dragColumnIndex, dropColumnIndex } = action.payload;
       const columns = state.data.columns;
 
       const dragColumn = columns[dragColumnIndex - 1].tasks;
       const dropColumn = columns[dropColumnIndex - 1].tasks;
       const dragTask = dragColumn[dragIndex - 1];
-      console.log(current(dragTask));
       dragColumn.splice(dragIndex - 1, 1);
 
       if (dragColumnIndex == dropColumnIndex) {

@@ -1,12 +1,11 @@
 import { createSlice, current } from '@reduxjs/toolkit';
-import { IBoardDetails, IColumn, IUser, ITask, ITaskPutResponse } from 'types';
+import { IBoardDetails, IColumn, IUser, ITask } from 'types';
 import {
   getBoard,
   getAllUsers,
   createColumn,
   deleteColumn,
   createTask,
-  updateTask,
   deleteTask,
 } from './actions';
 
@@ -59,17 +58,36 @@ export const boardSlice = createSlice({
     },
     moveColumn: (state, action) => {
       const { dragIndex, hoverIndex } = action.payload;
-      if (state.data) {
-        const columns = state.data.columns;
-        const dragColumn = columns[dragIndex - 1];
-        columns.splice(dragIndex - 1, 1);
-        columns.splice(hoverIndex - 1, 0, dragColumn);
+      const columns = state.data.columns;
+      const dragColumn = columns[dragIndex - 1];
+      columns.splice(dragIndex - 1, 1);
+      columns.splice(hoverIndex - 1, 0, dragColumn);
+      columns.forEach(async (column, i) => {
+        // set state column order
+        column.order = i + 1;
+      });
+    },
+    moveTask: (state, action) => {
+      // console.log(action.payload);
+      const { dragIndex, hoverIndex, dragColumnIndex, dropColumnIndex } = action.payload;
+      const columns = state.data.columns;
 
-        columns.forEach(async (column, i) => {
-          // set state column order
-          column.order = i + 1;
+      const dragColumn = columns[dragColumnIndex - 1].tasks;
+      const dropColumn = columns[dropColumnIndex - 1].tasks;
+      const dragTask = dragColumn[dragIndex - 1];
+      dragColumn.splice(dragIndex - 1, 1);
+
+      if (dragColumnIndex == dropColumnIndex) {
+        dragColumn.splice(hoverIndex - 1, 0, dragTask);
+      } else {
+        dropColumn.splice(hoverIndex - 1, 0, dragTask);
+        dropColumn.forEach(async (task, i) => {
+          task.order = i + 1;
         });
       }
+      dragColumn.forEach(async (task, i) => {
+        task.order = i + 1;
+      });
     },
   },
   extraReducers: (builder) => {
@@ -80,15 +98,20 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
-        const sortedColumns = action.payload.columns.sort(
+        const sortedColumns: IColumn[] = action.payload.columns.sort(
           (a: IColumn, b: IColumn) => a.order - b.order
         );
 
-        state.data = action.payload;
-        if (state.data?.columns) {
-          state.data.columns = sortedColumns;
-        }
+        sortedColumns.map((col) => {
+          const sortedTasks = col.tasks.sort((a, b) => a.order - b.order);
+          return {
+            ...col,
+            tasks: sortedTasks,
+          };
+        });
 
+        state.data = action.payload;
+        state.data.columns = sortedColumns;
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
@@ -103,7 +126,7 @@ export const boardSlice = createSlice({
         console.error('Something went wrong while fetching getAllUsers endpoint :( ');
       })
 
-      // createColumn
+      // create column
       .addCase(createColumn.fulfilled, (state, action) => {
         state.data = {
           ...state.data,
@@ -141,9 +164,10 @@ export const boardSlice = createSlice({
       })
 
       // updateTask
+      /*
       .addCase(updateTask.fulfilled, (state, action) => {
         console.log('start update task');
-        const { columnId, id, title, order, done, description, userId } =
+        const { columnId, id, title, order, description, userId } =
           action.payload as ITaskPutResponse;
         // создаём копию массива из state
         const columns = Array.from(state.data.columns);
@@ -161,7 +185,6 @@ export const boardSlice = createSlice({
             id: id,
             title: title,
             order: order,
-            done: done,
             description: description,
             userId: userId,
           };
@@ -177,6 +200,7 @@ export const boardSlice = createSlice({
       .addCase(updateTask.rejected, (state, action) => {
         state.error = String(action.payload);
       })
+      */
 
       // deleteTask
       .addCase(deleteTask.fulfilled, (state, action) => {
@@ -193,6 +217,7 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { moveColumn, clearTasksSearch, searchTasks, toggleSearchFocus } = boardSlice.actions;
+export const { moveColumn, moveTask, clearTasksSearch, searchTasks, toggleSearchFocus } =
+  boardSlice.actions;
 
 export default boardSlice.reducer;

@@ -39,7 +39,6 @@ export interface ITask {
   id: string;
   title: string;
   order: number;
-  done: boolean;
   description: string;
   userId: string;
   files?: [
@@ -48,6 +47,12 @@ export interface ITask {
       fileSize: number;
     }
   ];
+}
+
+export interface ITaskDetail extends ITask {
+  boardId: string;
+  columnId: string;
+  columnOrder: number;
 }
 
 export interface ITaskPut {

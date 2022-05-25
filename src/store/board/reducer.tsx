@@ -6,7 +6,6 @@ type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
-  isPending: boolean;
   searchResults: Array<ITask>;
   isSearchFocus: boolean;
 };
@@ -15,7 +14,6 @@ const initialState: IBoardState = {
   isLoading: true,
   error: null,
   data: {} as IBoardDetails,
-  isPending: false,
   searchResults: [],
   isSearchFocus: false,
 };

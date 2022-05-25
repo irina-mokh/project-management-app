@@ -96,10 +96,15 @@ export const createTask = createAsyncThunk(
 
 export const updateTask = createAsyncThunk(
   'board/updateTask',
-  async function ([task, taskId, dragColumnId]: [ITaskPut, string, string], { rejectWithValue }) {
+  async function ([task, taskId, columnId]: [ITaskPut, string, string], { rejectWithValue }) {
     const { boardId } = task;
     try {
-      await axiosClient.put(`boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`, task);
+      const response = await axiosClient.put(
+        `boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
+        task
+      );
+
+      return response.data;
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);
     }

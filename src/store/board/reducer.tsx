@@ -1,11 +1,12 @@
 import { createSlice, current } from '@reduxjs/toolkit';
-import { IBoardDetails, IColumn, IUser, ITask } from 'types';
+import { IBoardDetails, IColumn, IUser, ITask, ITaskPutResponse } from 'types';
 import {
   getBoard,
   getAllUsers,
   createColumn,
   deleteColumn,
   createTask,
+  updateTask,
   deleteTask,
 } from './actions';
 
@@ -136,6 +137,44 @@ export const boardSlice = createSlice({
         state.data.columns = columns;
       })
       .addCase(createTask.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // updateTask
+      .addCase(updateTask.fulfilled, (state, action) => {
+        console.log('start update task');
+        const { columnId, id, title, order, done, description, userId } =
+          action.payload as ITaskPutResponse;
+        // создаём копию массива из state
+        const columns = Array.from(state.data.columns);
+
+        // в копии массива заменяем старый таск
+        const updatedColumn = columns.find((column) => column.id === columnId);
+
+        if (updatedColumn !== undefined) {
+          const taskIdx = updatedColumn.tasks.findIndex((task) => task.id == id);
+
+          // меняем элемент по ссылке
+          let editedTask = updatedColumn.tasks[taskIdx];
+
+          editedTask = {
+            id: id,
+            title: title,
+            order: order,
+            done: done,
+            description: description,
+            userId: userId,
+          };
+
+          debugger;
+        }
+
+        // присваиваем копию массива в state.columns
+        state.data.columns = columns;
+
+        debugger;
+      })
+      .addCase(updateTask.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 

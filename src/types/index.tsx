@@ -59,16 +59,18 @@ export interface ITaskPut {
   columnId: string;
 }
 
+export interface ITaskPutResponse extends ITaskPut {
+  id: string;
+  done: boolean;
+}
+
 export interface ICreateTask {
   title: string;
   description: string;
   userId: string;
 }
 
-export interface ICreateTaskResponse {
-  title: string;
-  description: string;
-  userId: string;
+export interface ICreateTaskResponse extends ICreateTask {
   taskId: string;
 }
 

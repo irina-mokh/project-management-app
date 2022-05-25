@@ -23,7 +23,7 @@ export const Header = () => {
   const { toggleLang } = langSlice.actions;
 
   const checkSticky = () => {
-    if (headerLine.current?.clientHeight && window.pageYOffset > headerLine.current?.clientHeight) {
+    if (window.pageYOffset > 0) {
       setSticky(true);
     } else {
       setSticky(false);

@@ -47,12 +47,10 @@ export const Board = () => {
     return <>{error}</>;
   }
 
-  console.log(`params id: ${id}`);
-
   return (
     <Container
+      maxWidth="xl"
       sx={{
-        width: '100%',
         height: '83vh',
         padding: '5px',
         display: 'flex',
@@ -110,15 +108,33 @@ export const Board = () => {
       <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '10px 0 5px 0' }}>
         {data?.title}
       </Typography>
-      <List sx={{ width: '100%', height: '90%', display: 'flex' }}>
+      <List
+        sx={{
+          width: '100%',
+          height: '90%',
+          display: 'flex',
+          overflowX: 'scroll',
+          '&::-webkit-scrollbar': {
+            width: 7,
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'transparent',
+            border: '1px solid #bdbdbd4D',
+            borderRadius: 2,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#bdbdbdCC',
+            borderRadius: 2,
+          },
+        }}
+      >
         {columns.map((column: IColumn) => (
           <Column column={column} boardId={String(id)} key={column.id} />
         ))}
-        <Card sx={{ minWidth: '300px', padding: '10px' }}>
+        <Card sx={{ order: `${columns.length + 1}`, minWidth: '250px', padding: '10px' }}>
           <AddButton text={t('addNewColumn')} addHandler={() => setShowModal(true)} />
         </Card>
       </List>
-
       <CreateColumnModal
         boardId={id}
         isVisible={showModal}

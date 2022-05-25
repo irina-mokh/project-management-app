@@ -44,17 +44,36 @@ export const boardSlice = createSlice({
     },
     moveColumn: (state, action) => {
       const { dragIndex, hoverIndex } = action.payload;
-      if (state.data) {
-        const columns = state.data.columns;
-        const dragColumn = columns[dragIndex - 1];
-        columns.splice(dragIndex - 1, 1);
-        columns.splice(hoverIndex - 1, 0, dragColumn);
+      const columns = state.data.columns;
+      const dragColumn = columns[dragIndex - 1];
+      columns.splice(dragIndex - 1, 1);
+      columns.splice(hoverIndex - 1, 0, dragColumn);
+      columns.forEach(async (column, i) => {
+        // set state column order
+        column.order = i + 1;
+      });
+    },
+    moveTask: (state, action) => {
+      // console.log(action.payload);
+      const { dragIndex, hoverIndex, dragColumnIndex, dropColumnIndex } = action.payload;
+      const columns = state.data.columns;
 
-        columns.forEach(async (column, i) => {
-          // set state column order
-          column.order = i + 1;
+      const dragColumn = columns[dragColumnIndex - 1].tasks;
+      const dropColumn = columns[dropColumnIndex - 1].tasks;
+      const dragTask = dragColumn[dragIndex - 1];
+      dragColumn.splice(dragIndex - 1, 1);
+
+      if (dragColumnIndex == dropColumnIndex) {
+        dragColumn.splice(hoverIndex - 1, 0, dragTask);
+      } else {
+        dropColumn.splice(hoverIndex - 1, 0, dragTask);
+        dropColumn.forEach(async (task, i) => {
+          task.order = i + 1;
         });
       }
+      dragColumn.forEach(async (task, i) => {
+        task.order = i + 1;
+      });
     },
   },
   extraReducers: (builder) => {
@@ -65,20 +84,27 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
-        const sortedColumns = action.payload.columns.sort(
+        const sortedColumns: IColumn[] = action.payload.columns.sort(
           (a: IColumn, b: IColumn) => a.order - b.order
         );
 
+        sortedColumns.map((col) => {
+          const sortedTasks = col.tasks.sort((a, b) => a.order - b.order);
+          return {
+            ...col,
+            tasks: sortedTasks,
+          };
+        });
+
         state.data = action.payload;
-        if (state.data?.columns) {
-          state.data.columns = sortedColumns;
-        }
+        state.data.columns = sortedColumns;
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 
+      // create column
       .addCase(createColumn.fulfilled, (state, action) => {
         state.data = {
           ...state.data,
@@ -113,6 +139,7 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { moveColumn, clearTasksSearch, searchTasks, toggleSearchFocus } = boardSlice.actions;
+export const { moveColumn, moveTask, clearTasksSearch, searchTasks, toggleSearchFocus } =
+  boardSlice.actions;
 
 export default boardSlice.reducer;

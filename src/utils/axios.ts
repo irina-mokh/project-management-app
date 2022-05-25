@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ITaskPut } from 'types';
 
 export const axiosClient = axios.create({
   baseURL: 'https://thawing-spire-17017.herokuapp.com/',
@@ -45,12 +46,20 @@ export const updateColumn = async (
   order: number,
   title: string
 ) => {
-  console.log(`update column: ${order}`);
   try {
     await axiosClient.put(`boards/${boardId}/columns/${columnId}`, {
       title: title,
       order: order,
     });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateTask = async (task: ITaskPut, taskId: string, dragColumnId: string) => {
+  const { boardId } = task;
+  try {
+    await axiosClient.put(`boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`, task);
   } catch (err) {
     console.log(err);
   }

@@ -73,7 +73,7 @@ export const authSlice = createSlice({
       .addCase(getUserPersData.fulfilled, (state, action) => {
         state.userId = action.payload.userId;
         state.userName = action.payload.userName;
-        console.log('action1-getUserPersData', action.payload);
+        // console.log('action1', action.payload);
       })
       .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;

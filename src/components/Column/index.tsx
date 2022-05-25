@@ -4,16 +4,22 @@ import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
 import { AppDispatch } from 'store';
 import React, { useState, useRef, MutableRefObject } from 'react';
-// import { selectBoard } from 'store/board/selectors';
 import { useDispatch } from 'react-redux';
 import { moveColumn } from 'store/board/reducer';
 import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
-//import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { Task } from 'components/Task';
 import { useTranslation } from 'react-i18next';
 import { DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
+
+const emptyTask = {
+  id: '0',
+  title: '',
+  order: 1,
+  description: '',
+  userId: '',
+};
 
 interface IColumnProps {
   column: IColumn;
@@ -21,6 +27,8 @@ interface IColumnProps {
 }
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
+  const [isPending, setPending] = useState(false);
+
   const { boardId, column } = props;
 
   const [curTitle, setCurTitle] = useState(column.title);
@@ -31,19 +39,22 @@ export const Column = (props: IColumnProps) => {
     setCurTitle(column.title);
   };
 
+  // ref for column DnD
+  const colRef = useRef() as MutableRefObject<HTMLDivElement>;
   const { t } = useTranslation();
-  // ref for DnD
-  const ref = useRef() as MutableRefObject<HTMLDivElement>;
 
-  // Drop
-  const [{ isOver, canDrop }, drop] = useDrop(
+  // Drop column
+  const [{ isOver, canDrop }, dropCol] = useDrop(
     () => ({
       accept: 'column',
       drop: async (item: IColumn) => {
+        setPending(true);
         const dragIndex = item.order;
         const hoverIndex = props.column.order;
         dispatch(moveColumn({ dragIndex, hoverIndex }));
-        await updateColumn(boardId, item.id, hoverIndex, item.title);
+        updateColumn(boardId, item.id, hoverIndex, item.title).then(() => {
+          setPending(false);
+        });
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),
@@ -53,19 +64,21 @@ export const Column = (props: IColumnProps) => {
     [props]
   );
 
-  // Drag
-  const [{ isDragging }, drag] = useDrag(
+  // Drag column
+  const [{ isDragging }, dragCol] = useDrag(
     () => ({
       type: 'column',
       item: column,
+      canDrag: !isPending,
       collect: (monitor: DragSourceMonitor) => ({
         isDragging: monitor.isDragging(),
+        canDrag: monitor.canDrag(),
       }),
     }),
     [column]
   );
-
-  drag(drop(ref));
+  // column ref
+  dragCol(dropCol(colRef));
 
   const opacity = isDragging ? 0.5 : 1;
 
@@ -91,21 +104,22 @@ export const Column = (props: IColumnProps) => {
       </IconButton>
     </>
   ) : (
-    <Edit aria-label="edit" color="disabled" sx={{ width: '0.8em', height: '0.8em' }} />
+    <Edit aria-label="edit" color="disabled" sx={{ width: '0.5em', height: '0.5em' }} />
   );
   return (
     <Card
       component="li"
-      ref={ref}
-      style={{
+      ref={colRef}
+      sx={{
+        order: `${column.order}`,
         marginRight: '1rem',
         height: '100%',
-        minWidth: '300px',
-        padding: '5px 15px 10px 15px',
+        width: '300px',
+        padding: '5px 10px 10px 7px',
         position: 'relative',
         opacity: opacity,
         cursor: 'grab',
-        border: `1px dashed ${borderColor}`,
+        borderLeft: `7px solid ${borderColor}`,
       }}
     >
       <TextField
@@ -123,6 +137,8 @@ export const Column = (props: IColumnProps) => {
       />
       <List
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
           height: '90%',
           overflowY: 'scroll',
           padding: '0 10px 0 0',
@@ -130,21 +146,38 @@ export const Column = (props: IColumnProps) => {
             width: 7,
           },
           '&::-webkit-scrollbar-track': {
-            backgroundColor: '#7b9c8480',
+            backgroundColor: 'transparent',
+            border: '1px solid #bdbdbd4D',
+            borderRadius: 2,
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: 'gray',
+            backgroundColor: '#bdbdbdCC',
             borderRadius: 2,
           },
         }}
       >
         {column.tasks.map((task: ITask) => (
-          <Task boardId={boardId} columnId={column.id} task={task} key={task.id}></Task>
+          <Task
+            boardId={boardId}
+            columnId={column.id}
+            data={task}
+            key={task.id}
+            columnOrder={column.order}
+          ></Task>
         ))}
-        <AddButton text={t('addTask')} />
+        <AddButton text={t('addTask')} order={column.tasks.length + 1} />
+        {column.tasks.length == 0 && (
+          <Task
+            boardId={boardId}
+            columnId={column.id}
+            data={emptyTask}
+            key="0"
+            columnOrder={column.order}
+            isEmpty={true}
+          ></Task>
+        )}
       </List>
       <DeleteButton
-        // size="small"
         confirmText={t('confirmTextButton')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />

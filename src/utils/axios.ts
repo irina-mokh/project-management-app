@@ -59,7 +59,11 @@ export const updateColumn = async (
 export const updateTask = async (task: ITaskPut, taskId: string, dragColumnId: string) => {
   const { boardId } = task;
   try {
-    await axiosClient.put(`boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`, task);
+    const response = await axiosClient.put(
+      `boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`,
+      task
+    );
+    return response;
   } catch (err) {
     console.log(err);
   }

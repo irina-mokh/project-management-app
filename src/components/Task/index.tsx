@@ -56,15 +56,17 @@ export const Task = (props: ITaskProps) => {
 
         const newTask = {
           title: drag.title,
-          order: drag.order,
+          order: task.order,
           description: drag.description,
           userId: drag.userId,
           boardId: boardId,
           columnId: task.columnId,
         };
-        updateTask(newTask, drag.id, drag.columnId).then(() => {
-          setPending(false);
-        });
+        if (dragColumnIndex === dropColumnIndex && dropIndex === dragIndex) {
+          return;
+        }
+        await updateTask(newTask, drag.id, drag.columnId);
+        setPending(false);
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),

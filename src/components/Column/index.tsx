@@ -51,6 +51,9 @@ export const Column = (props: IColumnProps) => {
         setPending(true);
         const dragIndex = item.order;
         const hoverIndex = props.column.order;
+        if (hoverIndex === dragIndex) {
+          return;
+        }
         dispatch(moveColumn({ dragIndex, hoverIndex }));
         updateColumn(boardId, item.id, hoverIndex, item.title).then(() => {
           setPending(false);

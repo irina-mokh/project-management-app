@@ -16,6 +16,7 @@ export const MainLayout = () => {
       <CssBaseline />
       <DndProvider backend={HTML5Backend}>
         <Box
+          data-testid="app"
           sx={{
             backgroundColor: theme.palette.background.default,
             fontFamily: theme.typography.fontFamily,

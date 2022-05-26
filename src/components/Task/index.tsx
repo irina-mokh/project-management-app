@@ -20,6 +20,7 @@ interface ITaskProps {
 export const Task = (props: ITaskProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [isPending, setPending] = useState(false);
+  let pending = false;
   const { columnId, boardId, columnOrder, isEmpty, data } = props;
 
   // add state to have columnId and boardId in state of Task
@@ -29,6 +30,10 @@ export const Task = (props: ITaskProps) => {
     boardId: boardId,
     columnOrder: columnOrder,
   });
+  useEffect(() => {
+    setPending(pending);
+  }, [pending]);
+
   useEffect(() => {
     setTask({
       ...data,
@@ -46,12 +51,15 @@ export const Task = (props: ITaskProps) => {
     () => ({
       accept: 'task',
       drop: async (drag: ITaskDetail) => {
-        setPending(true);
+        pending = true;
         const dragIndex = drag.order;
         const dropIndex = task.order;
         const dragColumnIndex = drag.columnOrder;
         const dropColumnIndex = task.columnOrder;
 
+        if (dragColumnIndex === dropColumnIndex && dropIndex === dragIndex) {
+          return;
+        }
         dispatch(moveTask({ dragIndex, dropIndex, dragColumnIndex, dropColumnIndex }));
 
         const newTask = {
@@ -62,11 +70,9 @@ export const Task = (props: ITaskProps) => {
           boardId: boardId,
           columnId: task.columnId,
         };
-        if (dragColumnIndex === dropColumnIndex && dropIndex === dragIndex) {
-          return;
-        }
+
         await updateTask(newTask, drag.id, drag.columnId);
-        setPending(false);
+        pending = false;
       },
       collect: (monitor: DropTargetMonitor) => ({
         isOver: !!monitor.isOver(),

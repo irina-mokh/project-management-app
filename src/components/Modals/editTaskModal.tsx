@@ -17,27 +17,7 @@ import { updateTask } from 'store/board/actions';
 import { selectBoard } from 'store/board/selectors';
 import { useSearchParams } from 'react-router-dom';
 
-interface IEditTask {
-  boardId: string | undefined;
-}
-
-/*
-Что должно быть в таске? 
-Пользователь(член команды) может ставить задачи, выполнять задачи, просматривать задачи, удалять собственные задачи, быть ответственным (виноватым) в чужих задачах.
-
-Для создания таска используется форма отображаемая в модальном окне.
-Для создания колонки / таска используются формы, отображаемые в модальных окнах. 3 балла
-Реализован функционал просмотра, и редактирования всего содержимого таски. 3 балла
-
-POST
-{
-  "title": "Task: pet the cat",
-  "description": "Domestic cat needs to be stroked gently",
-  "userId": "40af606c-c0bb-47d1-bc20-a2857242cde3"
-}
-*/
-
-export function EditTaskModal({ boardId }: IEditTask) {
+export function EditTaskModal({ boardId }: { boardId: string | undefined }) {
   const dispatch: AppDispatch = useDispatch();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -48,6 +28,7 @@ export function EditTaskModal({ boardId }: IEditTask) {
 
   const boardDetails = useSelector(selectBoard);
 
+  // список пользователей для возможности назначить таск
   const useresListElement = boardDetails.usersList.map(function (user, idx) {
     return (
       <MenuItem value={user.id} key={idx}>
@@ -59,25 +40,26 @@ export function EditTaskModal({ boardId }: IEditTask) {
   const column = boardDetails.data.columns.find((col) => col.id === columnId);
   const taskDetails = column?.tasks.find((task) => task.id == taskId);
 
-  const [title, setTitle] = useState(taskDetails?.title || '');
-  const [description, setDescription] = useState(taskDetails?.description || '');
-  const [responsible, setResponsible] = useState(taskDetails?.userId || '');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [responsible, setResponsible] = useState('');
 
-  const [hasSelectError, setHasSelectError] = useState(false);
+  useEffect(() => {
+    if (!taskDetails) return;
+
+    setTitle(taskDetails.title);
+    setDescription(taskDetails.description);
+    setResponsible(taskDetails.userId);
+  }, [taskDetails]);
+
   const [hasErrors, setHasErrors] = useState({
     title: true,
     description: true,
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log('EDIT SUBMITED');
     event.preventDefault();
     if (hasErrors.title || hasErrors.description) return;
-
-    if (responsible == '') {
-      setHasSelectError(true);
-      return;
-    }
 
     //отправляем PUT запрос с обновлением таска
     dispatch(
@@ -96,14 +78,15 @@ export function EditTaskModal({ boardId }: IEditTask) {
     );
 
     // обнуляем строку с именем и закрываем окошко
-    setTitle('');
-    setDescription('');
-    setResponsible('');
     handleClose();
   };
 
-  // для закрытия удаляем query param из строки
+  // для закрытия обнуляем значения в values и удаляем query param из строки
   const handleClose = () => {
+    setTitle('');
+    setDescription('');
+    setResponsible('');
+
     searchParams.delete('columnId');
     searchParams.delete('taskId');
     setSearchParams(searchParams);
@@ -132,7 +115,6 @@ export function EditTaskModal({ boardId }: IEditTask) {
           <DialogContentText>Title</DialogContentText>
           <TextField
             name="title"
-            autoFocus
             required
             autoComplete="off"
             value={title}
@@ -161,14 +143,10 @@ export function EditTaskModal({ boardId }: IEditTask) {
           <DialogContentText sx={{ mt: 2, mb: 2 }}>Responsible</DialogContentText>
           <Select
             sx={{ minWidth: 120 }}
-            error={hasSelectError}
             value={responsible}
-            displayEmpty
             variant="standard"
-            renderValue={responsible !== '' ? undefined : () => <MenuItem>Select</MenuItem>}
             onChange={(event: SelectChangeEvent) => {
               setResponsible(event.target.value as string);
-              setHasSelectError(false);
             }}
           >
             {useresListElement}
@@ -177,7 +155,7 @@ export function EditTaskModal({ boardId }: IEditTask) {
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            Create task
+            Confirm changes
           </Button>
         </DialogActions>
       </form>

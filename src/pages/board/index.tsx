@@ -26,6 +26,7 @@ export const Board = () => {
   const { searchResults, data, isLoading, error, isSearchFocus } = useSelector(selectBoard);
   const [showModal, setShowModal] = useState(false);
   const columns: IColumn[] = data.columns;
+
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
 

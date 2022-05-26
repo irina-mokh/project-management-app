@@ -36,7 +36,14 @@ export const DevCardMary = () => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: 'transparent', border: 'none' }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        backgroundColor: 'transparent',
+        border: 'none',
+        backgroundImage: 'none',
+      }}
+    >
       <CardMedia component="img" image={maryPic} alt="Paella dish" sx={{ zIndex: '100' }} />
       <CardActions
         disableSpacing
@@ -72,6 +79,7 @@ export const DevCardMary = () => {
             <li>Welcome page </li>
             <li>Authorization</li>
             <li>Localization</li>
+            <li>Confirm Modal</li>
           </ul>
         </CardContent>
       </Collapse>

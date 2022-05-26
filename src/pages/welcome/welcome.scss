@@ -25,16 +25,8 @@
   margin-top: 15%;
   margin-bottom: 5%;
   text-align: center;
-  color: #1a0f91;
+  color: #ff7000;
 }
-
-.h3 {
-  text-align: center;
-  color: #391f20;
-  text-shadow: 0px 0px 20px rgb(0 0 0);
-  margin-bottom: 20px;
-}
-
 .olcards,
 .olcards * {
   margin: 0;
@@ -174,4 +166,5 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-bottom: 20px;
 }

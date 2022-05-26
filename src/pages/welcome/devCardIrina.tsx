@@ -35,7 +35,14 @@ export const DevCardIrina = () => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: 'transparent', border: 'none' }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        backgroundColor: 'transparent',
+        border: 'none',
+        backgroundImage: 'none',
+      }}
+    >
       <CardMedia component="img" image={iraPic} alt="Paella dish" sx={{ zIndex: '100' }} />
       <CardActions
         disableSpacing

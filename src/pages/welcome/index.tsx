@@ -1,7 +1,7 @@
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
 
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { DevCardIrina } from './devCardIrina';
 import { DevCardMary } from './devCardMary ';
 import { DevCardIvan } from './devCardIvan';
@@ -12,7 +12,18 @@ export const Welcome = () => {
     <div className="welcomeContainer">
       <div className="mainTextContainer">
         <div className="aboutAppContainer">
-          <h1 className="mainTitle">Project managment app</h1>
+          <Typography
+            variant="h3"
+            sx={{
+              marginTop: '20px',
+              marginBottom: '20px',
+              textAlign: 'center',
+              color: '#FF7000',
+              fontWeight: '600',
+            }}
+          >
+            Project Manegment App
+          </Typography>
           <h3>Manage your team&apos;s work, projects and tasks online</h3>
           <Button
             variant="contained"
@@ -23,7 +34,16 @@ export const Welcome = () => {
         </div>
       </div>
       <section>
-        <h3 className="h3">Team of developers</h3>
+        <Typography
+          variant="h3"
+          sx={{
+            marginBottom: '20px',
+            textAlign: 'center',
+            color: '#FF7000',
+          }}
+        >
+          Team of developers
+        </Typography>
         <div className="devCardsContainer">
           <DevCardIrina />
           <DevCardIvan />

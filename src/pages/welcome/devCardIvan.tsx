@@ -36,16 +36,27 @@ export const DevCardIvan = () => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: 'transparent', border: 'none' }}>
-      <CardMedia component="img" image={ivanPic} alt="Paella dish" sx={{ zIndex: '100' }} />
+    <Card
+      sx={{
+        maxWidth: 345,
+        backgroundColor: 'transparent',
+        border: 'none',
+        padding: '5px',
+        backgroundImage: 'none',
+      }}
+    >
+      <CardMedia
+        component="img"
+        image={ivanPic}
+        alt="Paella dish"
+        sx={{ zIndex: '100', objectFit: 'contain' }}
+      />
       <CardActions
         disableSpacing
         sx={{
-          width: '98%',
+          width: '100%',
           marginTop: '0px',
           backgroundColor: '#009688',
-          marginLeft: '5px',
-          objectFit: 'none',
         }}
       >
         <Typography sx={{ color: 'white' }}>Ivan</Typography>

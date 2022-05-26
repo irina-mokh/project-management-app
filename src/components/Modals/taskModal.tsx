@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'store';
 import { createTask } from 'store/board/actions';
 import { selectBoard } from 'store/board/selectors';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 interface ICreateTask {
@@ -22,24 +23,6 @@ interface ICreateTask {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   columnId: string | undefined;
 }
-
-/*
-Что должно быть в таске? 
-Пользователь(член команды) может ставить задачи, выполнять задачи, просматривать задачи, удалять собственные задачи, быть ответственным (виноватым) в чужих задачах.
-
-Для создания таска используется форма отображаемая в модальном окне.
-Для создания колонки / таска используются формы, отображаемые в модальных окнах. 3 балла
-Реализован функционал просмотра, и редактирования всего содержимого таски. 3 балла
-
-Таск не может быть НЕ привязан к колонке.
-
-POST
-{
-  "title": "Task: pet the cat",
-  "description": "Domestic cat needs to be stroked gently",
-  "userId": "40af606c-c0bb-47d1-bc20-a2857242cde3"
-}
-*/
 
 export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
   const dispatch: AppDispatch = useDispatch();
@@ -54,6 +37,7 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
   });
 
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -116,10 +100,10 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
   return (
     <Dialog open={isVisible} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Create task</DialogTitle>
+        <DialogTitle>{t('createTask')}</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Set title</DialogContentText>
+          <DialogContentText>{t('setTitle')}</DialogContentText>
           <TextField
             name="title"
             autoFocus
@@ -133,7 +117,7 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
             error={title.length > 0 && hasErrors.title}
           ></TextField>
 
-          <DialogContentText sx={{ mt: 2 }}>Add description</DialogContentText>
+          <DialogContentText sx={{ mt: 2 }}>{t('setDescription')}</DialogContentText>
           <TextField
             name="description"
             required
@@ -148,14 +132,14 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
             error={description.length > 0 && hasErrors.description}
           ></TextField>
 
-          <DialogContentText sx={{ mt: 2, mb: 2 }}>Add responsible</DialogContentText>
+          <DialogContentText sx={{ mt: 2, mb: 2 }}>{t('setResponsible')}</DialogContentText>
           <Select
             sx={{ minWidth: 120 }}
             error={hasSelectError}
             value={responsible}
             displayEmpty
             variant="standard"
-            renderValue={responsible !== '' ? undefined : () => <MenuItem>Select</MenuItem>}
+            renderValue={responsible !== '' ? undefined : () => <MenuItem>{t('select')}</MenuItem>}
             onChange={(event: SelectChangeEvent) => {
               setResponsible(event.target.value as string);
               setHasSelectError(false);
@@ -167,7 +151,7 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            Create task
+            {t('createTask')}
           </Button>
         </DialogActions>
       </form>

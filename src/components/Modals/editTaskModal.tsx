@@ -15,10 +15,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'store';
 import { updateTask } from 'store/board/actions';
 import { selectBoard } from 'store/board/selectors';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
 export function EditTaskModal({ boardId }: { boardId: string | undefined }) {
   const dispatch: AppDispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -109,10 +112,10 @@ export function EditTaskModal({ boardId }: { boardId: string | undefined }) {
   return (
     <Dialog open={hasModal} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Edit task</DialogTitle>
+        <DialogTitle>{t('editTask')}</DialogTitle>
 
         <DialogContent>
-          <DialogContentText>Title</DialogContentText>
+          <DialogContentText>{t('title')}</DialogContentText>
           <TextField
             name="title"
             required
@@ -125,7 +128,7 @@ export function EditTaskModal({ boardId }: { boardId: string | undefined }) {
             error={title.length > 0 && hasErrors.title}
           ></TextField>
 
-          <DialogContentText sx={{ mt: 2 }}>Description</DialogContentText>
+          <DialogContentText sx={{ mt: 2 }}>{t('description')}</DialogContentText>
           <TextField
             name="description"
             required
@@ -140,7 +143,7 @@ export function EditTaskModal({ boardId }: { boardId: string | undefined }) {
             error={description.length > 0 && hasErrors.description}
           ></TextField>
 
-          <DialogContentText sx={{ mt: 2, mb: 2 }}>Responsible</DialogContentText>
+          <DialogContentText sx={{ mt: 2, mb: 2 }}>{t('responsible')}</DialogContentText>
           <Select
             sx={{ minWidth: 120 }}
             value={responsible}
@@ -155,7 +158,7 @@ export function EditTaskModal({ boardId }: { boardId: string | undefined }) {
 
         <DialogActions>
           <Button type="submit" size="medium" variant="contained">
-            Confirm changes
+            {t('editTaskConfirm')}
           </Button>
         </DialogActions>
       </form>

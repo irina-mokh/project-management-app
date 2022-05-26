@@ -168,8 +168,11 @@ export const Column = (props: IColumnProps) => {
             columnOrder={column.order}
           ></Task>
         ))}
-        <AddButton text={t('addTask')} addHandler={() => setShowModal(true)} />
-        <AddButton text={t('addTask')} order={column.tasks.length + 1} />
+        <AddButton
+          text={t('addTask')}
+          order={column.tasks.length + 1}
+          addHandler={() => setShowModal(true)}
+        />
         {column.tasks.length == 0 && (
           <Task
             boardId={boardId}

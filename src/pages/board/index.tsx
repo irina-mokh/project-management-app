@@ -142,12 +142,7 @@ export const Board = () => {
       </List>
 
       <EditTaskModal boardId={id} />
-      <CreateColumnModal
-        boardId={id}
-        isVisible={showModal}
-        setVisible={setShowModal}
-        orderIdx={columns.length}
-      />
+      <CreateColumnModal boardId={id} isVisible={showModal} setVisible={setShowModal} />
     </Container>
   );
 };

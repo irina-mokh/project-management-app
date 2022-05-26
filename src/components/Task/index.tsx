@@ -24,7 +24,7 @@ export const Task = (props: ITaskProps) => {
   const { columnId, boardId, columnOrder, isEmpty, data } = props;
 
   // add state to have columnId and boardId in state of Task
-  const [task, setTask] = useState<ITaskDetails>({
+  const [task, setTask] = useState<ITaskDetail>({
     ...props.data,
     columnId: columnId,
     boardId: boardId,

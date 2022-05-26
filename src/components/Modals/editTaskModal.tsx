@@ -70,6 +70,7 @@ export function EditTaskModal({ boardId }: IEditTask) {
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('EDIT SUBMITED');
     event.preventDefault();
     if (hasErrors.title || hasErrors.description) return;
 
@@ -78,7 +79,7 @@ export function EditTaskModal({ boardId }: IEditTask) {
       return;
     }
 
-    //отправляем POST запрос с созданием колонки
+    //отправляем PUT запрос с обновлением таска
     dispatch(
       updateTask([
         {

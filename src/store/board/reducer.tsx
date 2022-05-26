@@ -6,13 +6,9 @@ import {
   createColumn,
   deleteColumn,
   createTask,
+  updateTask,
   deleteTask,
 } from './actions';
-
-type ICreateTaskArgs = {
-  columnId: string;
-  taskDetails: ITask;
-};
 
 type IBoardState = {
   isLoading: boolean;
@@ -148,7 +144,7 @@ export const boardSlice = createSlice({
 
       // createTask
       .addCase(createTask.fulfilled, (state, action) => {
-        const { columnId, taskDetails } = action.payload as ICreateTaskArgs;
+        const { columnId, taskDetails } = action.payload;
         // создаём копию массива из state
         const columns = Array.from(state.data.columns);
 
@@ -164,43 +160,27 @@ export const boardSlice = createSlice({
       })
 
       // updateTask
-      /*
       .addCase(updateTask.fulfilled, (state, action) => {
-        console.log('start update task');
-        const { columnId, id, title, order, description, userId } =
-          action.payload as ITaskPutResponse;
-        // создаём копию массива из state
-        const columns = Array.from(state.data.columns);
+        const { id, title, order, description, userId } = action.payload;
 
-        // в копии массива заменяем старый таск
-        const updatedColumn = columns.find((column) => column.id === columnId);
+        const column = state.data.columns.find((column) => column.id === action.payload.columnId);
+        if (column) {
+          const idx = column.tasks.findIndex((task) => task.id === id);
 
-        if (updatedColumn !== undefined) {
-          const taskIdx = updatedColumn.tasks.findIndex((task) => task.id == id);
-
-          // меняем элемент по ссылке
-          let editedTask = updatedColumn.tasks[taskIdx];
-
-          editedTask = {
-            id: id,
-            title: title,
-            order: order,
-            description: description,
-            userId: userId,
+          const task = {
+            id,
+            title,
+            order,
+            description,
+            userId,
           };
 
-          debugger;
+          column.tasks[idx] = task;
         }
-
-        // присваиваем копию массива в state.columns
-        state.data.columns = columns;
-
-        debugger;
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.error = String(action.payload);
       })
-      */
 
       // deleteTask
       .addCase(deleteTask.fulfilled, (state, action) => {

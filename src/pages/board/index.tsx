@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Card, Typography, Container, Breadcrumbs, Link } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
-import { CreateColumnModal, EditTaskModal } from 'components/Modals';
+import { CreateColumnModal, CreateTaskModal, EditTaskModal } from 'components/Modals';
 
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
@@ -142,8 +142,9 @@ export const Board = () => {
         </Card>
       </List>
 
-      <EditTaskModal boardId={id} />
       <CreateColumnModal boardId={id} isVisible={showModal} setVisible={setShowModal} />
+      <CreateTaskModal boardId={id} />
+      <EditTaskModal boardId={id} />
     </Container>
   );
 };

@@ -21,6 +21,7 @@ interface ITaskProps {
 export const Task = (props: ITaskProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [isPending, setPending] = useState(false);
+  // const [isDeleting, setDeleting] = useState(false);
   const { columnId, boardId, columnOrder, isEmpty, data } = props;
 
   // add state to have columnId and boardId in state of Task
@@ -114,10 +115,16 @@ export const Task = (props: ITaskProps) => {
     setSearchParams(searchParams);
   };
 
+  const allClickHandler = (event: React.MouseEvent) => {
+    console.log(event);
+    console.log(event.target);
+    editTaskHandler();
+  };
+
   return (
     <Card
       component="li"
-      onClick={editTaskHandler}
+      onClick={allClickHandler}
       ref={ref}
       sx={{
         order: props.data.order,

@@ -1,6 +1,6 @@
 import { CreateBoardModal } from './createBoardModal';
 import { CreateColumnModal } from './createColumnModal';
-import { TaskModal } from './taskModal';
+import { CreateTaskModal } from './createTaskModal';
 import { EditTaskModal } from './editTaskModal';
 
-export { TaskModal, CreateBoardModal, CreateColumnModal, EditTaskModal };
+export { CreateTaskModal, CreateBoardModal, CreateColumnModal, EditTaskModal };

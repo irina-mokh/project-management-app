@@ -16,15 +16,9 @@ import { AppDispatch } from 'store';
 import { createTask } from 'store/board/actions';
 import { selectBoard } from 'store/board/selectors';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-interface ICreateTask {
-  isVisible: boolean;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  columnId: string | undefined;
-}
-
-export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
+export function CreateTaskModal({ boardId }: { boardId: string | undefined }) {
   const dispatch: AppDispatch = useDispatch();
   const usersList = useSelector(selectBoard).usersList;
 
@@ -36,8 +30,11 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
     );
   });
 
-  const { id } = useParams();
   const { t } = useTranslation();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const hasModal = searchParams.has('columnId') && searchParams.has('create-task');
+  const columnId = searchParams.get('columnId') || '';
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -47,10 +44,6 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
     title: true,
     description: true,
   });
-
-  const handleClose = () => {
-    setVisible(false);
-  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,22 +58,29 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
     dispatch(
       createTask({
         url: {
-          boardId: id || '',
-          columnId: columnId || '',
+          boardId: boardId || '',
+          columnId,
         },
         data: {
-          title: title,
-          description: description,
+          title,
+          description,
           userId: responsible,
         },
       })
     );
 
+    handleClose();
+  };
+
+  const handleClose = () => {
     // обнуляем строку с именем и закрываем окошко
     setTitle('');
     setDescription('');
     setResponsible('');
-    handleClose();
+
+    searchParams.delete('create-task');
+    searchParams.delete('columnId');
+    setSearchParams(searchParams);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +98,7 @@ export function TaskModal({ isVisible, setVisible, columnId }: ICreateTask) {
   }, [title, description]);
 
   return (
-    <Dialog open={isVisible} onClose={handleClose} maxWidth="sm" fullWidth={true}>
+    <Dialog open={hasModal} onClose={handleClose} maxWidth="sm" fullWidth={true}>
       <form onSubmit={handleSubmit}>
         <DialogTitle>{t('createTask')}</DialogTitle>
 

@@ -10,9 +10,9 @@ import { deleteColumn } from 'store/board/actions';
 import { updateColumn } from 'utils/axios';
 import { DeleteButton } from 'components/DeleteButton';
 import { Task } from 'components/Task';
-import { TaskModal } from 'components/Modals';
 import { useTranslation } from 'react-i18next';
 import { DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
+import { useSearchParams } from 'react-router-dom';
 
 const emptyTask = {
   id: '0',
@@ -28,6 +28,7 @@ interface IColumnProps {
 }
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isPending, setPending] = useState(false);
 
   const { boardId, column } = props;
@@ -35,7 +36,12 @@ export const Column = (props: IColumnProps) => {
   const [curTitle, setCurTitle] = useState(column.title);
   const [curOrder] = useState(column.order);
   const [isSelected, setIsSelected] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+
+  const createTaskHandler = () => {
+    searchParams.set('create-task', 'true');
+    searchParams.set('columnId', column.id);
+    setSearchParams(searchParams);
+  };
 
   const handleTitleChangeCancel = () => {
     setCurTitle(column.title);
@@ -171,7 +177,7 @@ export const Column = (props: IColumnProps) => {
         <AddButton
           text={t('addTask')}
           order={column.tasks.length + 1}
-          addHandler={() => setShowModal(true)}
+          addHandler={() => createTaskHandler()}
         />
         {column.tasks.length == 0 && (
           <Task
@@ -188,8 +194,6 @@ export const Column = (props: IColumnProps) => {
         confirmText={t('confirmTextButton')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
-
-      <TaskModal columnId={column.id} isVisible={showModal} setVisible={setShowModal} />
     </Card>
   );
 };

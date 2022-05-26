@@ -13,7 +13,7 @@ import iraPic from '../../assets/images/svg/ira-logo.svg';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  expand: boolean | undefined;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {

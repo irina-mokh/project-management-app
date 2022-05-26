@@ -11,6 +11,8 @@ import { getUserPersData } from 'store/auth/actions';
 import { ReactComponent as MainLogo } from '../../assets/images/svg/logo.svg';
 import { ThemeSwitcher1 } from 'components/Theme';
 import { LangSwitcher } from 'components/LangSwitcher';
+import { Link } from 'react-router-dom';
+import { routes } from 'routes';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
@@ -46,10 +48,12 @@ export const Header = () => {
         backgroundColor: palette.background.paper,
       }}
     >
-      <MainLogo style={{ fill: '#FF7000', height: '100%', marginRight: '10px' }} />
-      <Typography variant="h5" component="h1">
-        PMA
-      </Typography>
+      <Link to={routes.welcome.path} style={{ display: 'flex', alignItems: 'center' }}>
+        <MainLogo style={{ fill: '#FF7000', height: '100%', marginRight: '10px' }} />
+        <Typography variant="h5" component="h1">
+          PMA
+        </Typography>
+      </Link>
       <LangSwitcher />
       <ThemeSwitcher1 />
       {token && token.length ? <UserHeader /> : <WelcomeHeader />}

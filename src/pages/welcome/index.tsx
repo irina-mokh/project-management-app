@@ -5,9 +5,13 @@ import { Button, Typography } from '@mui/material';
 import { DevCardIrina } from './devCardIrina';
 import { DevCardMary } from './devCardMary ';
 import { DevCardIvan } from './devCardIvan';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { Link } from 'react-router-dom';
 
 export const Welcome = () => {
   useTitle(routes.welcome.title);
+  const { token } = useSelector((state: RootState) => state.auth);
   return (
     <div className="welcomeContainer">
       <div className="mainTextContainer">
@@ -25,12 +29,15 @@ export const Welcome = () => {
             Project Manegment App
           </Typography>
           <h3>Manage your team&apos;s work, projects and tasks online</h3>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
-          >
-            Get started
-          </Button>
+
+          {token?.length ? null : (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
+            >
+              <Link to={routes.signUp.path}> Get started</Link>
+            </Button>
+          )}
         </div>
       </div>
       <section>

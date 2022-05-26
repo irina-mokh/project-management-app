@@ -21,7 +21,6 @@ interface ITaskProps {
 export const Task = (props: ITaskProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [isPending, setPending] = useState(false);
-  // const [isDeleting, setDeleting] = useState(false);
   const { columnId, boardId, columnOrder, isEmpty, data } = props;
 
   // add state to have columnId and boardId in state of Task
@@ -115,16 +114,9 @@ export const Task = (props: ITaskProps) => {
     setSearchParams(searchParams);
   };
 
-  const allClickHandler = (event: React.MouseEvent) => {
-    console.log(event);
-    console.log(event.target);
-    editTaskHandler();
-  };
-
   return (
     <Card
       component="li"
-      onClick={allClickHandler}
       ref={ref}
       sx={{
         order: props.data.order,
@@ -140,12 +132,14 @@ export const Task = (props: ITaskProps) => {
         cursor: !isEmpty ? 'pointer' : 'default',
       }}
     >
-      <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
-        {task.title}
-      </Typography>
-      <Typography fontSize="0.9em" fontStyle="italic">
-        {task.description}
-      </Typography>
+      <div onClick={editTaskHandler}>
+        <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
+          {task.title}
+        </Typography>
+        <Typography fontSize="0.9em" fontStyle="italic">
+          {task.description}
+        </Typography>
+      </div>
       {!isEmpty && (
         <DeleteButton
           confirmText={t('deleteTask')}

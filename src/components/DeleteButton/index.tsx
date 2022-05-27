@@ -9,13 +9,15 @@ interface IDeleteButtonProps {
 
   deleteHandler: () => void;
 }
+
 export const DeleteButton = (props: IDeleteButtonProps) => {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-
   const { deleteHandler, confirmText } = props;
+
   return (
     <>
       <IconButton
+        name="delete"
         aria-label="delete"
         sx={{ position: 'absolute', right: 0, top: 0 }}
         //onClick={deleteHandler}

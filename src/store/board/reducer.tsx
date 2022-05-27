@@ -1,11 +1,20 @@
 import { createSlice, current } from '@reduxjs/toolkit';
-import { IBoardDetails, IColumn, ITask } from 'types';
-import { getBoard, createColumn, deleteColumn, deleteTask } from './actions';
+import { IBoardDetails, IColumn, IUser, ITask } from 'types';
+import {
+  getBoard,
+  getAllUsers,
+  createColumn,
+  deleteColumn,
+  createTask,
+  updateTask,
+  deleteTask,
+} from './actions';
 
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
+  usersList: Array<IUser>;
   searchResults: Array<ITask>;
   isSearchFocus: boolean;
 };
@@ -14,6 +23,7 @@ const initialState: IBoardState = {
   isLoading: true,
   error: null,
   data: {} as IBoardDetails,
+  usersList: [] as Array<IUser>,
   searchResults: [],
   isSearchFocus: false,
 };
@@ -104,6 +114,14 @@ export const boardSlice = createSlice({
         state.error = String(action.payload);
       })
 
+      // getAllUsers
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.usersList = action.payload;
+      })
+      .addCase(getAllUsers.rejected, () => {
+        console.error('Something went wrong while fetching getAllUsers endpoint :( ');
+      })
+
       // create column
       .addCase(createColumn.fulfilled, (state, action) => {
         state.data = {
@@ -121,6 +139,46 @@ export const boardSlice = createSlice({
         state.data.columns = state.data.columns.filter((column) => column.id !== action.payload);
       })
       .addCase(deleteColumn.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // createTask
+      .addCase(createTask.fulfilled, (state, action) => {
+        const { columnId, taskDetails } = action.payload;
+        // создаём копию массива из state
+        const columns = Array.from(state.data.columns);
+
+        // в копию массива добавляем новый таск
+        const updatedColumn = columns.find((column) => column.id === columnId);
+        updatedColumn?.tasks.push(taskDetails);
+
+        // присваиваем копию массива в state.columns
+        state.data.columns = columns;
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // updateTask
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const { id, title, order, description, userId } = action.payload;
+
+        const column = state.data.columns.find((column) => column.id === action.payload.columnId);
+        if (column) {
+          const idx = column.tasks.findIndex((task) => task.id === id);
+
+          const task = {
+            id,
+            title,
+            order,
+            description,
+            userId,
+          };
+
+          column.tasks[idx] = task;
+        }
+      })
+      .addCase(updateTask.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 

@@ -58,9 +58,8 @@ export const boardListSlice = createSlice({
 
       // deleteBoard
       .addCase(deleteBoard.fulfilled, (state, action) => {
-        if (state.data?.length) {
-          state.data = state.data?.filter((board) => board.id !== action.payload);
-        }
+        state.data = state.data.filter((board) => board.id !== action.payload);
+        state.boardsOnClient = state.data;
       })
       .addCase(deleteBoard.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -69,6 +68,7 @@ export const boardListSlice = createSlice({
       // createBoard
       .addCase(createBoard.fulfilled, (state, action) => {
         state.data = [...state.data, action.payload];
+        state.boardsOnClient = state.data;
       })
       .addCase(createBoard.rejected, (state, action) => {
         state.error = String(action.payload);

@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import iraPic from '../../assets/images/svg/ira-logo.svg';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTranslation } from 'react-i18next';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean | undefined;
@@ -29,6 +30,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export const DevCardIrina = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const { t } = useTranslation();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -55,7 +57,7 @@ export const DevCardIrina = () => {
           objectFit: 'none',
         }}
       >
-        <Typography sx={{ color: 'white' }}>Irina</Typography>
+        <Typography sx={{ color: 'white' }}>{t('irina')}</Typography>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -73,12 +75,12 @@ export const DevCardIrina = () => {
             boxShadow: '0px 5px 10px 2px rgb(34 60 80 / 20%)',
           }}
         >
-          <Typography paragraph>Developed:</Typography>
+          <Typography paragraph>{t('developed')}</Typography>
           <ul>
-            <li>Boards</li>
-            <li>Tasks</li>
+            <li>{t('boardsPage')}</li>
+            <li>{t('tasks')}</li>
             <li>Drag&apos;n&apos;drop</li>
-            <li>Tests</li>
+            <li>{t('tests')}</li>
           </ul>
         </CardContent>
       </Collapse>

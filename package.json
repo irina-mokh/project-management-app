@@ -42,7 +42,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@amcharts)/\"",
     "eject": "react-scripts eject",
     "lint": "eslint --color src/",
     "lint:fix": "eslint --fix --max-warnings=0 --color src/",

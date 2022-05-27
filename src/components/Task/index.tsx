@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { deleteTask } from 'store/board/actions';
 import { moveTask } from 'store/board/reducer';
 import { AppDispatch } from 'store';
-import React, { useRef, MutableRefObject, useState, useEffect } from 'react';
+import { useRef, MutableRefObject, useState, useEffect } from 'react';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { updateTask } from 'utils/axios';
 import { useTranslation } from 'react-i18next';
@@ -124,6 +124,7 @@ export const Task = (props: ITaskProps) => {
 
   return (
     <Card
+      data-testid="task"
       component="li"
       ref={ref}
       sx={{

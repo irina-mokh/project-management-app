@@ -120,6 +120,7 @@ export const Column = (props: IColumnProps) => {
 
   return (
     <Card
+      data-testid="column"
       component="li"
       ref={colRef}
       sx={{

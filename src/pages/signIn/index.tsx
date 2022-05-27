@@ -99,6 +99,7 @@ export const SignInForm = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container
+        data-testid="signIn"
         component="main"
         maxWidth="xs"
         sx={{ mt: 5, backgroundColor: theme.palette.background.default }}
@@ -156,7 +157,13 @@ export const SignInForm = () => {
                 {t('successfully')}
               </Button>
             ) : (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                data-testid="submit-signin"
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 {t('signIn')}
               </Button>
             )}

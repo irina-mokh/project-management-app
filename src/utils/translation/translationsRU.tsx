@@ -45,7 +45,7 @@ export const translationsRU = {
   error: 'Ошибка',
   errorUnfilled: 'Заполните поля, чтобы зарегистрироваться',
   errorUserExist: 'Пользователь с таким логином уже существует!',
-  errorUserNotFound: 'Пользователя с таким логином/паролем не найден',
+  errorUserNotFound: 'Пользователь с таким логином/паролем не найден',
   searchBoardPlaceholder: 'Поиск досок по названию/описанию',
   searchTaskPlaceholder: 'Поиск задач по названию/описанию',
   aboutApp: 'Организуйте командную работу, создавайте проекты, устанавливайте задачи он-лайн, ',
@@ -74,4 +74,5 @@ export const translationsRU = {
   description: 'Описание',
   select: 'Выберите',
   responsible: 'Ответственный',
+  errorTokenExpired: 'Срок действия токена истек',
 };

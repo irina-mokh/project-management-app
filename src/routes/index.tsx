@@ -49,7 +49,16 @@ export const routes = {
     element: <NotFound />,
   },
 };
+export const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+  const { token } = useSelector((state: RootState) => state.auth);
+  return token ? children : <Navigate to={routes.welcome.path} replace />;
+};
+export const CommonRoute = ({ children }: { children: JSX.Element }) => {
+  const { token } = useSelector((state: RootState) => state.auth);
+  return token ? <Navigate to={routes.welcome.path} replace /> : children;
+};
 
+/*
 export const AppRouter = () => {
   const appRoutes = Object.values(routes).map((route, index) => {
     return <Route key={index} path={route.path} element={route.element} />;
@@ -71,9 +80,72 @@ export const AppRouter = () => {
         />
         <Route
           path="/signup"
-          element={token ? <Navigate to={routes.main.path} replace /> : <SignUpForm />}
+          element={
+            <PrivateRoute>
+              <SignUpForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/boards"
+          element={
+            <PrivateRoute>
+              <Main />
+            </PrivateRoute>
+          }
         />
       </Route>
+    </Routes>
+  );
+};
+*/
+export const AppRouter = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Welcome />} />
+        <Route
+          path="/signup"
+          element={
+            <CommonRoute>
+              <SignUpForm />
+            </CommonRoute>
+          }
+        />
+        <Route
+          path="/signin"
+          element={
+            <CommonRoute>
+              <SignInForm />
+            </CommonRoute>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <CommonRoute>
+              <SignInForm />
+            </CommonRoute>
+          }
+        />
+        <Route
+          path="/boards"
+          element={
+            <PrivateRoute>
+              <Main />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/boards/:id"
+          element={
+            <PrivateRoute>
+              <Board />
+            </PrivateRoute>
+          }
+        />
+      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

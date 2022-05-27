@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { AxiosError } from 'axios';
 import { Loading } from 'components/Loading';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,12 +88,12 @@ export const SignInForm = () => {
     dispatch(signInUser(curUser))
       .unwrap()
       .then(() => {
-        navigate(`${routes.welcome.path}`);
+        navigate(`/${routes.main.path}`);
         dispatch(getUserPersData(curUser.login));
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
-        console.log('e', e);
+        console.log('e', e as AxiosError);
       });
   };
 

@@ -1,8 +1,6 @@
 import { BoardList } from 'components/BoardList';
 import { SearchBar } from 'components/Search';
 import { Container } from '@mui/material';
-import { routes } from 'routes';
-import { useTitle } from 'hooks';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { searchBoards, clearBoardsSearch } from 'store/boardList/reducer';
@@ -10,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export const Main = () => {
   const { t } = useTranslation();
-  useTitle(routes.main.title);
+  //useTitle(routes.main.title);
   const dispatch: AppDispatch = useDispatch();
   return (
     <>

@@ -35,6 +35,8 @@ export const authSlice = createSlice({
       state.login = null;
       state.token = null;
       state.userId = null;
+      state.userName = null;
+      state.userPassword = null;
     },
     removeSnackState: (state) => {
       state.editSuccess = false;

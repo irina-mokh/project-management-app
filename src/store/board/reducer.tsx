@@ -65,7 +65,7 @@ export const boardSlice = createSlice({
     },
     moveTask: (state, action) => {
       // console.log(action.payload);
-      const { dragIndex, hoverIndex, dragColumnIndex, dropColumnIndex } = action.payload;
+      const { dragIndex, dropIndex, dragColumnIndex, dropColumnIndex } = action.payload;
       const columns = state.data.columns;
 
       const dragColumn = columns[dragColumnIndex - 1].tasks;
@@ -74,9 +74,13 @@ export const boardSlice = createSlice({
       dragColumn.splice(dragIndex - 1, 1);
 
       if (dragColumnIndex == dropColumnIndex) {
-        dragColumn.splice(hoverIndex - 1, 0, dragTask);
+        if (dropIndex < dragIndex) {
+          dragColumn.splice(dropIndex - 1, 0, dragTask);
+        } else {
+          dragColumn.splice(dropIndex - 2, 0, dragTask);
+        }
       } else {
-        dropColumn.splice(hoverIndex - 1, 0, dragTask);
+        dropColumn.splice(dropIndex - 1, 0, dragTask);
         dropColumn.forEach(async (task, i) => {
           task.order = i + 1;
         });

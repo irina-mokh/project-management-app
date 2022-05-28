@@ -37,6 +37,15 @@ axiosClient.interceptors.response.use(
     return response;
   },
   async (error) => {
+    // добавляем сообщение об ошибке в query строку
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasError = urlParams.get('fetch-failed');
+
+    if (!hasError) {
+      urlParams.set('fetch-failed', 'true');
+      window.location.search = urlParams.toString();
+    }
+
     return Promise.reject(error);
   }
 );

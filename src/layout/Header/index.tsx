@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'store';
 import { UserHeader } from './UserHeader';
-import { CreateBoardModal } from 'components/Modals';
+import { FetchFailedModal } from 'components/Modals';
 import { getUserPersData } from 'store/auth/actions';
 import { ReactComponent as MainLogo } from '../../assets/images/svg/logo.svg';
 import { ThemeSwitcher1 } from 'components/Theme';
@@ -57,7 +57,7 @@ export const Header = () => {
       <LangSwitcher />
       <ThemeSwitcher1 />
       {token && token.length ? <UserHeader /> : <WelcomeHeader />}
-      <CreateBoardModal />
+      <FetchFailedModal />
     </header>
   );
 };

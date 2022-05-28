@@ -61,4 +61,5 @@ export const translationsRU = {
   errorBoundaryHeader: 'Невероятно, но кажется что-то пошло не так...',
   errorBoundaryMessage: 'Попробуйте вернуться на старт и обновить страницу',
   returnStartPage: 'Вернуться на стартовую страницу',
+  fetchFailedMessage: 'Последний запрос к серверу не удался \n Попробуйте ещё раз?',
 };

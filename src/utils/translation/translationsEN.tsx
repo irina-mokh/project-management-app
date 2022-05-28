@@ -61,4 +61,5 @@ export const translationsEN = {
   errorBoundaryHeader: 'Looks like something went wrong...',
   errorBoundaryMessage: 'try to get back to start and refresh page',
   returnStartPage: 'Back to start page',
+  fetchFailedMessage: 'Last request has failed \n Try again once more?',
 };

@@ -1,5 +1,6 @@
 import { AccountMenu } from './AccountMenu';
 import { useSearchParams } from 'react-router-dom';
+import { CreateBoardModal } from 'components/Modals';
 
 import './Header.scss';
 import { useTranslation } from 'react-i18next';
@@ -14,11 +15,14 @@ export const UserHeader = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="userHeaderCont">
-      <button className="headerBtn" onClick={addBoardHandler}>
-        {t('createBoard')}
-      </button>
-      <AccountMenu />
-    </div>
+    <>
+      <div className="userHeaderCont">
+        <button className="headerBtn" onClick={addBoardHandler}>
+          {t('createBoard')}
+        </button>
+        <AccountMenu />
+      </div>
+      <CreateBoardModal />
+    </>
   );
 };

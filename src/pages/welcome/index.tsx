@@ -8,10 +8,13 @@ import { DevCardIvan } from './devCardIvan';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const Welcome = () => {
   useTitle(routes.welcome.title);
   const { token } = useSelector((state: RootState) => state.auth);
+  const { t } = useTranslation();
+
   return (
     <div className="welcomeContainer">
       <div className="mainTextContainer">
@@ -28,14 +31,21 @@ export const Welcome = () => {
           >
             Project Manegment App
           </Typography>
-          <h3>Manage your team&apos;s work, projects and tasks online</h3>
+          <Typography
+            variant="h5"
+            sx={{
+              textAlign: 'center',
+            }}
+          >
+            {t('aboutApp')}
+          </Typography>
 
           {token?.length ? null : (
             <Button
               variant="contained"
               sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
             >
-              <Link to={routes.signUp.path}> Get started</Link>
+              <Link to={routes.signUp.path}>{t('getStarted')}</Link>
             </Button>
           )}
         </div>
@@ -49,7 +59,7 @@ export const Welcome = () => {
             color: '#FF7000',
           }}
         >
-          Team of developers
+          {t('teamOfDevs')}
         </Typography>
         <div className="devCardsContainer">
           <DevCardIrina />

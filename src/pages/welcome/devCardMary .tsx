@@ -15,12 +15,11 @@ import maryPic from '../../assets/images/svg/mary-logo.svg';
 import { useTranslation } from 'react-i18next';
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  expand: number | undefined;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  // eslint-disable-next-line
-  const { expand, ...other } = props;
+  const { ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
@@ -61,7 +60,7 @@ export const DevCardMary = () => {
       >
         <Typography sx={{ color: 'white' }}>{t('mariia')}</Typography>
         <ExpandMore
-          expand={expanded}
+          expand={+expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"
@@ -74,6 +73,7 @@ export const DevCardMary = () => {
           sx={{
             width: '70%',
             marginLeft: '55px',
+            marginRight: '5px',
             boxShadow: '0px 5px 10px 2px rgb(34 60 80 / 20%)',
           }}
         >

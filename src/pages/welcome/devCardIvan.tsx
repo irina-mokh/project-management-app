@@ -15,12 +15,11 @@ import ivanPic from '../../assets/images/svg/ivan-logo.svg';
 import { useTranslation } from 'react-i18next';
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  expand: number | undefined;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  // eslint-disable-next-line
-  const { expand, ...other } = props;
+  const { ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
@@ -51,7 +50,7 @@ export const DevCardIvan = () => {
       <CardMedia
         component="img"
         image={ivanPic}
-        alt="Paella dish"
+        alt="Dev avatar"
         sx={{ zIndex: '100', objectFit: 'contain' }}
       />
       <CardActions
@@ -64,7 +63,7 @@ export const DevCardIvan = () => {
       >
         <Typography sx={{ color: 'white' }}>{t('ivan')}</Typography>
         <ExpandMore
-          expand={expanded}
+          expand={+expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"

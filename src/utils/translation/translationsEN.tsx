@@ -75,4 +75,5 @@ export const translationsEN = {
   select: 'Select',
   responsible: 'Responsible',
   errorTokenExpired: 'Token has expired',
+  goToBoards: 'Go to boards',
 };

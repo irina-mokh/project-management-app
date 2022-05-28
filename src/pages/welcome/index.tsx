@@ -45,9 +45,9 @@ export const Welcome = () => {
             sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
           >
             {token?.length ? (
-              <Link to={routes.main.path}> Go to boards </Link>
+              <Link to={routes.main.path}> {t('goToBoards')} </Link>
             ) : (
-              <Link to={routes.signUp.path}>Get started</Link>
+              <Link to={routes.signUp.path}>{t('getStarted')}</Link>
             )}
           </Button>
         </div>

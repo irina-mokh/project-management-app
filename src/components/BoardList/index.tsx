@@ -61,7 +61,7 @@ export const BoardList = () => {
             </CardContent>
           </CardActionArea>
           <DeleteButton
-            confirmText="Delete a board?"
+            confirmText={t('confirmTextButton')}
             deleteHandler={() => dispatch(deleteBoard(id))}
           />
         </Card>

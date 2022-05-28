@@ -20,7 +20,7 @@ export const UserHeader = () => {
         <Link to={routes.main.path}>{t('boardsPage')}</Link>
       </button>
       <button className="headerBtn" onClick={addBoardHandler}>
-        <Link to={routes.main.path}>{t('createBoard')}</Link>
+        {t('createBoard')}
       </button>
       <AccountMenu />
     </div>

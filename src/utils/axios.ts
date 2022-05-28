@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { routes } from 'routes';
+import { store } from 'store';
+import { expiredToken } from 'store/auth/reducer';
 import { ITaskPut } from 'types';
 
 export const axiosClient = axios.create({
@@ -24,7 +27,7 @@ axiosClient.interceptors.request.use(
     Promise.reject(error);
   }
 );
-
+/*
 axiosClient.interceptors.response.use(
   (response) => {
     const {
@@ -39,7 +42,28 @@ axiosClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+*/
+axiosClient.interceptors.response.use(
+  (response) => {
+    const {
+      data: { token },
+    } = response;
+    console.log('rees', response);
+    if (token && response.status !== 401) {
+      localStorage.setItem('token', token);
+    }
+    return response;
+  },
+  async (error) => {
+    if (error.response.data.statusCode === 401) {
+      store.dispatch(expiredToken());
+      //store.dispatch(logOut());
+      window.location.href = `${routes.welcome.path}`;
+    }
 
+    return Promise.reject(error);
+  }
+);
 export const updateColumn = async (
   boardId: string,
   columnId: string,

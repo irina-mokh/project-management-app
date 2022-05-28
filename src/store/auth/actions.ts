@@ -123,7 +123,6 @@ export const editUser = createAsyncThunk(
       if (response.status !== 200) {
         throw new Error('Error');
       }
-      console.log('nansn', response.data);
       return response.data;
     } catch (err) {
       let errorMessage;

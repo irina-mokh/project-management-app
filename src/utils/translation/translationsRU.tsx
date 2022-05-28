@@ -58,4 +58,7 @@ export const translationsRU = {
   description: 'Описание',
   select: 'Выберите',
   responsible: 'Ответственный',
+  errorBoundaryHeader: 'Невероятно, но кажется что-то пошло не так...',
+  errorBoundaryMessage: 'Попробуйте вернуться на старт и обновить страницу',
+  returnStartPage: 'Вернуться на стартовую страницу',
 };

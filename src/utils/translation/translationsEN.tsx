@@ -58,4 +58,7 @@ export const translationsEN = {
   description: 'Description',
   select: 'Select',
   responsible: 'Responsible',
+  errorBoundaryHeader: 'Looks like something went wrong...',
+  errorBoundaryMessage: 'try to get back to start and refresh page',
+  returnStartPage: 'Back to start page',
 };

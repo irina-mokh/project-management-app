@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ivanPic from '../../assets/images/svg/ivan-logo.svg';
+import { useTranslation } from 'react-i18next';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -30,6 +31,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export const DevCardIvan = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const { t } = useTranslation();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -59,7 +61,7 @@ export const DevCardIvan = () => {
           backgroundColor: '#009688',
         }}
       >
-        <Typography sx={{ color: 'white' }}>Ivan</Typography>
+        <Typography sx={{ color: 'white' }}>{t('ivan')}</Typography>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -76,11 +78,11 @@ export const DevCardIvan = () => {
             boxShadow: '0px 5px 10px 2px rgb(34 60 80 / 20%)',
           }}
         >
-          <Typography paragraph>Developed:</Typography>
+          <Typography paragraph>{t('developed')}</Typography>
           <ul>
-            <li>BackEnd: deploy and update </li>
-            <li>Modals</li>
-            <li>Code review, catching errors</li>
+            <li>{t('backendTask')}</li>
+            <li>{t('modals')}</li>
+            <li>{t('codeReview')}</li>
           </ul>
         </CardContent>
       </Collapse>

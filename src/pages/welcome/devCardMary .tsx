@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import maryPic from '../../assets/images/svg/mary-logo.svg';
+import { useTranslation } from 'react-i18next';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -30,6 +31,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export const DevCardMary = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const { t } = useTranslation();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -56,7 +58,7 @@ export const DevCardMary = () => {
           objectFit: 'none',
         }}
       >
-        <Typography sx={{ color: 'white' }}>Mariia</Typography>
+        <Typography sx={{ color: 'white' }}>{t('mariia')}</Typography>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -74,12 +76,12 @@ export const DevCardMary = () => {
             boxShadow: '0px 5px 10px 2px rgb(34 60 80 / 20%)',
           }}
         >
-          <Typography paragraph>Developed:</Typography>
+          <Typography paragraph>{t('developed')}</Typography>
           <ul>
-            <li>Welcome page </li>
-            <li>Authorization</li>
-            <li>Localization</li>
-            <li>Confirm Modal</li>
+            <li>{t('welcomePage')}</li>
+            <li>{t('authorization')}</li>
+            <li>{t('localization')}</li>
+            <li>{t('confirmModal')}</li>
           </ul>
         </CardContent>
       </Collapse>

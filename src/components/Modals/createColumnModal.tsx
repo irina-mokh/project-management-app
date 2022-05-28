@@ -17,10 +17,9 @@ interface ICreateColumn {
   isVisible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   boardId: string | undefined;
-  orderIdx: number;
 }
 
-export function CreateColumnModal({ isVisible, setVisible, boardId, orderIdx }: ICreateColumn) {
+export function CreateColumnModal({ isVisible, setVisible, boardId }: ICreateColumn) {
   const dispatch: AppDispatch = useDispatch();
 
   const [title, setTitle] = useState('');
@@ -40,10 +39,7 @@ export function CreateColumnModal({ isVisible, setVisible, boardId, orderIdx }: 
     dispatch(
       createColumn({
         boardId: boardId || '', // ругается что в useParams может быть undefined, из-за этого приходится использовать так
-        requestBody: {
-          title: title,
-          order: orderIdx,
-        },
+        title: title,
       })
     );
 

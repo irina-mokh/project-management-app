@@ -12,6 +12,7 @@ export type IAuthState = {
   editSuccess: boolean;
   deleteSuccess: boolean;
 };
+
 const initialState: IAuthState = {
   userName: null,
   userId: null,
@@ -57,6 +58,7 @@ export const authSlice = createSlice({
         state.error = String(action.payload);
         state.isLoading = false;
       })
+
       .addCase(signInUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -72,6 +74,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = String(action.payload);
       })
+
       .addCase(getUserPersData.fulfilled, (state, action) => {
         state.userId = action.payload.userId;
         state.userName = action.payload.userName;
@@ -90,6 +93,7 @@ export const authSlice = createSlice({
       .addCase(deleteUser.rejected, (state) => {
         state.isLoading = false;
       })
+
       .addCase(editUser.pending, (state) => {
         state.isLoading = true;
       })

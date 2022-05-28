@@ -1,3 +1,9 @@
+export interface IUser {
+  id: string;
+  name: string;
+  login: string;
+}
+
 export interface NewUserType {
   name: null | string;
   login: null | string;
@@ -17,8 +23,9 @@ export interface IBoard {
   title: string;
   description: string;
 }
+
 export interface IBoardDetails extends IBoard {
-  columns: IColumn[];
+  columns: Array<IColumn>;
 }
 
 export interface IColumn {
@@ -57,6 +64,21 @@ export interface ITaskPut {
   columnId: string;
 }
 
+export interface ITaskPutResponse extends ITaskPut {
+  id: string;
+  done: boolean;
+}
+
+export interface ICreateTask {
+  title: string;
+  description: string;
+  userId: string;
+}
+
+export interface ICreateTaskResponse extends ICreateTask {
+  taskId: string;
+}
+
 export interface ICreateBoardFields {
   title: string;
   description: string;
@@ -64,8 +86,5 @@ export interface ICreateBoardFields {
 
 export interface ICreateColumnRequest {
   boardId: string;
-  requestBody: {
-    title: string;
-    order: number;
-  };
+  title: string;
 }

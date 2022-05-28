@@ -12,6 +12,7 @@ import { DeleteButton } from 'components/DeleteButton';
 import { Task } from 'components/Task';
 import { useTranslation } from 'react-i18next';
 import { DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
+import { useSearchParams } from 'react-router-dom';
 
 const emptyTask = {
   id: '0',
@@ -27,6 +28,7 @@ interface IColumnProps {
 }
 export const Column = (props: IColumnProps) => {
   const dispatch: AppDispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isPending, setPending] = useState(false);
 
   const { boardId, column } = props;
@@ -34,6 +36,12 @@ export const Column = (props: IColumnProps) => {
   const [curTitle, setCurTitle] = useState(column.title);
   const [curOrder] = useState(column.order);
   const [isSelected, setIsSelected] = useState(false);
+
+  const createTaskHandler = () => {
+    searchParams.set('create-task', 'true');
+    searchParams.set('columnId', column.id);
+    setSearchParams(searchParams);
+  };
 
   const handleTitleChangeCancel = () => {
     setCurTitle(column.title);
@@ -109,8 +117,10 @@ export const Column = (props: IColumnProps) => {
   ) : (
     <Edit aria-label="edit" color="disabled" sx={{ width: '0.5em', height: '0.5em' }} />
   );
+
   return (
     <Card
+      data-testid="column"
       component="li"
       ref={colRef}
       sx={{
@@ -168,7 +178,11 @@ export const Column = (props: IColumnProps) => {
             columnOrder={column.order}
           ></Task>
         ))}
-        <AddButton text={t('addTask')} order={column.tasks.length + 1} />
+        <AddButton
+          text={t('addTask')}
+          order={column.tasks.length + 1}
+          addHandler={() => createTaskHandler()}
+        />
         {column.tasks.length == 0 && (
           <Task
             boardId={boardId}

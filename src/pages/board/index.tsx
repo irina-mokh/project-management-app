@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppDispatch } from 'store';
+import { getBoard, getAllUsers } from 'store/board/actions';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBoard } from 'store/board/actions';
 import { searchTasks, clearTasksSearch, toggleSearchFocus } from 'store/board/reducer';
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Card, Typography, Container, Breadcrumbs, Link } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
-import { CreateColumnModal } from 'components/Modals';
+import { CreateColumnModal, CreateTaskModal, EditTaskModal } from 'components/Modals';
 
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
@@ -26,8 +26,14 @@ export const Board = () => {
   const { searchResults, data, isLoading, error, isSearchFocus } = useSelector(selectBoard);
   const [showModal, setShowModal] = useState(false);
   const columns: IColumn[] = data.columns;
+
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+
+  // обновляем список доступных пользователей при загрузке доски
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {
@@ -135,12 +141,10 @@ export const Board = () => {
           <AddButton text={t('addNewColumn')} addHandler={() => setShowModal(true)} />
         </Card>
       </List>
-      <CreateColumnModal
-        boardId={id}
-        isVisible={showModal}
-        setVisible={setShowModal}
-        orderIdx={columns.length}
-      />
+
+      <CreateColumnModal boardId={id} isVisible={showModal} setVisible={setShowModal} />
+      <CreateTaskModal boardId={id} />
+      <EditTaskModal boardId={id} />
     </Container>
   );
 };

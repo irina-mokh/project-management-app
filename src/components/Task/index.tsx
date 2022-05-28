@@ -5,10 +5,11 @@ import { useDispatch } from 'react-redux';
 import { deleteTask } from 'store/board/actions';
 import { moveTask } from 'store/board/reducer';
 import { AppDispatch } from 'store';
-import React, { useRef, MutableRefObject, useState, useEffect } from 'react';
+import { useRef, MutableRefObject, useState, useEffect } from 'react';
 import { useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from 'react-dnd';
 import { updateTask } from 'utils/axios';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 
 interface ITaskProps {
   columnId: string;
@@ -111,8 +112,19 @@ export const Task = (props: ITaskProps) => {
   const height = isEmpty ? '100%' : 'auto';
 
   const { t } = useTranslation();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const editTaskHandler = () => {
+    // добавляем в url id колонки и таска
+    searchParams.set('columnId', columnId);
+    searchParams.set('taskId', task.id);
+    setSearchParams(searchParams);
+  };
+
   return (
     <Card
+      data-testid="task"
       component="li"
       ref={ref}
       sx={{
@@ -129,12 +141,14 @@ export const Task = (props: ITaskProps) => {
         cursor: !isEmpty ? 'pointer' : 'default',
       }}
     >
-      <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
-        {task.title}
-      </Typography>
-      <Typography fontSize="0.9em" fontStyle="italic">
-        {task.description}
-      </Typography>
+      <div onClick={editTaskHandler}>
+        <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
+          {task.title}
+        </Typography>
+        <Typography fontSize="0.9em" fontStyle="italic">
+          {task.description}
+        </Typography>
+      </div>
       {!isEmpty && (
         <DeleteButton
           confirmText={t('deleteTask')}

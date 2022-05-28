@@ -9,6 +9,7 @@ type IAddButton = {
 
 export const AddButton = (props: IAddButton) => {
   const order = props.order ? props.order : 'auto';
+
   return (
     <Card variant="outlined" sx={{ height: '50px', order: { order } }} onClick={props.addHandler}>
       <Button

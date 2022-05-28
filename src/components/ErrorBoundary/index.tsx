@@ -1,8 +1,6 @@
 import React, { ErrorInfo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { routes } from 'routes';
+import { Box } from '@mui/material';
 
 interface IErrorBoundary {
   children: JSX.Element[] | JSX.Element;
@@ -23,12 +21,18 @@ function ErrorMessage(props: IErrorMessage) {
   const { error, errorInfo } = props;
 
   return (
-    <Box>
+    <Box
+      sx={{
+        margin: '0 auto',
+        border: '3px solid red',
+        maxWidth: '50%',
+        minWidth: '300px',
+        textAlign: 'center',
+        backgroundColor: 'white',
+      }}
+    >
       <h2>{t('errorBoundaryHeader')}</h2>
       <p>{t('errorBoundaryMessage')}</p>
-      <Button>
-        <Link to={routes.welcome.path}>{t('returnStartPage')}</Link>
-      </Button>
       <details style={{ whiteSpace: 'pre-wrap' }}>
         {error.toString()}
         <br />

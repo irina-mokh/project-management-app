@@ -76,8 +76,8 @@ export const getUserPersData = createAsyncThunk(
       };
       return persData;
     } catch (err) {
-      console.log('Something went wrong while getting userData->', err as AxiosError);
-      return rejectWithValue(err as AxiosError);
+      console.error('Something went wrong while getting userData->', err as AxiosError);
+      return rejectWithValue((err as AxiosError).message);
     }
   }
 );
@@ -93,12 +93,13 @@ export const deleteUser = createAsyncThunk(
       }
       return response.data;
     } catch (err) {
-      let errorMessage;
-      if ((err as AxiosError).response?.status === 404) {
-        errorMessage = i18n.t('errorUserNotFound');
-      }
-      console.log('Something went wrong while deleting userData->', errorMessage);
-      return rejectWithValue(err as AxiosError);
+      const errorMessage =
+        (err as AxiosError).status == '404'
+          ? i18n.t('errorUserNotFound')
+          : (err as AxiosError).message;
+
+      console.error('Something went wrong while deleting userData->', errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -124,8 +125,8 @@ export const editUser = createAsyncThunk(
       } else if ((err as AxiosError).response?.status === 403) {
         errorMessage = 'User with such login/password was not found';
       }*/
-      console.log('Something went wrong while editing userData->', err as AxiosError);
-      return rejectWithValue(err as AxiosError);
+      console.error('Something went wrong while editing userData->', err as AxiosError);
+      return rejectWithValue((err as AxiosError).message);
     }
   }
 );

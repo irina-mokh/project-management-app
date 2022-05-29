@@ -1,4 +1,4 @@
-import { List, Card, TextField, InputAdornment, IconButton } from '@mui/material';
+import { List, Card, TextField, InputAdornment, IconButton, Box } from '@mui/material';
 import { IColumn, ITask } from 'types';
 import { AddButton } from 'components/AddButton';
 import { Clear, Check, Edit } from '@mui/icons-material';
@@ -128,6 +128,7 @@ export const Column = (props: IColumnProps) => {
         marginRight: '1rem',
         height: '100%',
         width: '300px',
+        flexShrink: '0',
         padding: '5px 10px 10px 7px',
         position: 'relative',
         opacity: opacity,
@@ -148,13 +149,11 @@ export const Column = (props: IColumnProps) => {
           startAdornment: <InputAdornment position="start">{inputButtons}</InputAdornment>,
         }}
       />
-      <List
+      <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          width: '100%',
           height: '90%',
           overflowY: 'scroll',
-          padding: '0 10px 0 0',
           '&::-webkit-scrollbar': {
             width: 7,
           },
@@ -169,33 +168,39 @@ export const Column = (props: IColumnProps) => {
           },
         }}
       >
-        {column.tasks.map((task: ITask) => (
-          <Task
-            boardId={boardId}
-            columnId={column.id}
-            data={task}
-            key={task.id}
-            columnOrder={column.order}
-          ></Task>
-        ))}
-        <AddButton
-          text={t('addTask')}
-          order={column.tasks.length + 1}
-          addHandler={() => createTaskHandler()}
-        />
-        {column.tasks.length == 0 && (
-          <Task
-            boardId={boardId}
-            columnId={column.id}
-            data={emptyTask}
-            key="0"
-            columnOrder={column.order}
-            isEmpty={true}
-          ></Task>
-        )}
-      </List>
+        <List
+          sx={{
+            padding: '0 10px 0 0',
+          }}
+        >
+          {column.tasks.map((task: ITask) => (
+            <Task
+              boardId={boardId}
+              columnId={column.id}
+              data={task}
+              key={task.id}
+              columnOrder={column.order}
+            ></Task>
+          ))}
+          <AddButton
+            text={t('addTask')}
+            // order={column.tasks.length + 1}
+            addHandler={() => createTaskHandler()}
+          />
+          {column.tasks.length == 0 && (
+            <Task
+              boardId={boardId}
+              columnId={column.id}
+              data={emptyTask}
+              key="0"
+              columnOrder={column.order}
+              isEmpty={true}
+            ></Task>
+          )}
+        </List>
+      </Box>
       <DeleteButton
-        confirmText={t('confirmTextButton')}
+        confirmText={t('deleteColumn')}
         deleteHandler={() => dispatch(deleteColumn([boardId, column.id]))}
       />
     </Card>

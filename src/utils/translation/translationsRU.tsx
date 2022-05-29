@@ -22,6 +22,7 @@ export const translationsRU = {
   addNewColumn: 'Добавить новую колонку',
   addTitleColumn: 'Добавить название',
   deleteTask: 'Удалить задачу',
+  deleteColumn: 'Удалить колонку?',
   homePage: 'На главную',
   boardsPage: 'Доски',
   board: 'Доска',

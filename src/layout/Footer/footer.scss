@@ -14,10 +14,22 @@
   justify-content: space-between;
   width: 100%;
 }
-.footer_nav li {
-  list-style: none;
-  width: 15%;
+
+.team {
+  padding: 0;
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 600px) {
+    justify-content: space-around;
+  }
 }
+
+.member {
+  list-style: none;
+  margin: 0 5px;
+}
+
 .nav_link {
   display: flex;
   justify-content: center;

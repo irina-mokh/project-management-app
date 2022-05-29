@@ -100,6 +100,7 @@ export const EditProfile = () => {
   useEffect(() => {
     editSuccess || deleteSuccess ? setSnackOpen(true) : setSnackOpen(false);
   }, [editSuccess, deleteSuccess]);
+
   return (
     <ThemeProvider theme={theme}>
       <Box

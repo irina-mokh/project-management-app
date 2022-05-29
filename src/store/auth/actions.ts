@@ -11,19 +11,23 @@ export const createUser = createAsyncThunk(
     const url = `signup`;
     try {
       const response = await axiosClient.post(url, user);
-      if (response.status !== 201) {
-        throw new Error(i18n.t('error'));
-      } else {
-        return response.data;
-      }
+
+      return response.data;
     } catch (err) {
       let errorMessage;
-      if ((err as AxiosError).response?.status === 400) {
-        errorMessage = i18n.t('errorUnfilled');
-      } else if ((err as AxiosError).response?.status === 409) {
-        errorMessage = i18n.t('errorUserExist');
+
+      switch ((err as AxiosError).response?.status) {
+        case 400:
+          errorMessage = i18n.t('errorUnfilled');
+          break;
+        case 409:
+          errorMessage = i18n.t('errorUserExist');
+          break;
+        default:
+          errorMessage = i18n.t('error');
       }
-      console.log('Something went wrong ->', errorMessage);
+
+      console.error('Something went wrong ->', errorMessage);
       return rejectWithValue(errorMessage);
     }
   }
@@ -35,23 +39,29 @@ export const signInUser = createAsyncThunk(
     const url = `signin`;
     try {
       const response = await axiosClient.post(url, user);
-      if (response.status !== 201) {
-        throw new Error('Error');
-      }
+
       const resData = {
         token: response.data.token,
         login: user.login,
         password: user.password,
       };
+
       return resData;
     } catch (err) {
       let errorMessage;
-      if ((err as AxiosError).response?.status === 400) {
-        errorMessage = i18n.t('errorUnfilled');
-      } else if ((err as AxiosError).response?.status === 403) {
-        errorMessage = i18n.t('errorUserNotFound');
+
+      switch ((err as AxiosError).response?.status) {
+        case 400:
+          errorMessage = i18n.t('errorUnfilled');
+          break;
+        case 403:
+          errorMessage = i18n.t('errorUserNotFound');
+          break;
+        default:
+          errorMessage = i18n.t('error');
       }
-      console.log('Something went wrong while signin->', errorMessage);
+
+      console.error('Something went wrong while signin->', errorMessage);
       return rejectWithValue(errorMessage);
     }
   }
@@ -63,9 +73,7 @@ export const getUserPersData = createAsyncThunk(
     const url = `users`;
     try {
       const response = await axiosClient.get(url);
-      if (response.status !== 200) {
-        throw new Error('Error');
-      }
+
       const arrUser = response.data.filter((item: NewUserType) => {
         return item.login === login;
       });
@@ -74,9 +82,10 @@ export const getUserPersData = createAsyncThunk(
         userId: arrUser[0].id,
         userName: arrUser[0].name,
       };
+
       return persData;
     } catch (err) {
-      console.error('Something went wrong while getting userData->', err as AxiosError);
+      console.error('Something went wrong while getting userData->', (err as AxiosError).message);
       return rejectWithValue((err as AxiosError).message);
     }
   }
@@ -88,9 +97,7 @@ export const deleteUser = createAsyncThunk(
     const url = `users/${userId}`;
     try {
       const response = await axiosClient.delete(url);
-      if (response.status !== 204) {
-        throw new Error('Error');
-      }
+
       return response.data;
     } catch (err) {
       const errorMessage =
@@ -113,10 +120,7 @@ export const editUser = createAsyncThunk(
     const url = `users/${userId}`;
     try {
       const response = await axiosClient.put(url, newData);
-      if (response.status !== 200) {
-        throw new Error('Error');
-      }
-      console.log('nansn', response.data);
+
       return response.data;
     } catch (err) {
       /*let errorMessage;

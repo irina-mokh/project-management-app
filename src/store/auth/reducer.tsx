@@ -83,6 +83,7 @@ export const authSlice = createSlice({
       .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;
       })
+
       .addCase(deleteUser.fulfilled, (state) => {
         state.userId = null;
         state.userName = null;

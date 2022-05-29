@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { errorHandler } from './axiosErrorHandler';
 import { ITaskPut } from 'types';
 
 export const axiosClient = axios.create({
@@ -7,6 +8,10 @@ export const axiosClient = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+  },
+  // валидация всех ответов от сервера
+  validateStatus: (status) => {
+    return status >= 200 && status <= 299;
   },
 });
 
@@ -36,16 +41,9 @@ axiosClient.interceptors.response.use(
     }
     return response;
   },
-  async (error) => {
-    // добавляем сообщение об ошибке в query строку
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasError = urlParams.get('fetch-failed');
-
-    if (!hasError) {
-      urlParams.set('fetch-failed', 'true');
-      window.location.search = urlParams.toString();
-    }
-
+  async (error: AxiosError) => {
+    // глобальный обработчик ошибок
+    errorHandler(error.status);
     return Promise.reject(error);
   }
 );
@@ -62,7 +60,7 @@ export const updateColumn = async (
       order: order,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -75,6 +73,6 @@ export const updateTask = async (task: ITaskPut, taskId: string, dragColumnId: s
     );
     return response;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

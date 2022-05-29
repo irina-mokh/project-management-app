@@ -181,7 +181,7 @@ export const SignInForm = () => {
         {error ? (
           <Alert severity="error">
             <AlertTitle>{t('error')}</AlertTitle>
-            {error}
+            {error != 'undefined' && error}
           </Alert>
         ) : null}
       </Container>

@@ -77,5 +77,9 @@ export const translationsEN = {
   errorBoundaryHeader: 'Looks like something went wrong...',
   errorBoundaryMessage: 'try to get back to start and refresh page',
   returnStartPage: 'Back to start page',
-  fetchFailedMessage: 'Last request has failed \n Try again once more?',
+  fetchFailedMessage: 'Last request has failed. Try again once more?',
+  unknownErrorHappened: 'Unknown error happened',
+  authorizationError: 'Unauthorized for this action',
+  userError: 'Error happened during handling your request. Please, check requeired data',
+  serverError: 'Произошла ошибка на сервере. Обратитесь в поддержку',
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppDispatch } from 'store';
+import { getBoard, getAllUsers } from 'store/board/actions';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBoard } from 'store/board/actions';
 import { searchTasks, clearTasksSearch, toggleSearchFocus } from 'store/board/reducer';
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
@@ -9,23 +9,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Card, Typography, Container, Breadcrumbs, Link } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
-import { CreateColumnModal } from 'components/Modals';
+import { CreateColumnModal, CreateTaskModal, EditTaskModal } from 'components/Modals';
 
 import { useTitle } from 'hooks';
 import { routes } from 'routes';
 import { Column } from 'components/Column';
+import { useTranslation } from 'react-i18next';
 import { SearchBar } from 'components/Search';
 import { Box } from '@mui/system';
 
 export const Board = () => {
+  const { t } = useTranslation();
   useTitle(routes.board.title);
   const { id } = useParams();
 
   const { searchResults, data, isLoading, error, isSearchFocus } = useSelector(selectBoard);
   const [showModal, setShowModal] = useState(false);
   const columns: IColumn[] = data.columns;
+
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+
+  // обновляем список доступных пользователей при загрузке доски
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {
@@ -45,28 +53,34 @@ export const Board = () => {
     return <>{error}</>;
   }
 
-  console.log(`params id: ${id}`);
-
   return (
-    <Container sx={{ width: '100%', height: '83vh', padding: '5px' }}>
+    <Container
+      maxWidth="xl"
+      sx={{
+        height: '83vh',
+        padding: '5px',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <h2 className="visually-hidden">Board page</h2>
       <Box display="flex" justifyContent="space-between" sx={{ width: '100%' }}>
         <Breadcrumbs aria-label="breadcrumbs" sx={{ margin: '5px 0' }}>
           <Link underline="hover" color="inherit" href="/">
-            Home
+            {t('homePage')}
           </Link>
           <Link underline="hover" color="inherit" href="/boards">
-            Boards
+            {t('boardsPage')}
           </Link>
-          <Typography color="text.primary">{`Board: ${data?.title}`}</Typography>
+          <Typography color="text.primary">{`${t('board')}: ${data?.title}`}</Typography>
         </Breadcrumbs>
         <Box>
           <SearchBar
-            placeholder="search task by title or description"
+            placeholder={t('searchTaskPlaceholder')}
             searchClear={() => dispatch(clearTasksSearch())}
             searchHandler={(value) => dispatch(searchTasks(value))}
           />
-          {searchResults.length > 0 && isSearchFocus && (
+          {searchResults?.length > 0 && isSearchFocus && (
             <List
               sx={{
                 position: 'absolute',
@@ -102,21 +116,37 @@ export const Board = () => {
       <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '10px 0 5px 0' }}>
         {data?.title}
       </Typography>
-      <List sx={{ width: '100%', height: '90%', display: 'flex' }}>
+      <List
+        sx={{
+          width: '100%',
+          height: '90%',
+          display: 'flex',
+          overflowX: 'scroll',
+          '&::-webkit-scrollbar': {
+            width: 7,
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'transparent',
+            border: '1px solid #bdbdbd4D',
+            borderRadius: 2,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#bdbdbdCC',
+            borderRadius: 2,
+          },
+        }}
+      >
         {columns.map((column: IColumn) => (
           <Column column={column} boardId={String(id)} key={column.id} />
         ))}
-        <Card sx={{ minWidth: '300px', padding: '10px' }}>
-          <AddButton text="add column" addHandler={() => setShowModal(true)} />
+        <Card sx={{ order: `${columns.length + 1}`, minWidth: '250px', padding: '10px' }}>
+          <AddButton text={t('addNewColumn')} addHandler={() => setShowModal(true)} />
         </Card>
       </List>
 
-      <CreateColumnModal
-        boardId={id}
-        isVisible={showModal}
-        setVisible={setShowModal}
-        orderIdx={columns.length}
-      />
+      <CreateColumnModal boardId={id} isVisible={showModal} setVisible={setShowModal} />
+      <CreateTaskModal boardId={id} />
+      <EditTaskModal boardId={id} />
     </Container>
   );
 };

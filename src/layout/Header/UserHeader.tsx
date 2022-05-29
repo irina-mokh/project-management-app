@@ -1,7 +1,9 @@
 import { AccountMenu } from './AccountMenu';
-import { useSearchParams } from 'react-router-dom';
-
+import { Link, useSearchParams } from 'react-router-dom';
 import './Header.scss';
+import { useTranslation } from 'react-i18next';
+import { routes } from 'routes';
+
 export const UserHeader = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -10,20 +12,16 @@ export const UserHeader = () => {
     searchParams.set('create-board', 'true');
     setSearchParams(searchParams);
   };
+  const { t } = useTranslation();
 
   return (
-    /*<div>
-      <button className="headerBtn">+ create new board</button>
-      <button className="headerBtn">Edit profile</button>
-      <button className="headerBtn">Log Out</button>
-    </div>
-    */
     <div className="userHeaderCont">
-      <button className="headerBtn" onClick={addBoardHandler}>
-        + create board
+      <button className="headerBtn">
+        <Link to={routes.main.path}>{t('boardsPage')}</Link>
       </button>
-      {/*<button className="headerBtn">Редактировать профиль</button>
-      <button className="headerBtn">Выйти</button>*/}
+      <button className="headerBtn" onClick={addBoardHandler}>
+        {t('createBoard')}
+      </button>
       <AccountMenu />
     </div>
   );

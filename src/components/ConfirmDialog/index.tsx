@@ -4,6 +4,7 @@ import Dialog from '@mui/material/Dialog/Dialog';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
+import { useTranslation } from 'react-i18next';
 
 export type ConfirmDialogPropsType = {
   confirmText: string;
@@ -14,6 +15,7 @@ export type ConfirmDialogPropsType = {
 
 export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
   const { confirmText, open, setOpen, onConfirm } = props;
+  const { t } = useTranslation();
   return (
     <Dialog
       open={open}
@@ -21,11 +23,11 @@ export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
       aria-labelledby="confirm-dialog"
       sx={{ justifyContent: 'center' }}
     >
-      <DialogTitle id="confirm-dialog">Confirm your decision</DialogTitle>
+      <DialogTitle id="confirm-dialog">{t('confirmTitle')}</DialogTitle>
       <DialogContent>{confirmText}</DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={() => setOpen(false)}>
-          No, cancel
+          {t('confirmCancel')}
         </Button>
         <Button
           variant="contained"
@@ -34,7 +36,7 @@ export const ConfirmDialog = (props: ConfirmDialogPropsType) => {
             onConfirm();
           }}
         >
-          Yes
+          {t('confirmAgree')}
         </Button>
       </DialogActions>
     </Dialog>

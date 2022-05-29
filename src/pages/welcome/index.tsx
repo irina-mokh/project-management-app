@@ -40,14 +40,16 @@ export const Welcome = () => {
             {t('aboutApp')}
           </Typography>
 
-          {token?.length ? null : (
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
-            >
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
+          >
+            {token?.length ? (
+              <Link to={routes.main.path}> {t('goToBoards')} </Link>
+            ) : (
               <Link to={routes.signUp.path}>{t('getStarted')}</Link>
-            </Button>
-          )}
+            )}
+          </Button>
         </div>
       </div>
       <section>

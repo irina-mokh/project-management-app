@@ -49,10 +49,12 @@ export const signInUser = createAsyncThunk(
       return resData;
     } catch (err) {
       let errorMessage;
-
       switch ((err as AxiosError).response?.status) {
         case 400:
           errorMessage = i18n.t('errorUnfilled');
+          break;
+        case 401:
+          errorMessage = i18n.t('errorTokenExpired');
           break;
         case 403:
           errorMessage = i18n.t('errorUserNotFound');
@@ -85,8 +87,13 @@ export const getUserPersData = createAsyncThunk(
 
       return persData;
     } catch (err) {
-      console.error('Something went wrong while getting userData->', (err as AxiosError).message);
-      return rejectWithValue((err as AxiosError).message);
+      const errorMessage =
+        (err as AxiosError).response?.status == 401
+          ? (err as AxiosError).message
+          : i18n.t('errorTokenExpired');
+
+      console.error('Something went wrong while getting userData->', errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -100,13 +107,15 @@ export const deleteUser = createAsyncThunk(
 
       return response.data;
     } catch (err) {
-      const errorMessage =
-        (err as AxiosError).status == '404'
-          ? i18n.t('errorUserNotFound')
-          : (err as AxiosError).message;
+      let errorMessage;
+      if ((err as AxiosError).response?.status === 404) {
+        errorMessage = i18n.t('errorUserNotFound');
+      } else if ((err as AxiosError).response?.status === 401) {
+        errorMessage = i18n.t('errorTokenExpired');
+      }
 
-      console.error('Something went wrong while deleting userData->', errorMessage);
-      return rejectWithValue(errorMessage);
+      console.log('Something went wrong while deleting userData->', errorMessage);
+      return rejectWithValue(errorMessage || (err as AxiosError).message);
     }
   }
 );
@@ -120,17 +129,19 @@ export const editUser = createAsyncThunk(
     const url = `users/${userId}`;
     try {
       const response = await axiosClient.put(url, newData);
-
       return response.data;
     } catch (err) {
-      /*let errorMessage;
-      if ((err as AxiosError).response?.status === 400) {
+      let errorMessage;
+      if ((err as AxiosError).response?.status === 401) {
+        errorMessage = i18n.t('errorTokenExpired');
+      }
+      /*if ((err as AxiosError).response?.status === 400) {
         errorMessage = 'Fill fields to sign in';
       } else if ((err as AxiosError).response?.status === 403) {
         errorMessage = 'User with such login/password was not found';
       }*/
       console.error('Something went wrong while editing userData->', err as AxiosError);
-      return rejectWithValue((err as AxiosError).message);
+      return rejectWithValue(errorMessage || (err as AxiosError).message);
     }
   }
 );

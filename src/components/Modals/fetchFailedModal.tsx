@@ -1,5 +1,4 @@
-//import { Popover, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
-import { Popover } from '@mui/material';
+import { Popover, Box } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -35,14 +34,18 @@ export function FetchFailedModal() {
 
     const status = searchParams.get('status');
 
-    if (status == null) return t('unknownError');
+    if (status == null) return t('unknownErrorHappened');
 
     const statusCode = parseInt(status, 10);
 
     switch (true) {
       case status === 'undefined':
-        return t('unknownError');
+        return t('unknownErrorHappened');
+      case statusCode == 400:
+        return t('badRequest');
       case statusCode == 401:
+        return t('authentificationError');
+      case statusCode == 403:
         return t('authorizationError');
       case statusCode >= 402 && statusCode <= 499:
         return t('userError');
@@ -69,7 +72,13 @@ export function FetchFailedModal() {
         horizontal: 'center',
       }}
     >
-      {message}
+      <Box
+        sx={{
+          padding: 1.5,
+        }}
+      >
+        {message}
+      </Box>
     </Popover>
   );
 }

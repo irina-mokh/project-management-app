@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean | undefined;
+  expand: number | undefined;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -45,7 +45,7 @@ export const DevCardIrina = () => {
         backgroundImage: 'none',
       }}
     >
-      <CardMedia component="img" image={iraPic} alt="Paella dish" sx={{ zIndex: '100' }} />
+      <CardMedia component="img" image={iraPic} alt="Dev avatar" sx={{ zIndex: '100' }} />
       <CardActions
         disableSpacing
         sx={{
@@ -59,7 +59,7 @@ export const DevCardIrina = () => {
       >
         <Typography sx={{ color: 'white' }}>{t('irina')}</Typography>
         <ExpandMore
-          expand={expanded}
+          expand={+expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"

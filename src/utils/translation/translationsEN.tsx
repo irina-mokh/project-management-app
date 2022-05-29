@@ -80,6 +80,10 @@ export const translationsEN = {
   fetchFailedMessage: 'Last request has failed. Try again once more?',
   unknownErrorHappened: 'Unknown error happened',
   authorizationError: 'Unauthorized for this action',
-  userError: 'Error happened during handling your request. Please, check requeired data',
+  authentificationError: 'Authentification error',
+  badRequest: 'Bad request',
+  userError: 'Error happened during handling your request. Please, check required data',
   serverError: 'Произошла ошибка на сервере. Обратитесь в поддержку',
+  errorTokenExpired: 'Token has expired',
+  goToBoards: 'Go to boards',
 };

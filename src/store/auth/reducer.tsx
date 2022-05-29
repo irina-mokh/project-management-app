@@ -7,6 +7,7 @@ export type IAuthState = {
   userPassword: null | string;
   login: null | string;
   error: null | string;
+  isExpiredToken: boolean;
   isLoading: boolean;
   token: null | string;
   editSuccess: boolean;
@@ -19,6 +20,7 @@ const initialState: IAuthState = {
   userPassword: null,
   login: null,
   error: null,
+  isExpiredToken: false,
   isLoading: false,
   token: null,
   editSuccess: false,
@@ -42,6 +44,15 @@ export const authSlice = createSlice({
     removeSnackState: (state) => {
       state.editSuccess = false;
       state.deleteSuccess = false;
+      state.isExpiredToken = false;
+    },
+    expiredToken: (state) => {
+      state.isExpiredToken = true;
+      state.login = null;
+      state.token = null;
+      state.userId = null;
+      state.userName = null;
+      state.userPassword = null;
     },
   },
   extraReducers: (builder) => {
@@ -61,7 +72,7 @@ export const authSlice = createSlice({
 
       .addCase(signInUser.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
+        state.isExpiredToken = false;
       })
       .addCase(signInUser.fulfilled, (state, action) => {
         state.token = action.payload.token;
@@ -78,10 +89,10 @@ export const authSlice = createSlice({
       .addCase(getUserPersData.fulfilled, (state, action) => {
         state.userId = action.payload.userId;
         state.userName = action.payload.userName;
-        // console.log('action1', action.payload);
       })
       .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;
+        //state.errorCode = String(action.payload);
       })
 
       .addCase(deleteUser.fulfilled, (state) => {
@@ -103,14 +114,14 @@ export const authSlice = createSlice({
         state.userName = action.payload.name;
         state.login = action.payload.login;
         state.editSuccess = true;
-        console.log('actionEdit', action.payload);
       })
       .addCase(editUser.rejected, (state) => {
         state.isLoading = false;
+        //state.errorCode = String(action.payload);
       });
   },
 });
 
-export const { removeError, removeSnackState, logOut } = authSlice.actions;
+export const { removeError, removeSnackState, logOut, expiredToken } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -36,14 +36,16 @@ axiosClient.interceptors.response.use(
     const {
       data: { token },
     } = response;
+
     if (token) {
       localStorage.setItem('token', token);
     }
+
     return response;
   },
   async (error: AxiosError) => {
     // глобальный обработчик ошибок
-    errorHandler(error.status);
+    errorHandler(error.response?.status);
     return Promise.reject(error);
   }
 );

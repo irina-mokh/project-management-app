@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Layout } from 'layout';
 import { Main } from 'pages/main';
 import { Welcome } from 'pages/welcome';
@@ -50,30 +50,37 @@ export const routes = {
   },
 };
 
+export const PrivateRoute = ({ token }: { token: string | null }) => {
+  if (!token) {
+    return <Navigate to={routes.welcome.path} replace />;
+  }
+  return <Outlet />;
+};
+
+export const CommonRoute = ({ token }: { token: string | null }) => {
+  if (token) {
+    return <Navigate to={routes.main.path} replace />;
+  }
+  return <Outlet />;
+};
 export const AppRouter = () => {
-  const appRoutes = Object.values(routes).map((route, index) => {
-    return <Route key={index} path={route.path} element={route.element} />;
-  });
   const { token } = useSelector((state: RootState) => state.auth);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {appRoutes}
-        <Route
-          path="signin"
-          element={
-            token && token.length ? (
-              <Navigate to={`/${routes.welcome.path}`} replace />
-            ) : (
-              <SignInForm />
-            )
-          }
-        />
-        <Route
-          path="/signup"
-          element={token ? <Navigate to={routes.main.path} replace /> : <SignUpForm />}
-        />
+        <Route path="/" element={<Welcome />} />
+        <Route element={<PrivateRoute token={token} />}>
+          <Route path="edit-profile" element={<EditProfile />} />
+          <Route path="/boards" element={<Main />} />
+          <Route path="/boards/:id" element={<Board />} />
+        </Route>
+        <Route element={<CommonRoute token={token} />}>
+          <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/signin" element={<SignInForm />} />
+          <Route path="/boards/:id" element={<Board />} />
+        </Route>
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

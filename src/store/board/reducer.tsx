@@ -17,6 +17,7 @@ type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
+  usersList: Array<IUser>;
   searchResults: Array<ITaskWithColID>;
   isSearchFocus: boolean;
 };

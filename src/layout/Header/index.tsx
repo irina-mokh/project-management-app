@@ -9,7 +9,7 @@ import { UserHeader } from './UserHeader';
 import { CreateBoardModal } from 'components/Modals';
 import { getUserPersData } from 'store/auth/actions';
 import { ReactComponent as MainLogo } from '../../assets/images/svg/logo.svg';
-import { ThemeSwitcher1 } from 'components/Theme';
+import { ThemeSwitcher1 } from 'components/ThemeSwitcher';
 import { LangSwitcher } from 'components/LangSwitcher';
 import { Link } from 'react-router-dom';
 import { routes } from 'routes';

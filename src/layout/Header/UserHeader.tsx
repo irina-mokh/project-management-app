@@ -1,8 +1,9 @@
 import { AccountMenu } from './AccountMenu';
-import { useSearchParams } from 'react-router-dom';
-
+import { Link, useSearchParams } from 'react-router-dom';
 import './Header.scss';
 import { useTranslation } from 'react-i18next';
+import { routes } from 'routes';
+
 export const UserHeader = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -15,6 +16,9 @@ export const UserHeader = () => {
 
   return (
     <div className="userHeaderCont">
+      <button className="headerBtn">
+        <Link to={routes.main.path}>{t('boardsPage')}</Link>
+      </button>
       <button className="headerBtn" onClick={addBoardHandler}>
         {t('createBoard')}
       </button>

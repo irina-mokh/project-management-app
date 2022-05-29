@@ -2,11 +2,14 @@ import { createSlice, current } from '@reduxjs/toolkit';
 import { IBoardDetails, IColumn, ITask } from 'types';
 import { getBoard, createColumn, deleteColumn, deleteTask } from './actions';
 
+interface ITaskWithColID extends ITask {
+  columnId: string;
+}
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
   data: IBoardDetails;
-  searchResults: Array<ITask>;
+  searchResults: Array<ITaskWithColID>;
   isSearchFocus: boolean;
 };
 
@@ -26,13 +29,19 @@ export const boardSlice = createSlice({
       const search = action.payload.toLowerCase();
       const columns = current(state.data.columns);
 
-      const allTasks: ITask[] = columns.map((col: IColumn) => col.tasks).flat();
+      const allTasks = columns
+        .map((col: IColumn) => {
+          const tasksWithColId = col.tasks.map((task) => ({ ...task, columnId: col.id }));
+          return tasksWithColId;
+        })
+        .flat();
 
-      const result: ITask[] = allTasks.filter(
+      const result = allTasks.filter(
         (task) =>
           task.title.toLowerCase().includes(search) ||
           task.description.toLowerCase().includes(search)
       );
+
       state.searchResults = result;
     },
     clearTasksSearch: (state) => {

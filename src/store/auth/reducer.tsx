@@ -33,7 +33,6 @@ export const authSlice = createSlice({
   reducers: {
     removeError: (state) => {
       state.error = null;
-      console.log('djdd');
     },
     logOut: (state) => {
       state.login = null;
@@ -93,7 +92,6 @@ export const authSlice = createSlice({
       })
       .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;
-        //state.errorCode = String(action.payload);
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.userId = null;
@@ -117,7 +115,6 @@ export const authSlice = createSlice({
       })
       .addCase(editUser.rejected, (state) => {
         state.isLoading = false;
-        //state.errorCode = String(action.payload);
       });
   },
 });

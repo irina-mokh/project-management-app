@@ -27,28 +27,12 @@ axiosClient.interceptors.request.use(
     Promise.reject(error);
   }
 );
-/*
+
 axiosClient.interceptors.response.use(
   (response) => {
     const {
       data: { token },
     } = response;
-    if (token) {
-      localStorage.setItem('token', token);
-    }
-    return response;
-  },
-  async (error) => {
-    return Promise.reject(error);
-  }
-);
-*/
-axiosClient.interceptors.response.use(
-  (response) => {
-    const {
-      data: { token },
-    } = response;
-    console.log('rees', response);
     if (token && response.status !== 401) {
       localStorage.setItem('token', token);
     }

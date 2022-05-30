@@ -40,6 +40,8 @@ body {
   line-height: 1.5;
   font-family: 'PT Sans';
   background-color: #20212a;
+  -webkit-overflow-scrolling: auto;
+  overflow-y: scroll;
 }
 a {
   text-decoration: none;

@@ -7,6 +7,7 @@ type IBoardsState = {
   error: string | null;
   data: Array<IBoard>;
   hasModal: boolean;
+  boardsOnClient: Array<IBoard>;
 };
 
 const initialState: IBoardsState = {
@@ -14,20 +15,28 @@ const initialState: IBoardsState = {
   error: null,
   data: [],
   hasModal: false,
+  boardsOnClient: [],
 };
 
 export const boardListSlice = createSlice({
   name: 'boardList',
   initialState,
   reducers: {
-    // возвращаем state и меняем только hasModal
-    toggleModal: function (state) {
-      console.log('Current state: ');
-      console.log(state);
-      return {
-        ...state,
-        hasModal: !state.hasModal,
-      };
+    showModal: (state, action) => {
+      state.hasModal = action.payload;
+    },
+    searchBoards: (state, action) => {
+      const search = action.payload.toLowerCase();
+
+      const result = state.data.filter(
+        (board) =>
+          board.title.toLowerCase().includes(search) ||
+          board.description.toLowerCase().includes(search)
+      );
+      state.boardsOnClient = result;
+    },
+    clearBoardsSearch: (state) => {
+      state.boardsOnClient = state.data;
     },
   },
   extraReducers: (builder) => {
@@ -39,17 +48,18 @@ export const boardListSlice = createSlice({
       })
       .addCase(getBoards.fulfilled, (state, action) => {
         state.data = action.payload;
+        state.boardsOnClient = action.payload;
         state.isLoading = false;
       })
       .addCase(getBoards.rejected, (state, action) => {
         state.error = String(action.payload);
+        state.isLoading = false;
       })
 
       // deleteBoard
       .addCase(deleteBoard.fulfilled, (state, action) => {
-        if (state.data?.length) {
-          state.data = state.data?.filter((board) => board.id !== action.payload);
-        }
+        state.data = state.data.filter((board) => board.id !== action.payload);
+        state.boardsOnClient = state.data;
       })
       .addCase(deleteBoard.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -58,6 +68,7 @@ export const boardListSlice = createSlice({
       // createBoard
       .addCase(createBoard.fulfilled, (state, action) => {
         state.data = [...state.data, action.payload];
+        state.boardsOnClient = state.data;
       })
       .addCase(createBoard.rejected, (state, action) => {
         state.error = String(action.payload);
@@ -65,6 +76,6 @@ export const boardListSlice = createSlice({
   },
 });
 
-export const { toggleModal } = boardListSlice.actions;
+export const { showModal, searchBoards, clearBoardsSearch } = boardListSlice.actions;
 
 export default boardListSlice.reducer;

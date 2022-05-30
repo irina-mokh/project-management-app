@@ -2,7 +2,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { axiosClient } from 'utils/axios';
-import { ICreateBoardRequestFields } from '../../types';
+import { ICreateBoardFields } from '../../types';
 
 export const getBoards = createAsyncThunk(
   'boardList/getBoards',
@@ -33,7 +33,7 @@ export const deleteBoard = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
   'boards/createBoard',
-  async function (requestBody: ICreateBoardRequestFields, { rejectWithValue }) {
+  async function (requestBody: ICreateBoardFields, { rejectWithValue }) {
     try {
       const response = await axiosClient.post('boards', requestBody);
       if (response.status !== 201) {

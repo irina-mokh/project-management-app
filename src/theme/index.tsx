@@ -4,31 +4,33 @@ import { teal, amber } from '@mui/material/colors';
 export const getDesignTokens = (mode: PaletteMode) => ({
   typography: {
     fontFamily: 'PT Sans',
-    // h1: { color: '#fff' },
   },
   components: {
-    // MuiInputLabel: {
-    //   styleOverrides: {
-    //     root: {
-    //       color: 'primary',
-    //       '&.Mui-focused': {
-    //         color: 'secondary',
-    //       },
-    //     },
-    //   },
-    // },
+    '@global': {
+      '&::-webkit-scrollbar': {
+        width: 7,
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: 'transparent',
+        borderWidth: '1px',
+        borderColor: 'primary',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: 'gray',
+        borderRadius: 2,
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          // color: '#fff',
-
-          // backgroundColor: '#282933',
-
           '-webkit-autofill:focus': {
             transition: 'background-color 600000s 0s, color 600000s 0s',
           },
           '& fieldset': {
             border: 'none',
+          },
+          '& .MuiOutlinedInput-input + fieldset': {
+            border: '2px solid #009688',
           },
           '& .MuiOutlinedInput-input:hover + fieldset': {
             border: `2px solid #ced4da`,
@@ -43,6 +45,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
       styleOverrides: {
         root: {
           borderRadius: '0',
+          border: '1px solid #88888833',
         },
       },
     },
@@ -50,13 +53,22 @@ export const getDesignTokens = (mode: PaletteMode) => ({
       styleOverrides: {
         root: {
           borderRadius: '0',
-          backgroundColor: 'transparent',
+          // backgroundColor: 'transparent',
           // border: '1',
           boxShadow: 'none',
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          width: '1.2em',
+          height: '1.2em',
+        },
+      },
+    },
   },
+
   palette: {
     primary: teal,
     secondary: amber,

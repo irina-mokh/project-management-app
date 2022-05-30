@@ -12,12 +12,15 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { AxiosError } from 'axios';
 import { Loading } from 'components/Loading';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { routes } from 'routes';
 import { AppDispatch, RootState } from 'store';
-import { signInUser } from 'store/auth/actions';
+import { getUserPersData, signInUser } from 'store/auth/actions';
 import { authSlice } from 'store/auth/reducer';
 import { selectTheme } from 'store/theme/selectors';
 import { getDesignTokens } from 'theme';
@@ -27,7 +30,9 @@ export const SignInForm = () => {
   const theme = createTheme(getDesignTokens(mode));
   const dispatch = useDispatch<AppDispatch>();
   const { error, isLoading, token } = useSelector((state: RootState) => state.auth);
-  const { remError } = authSlice.actions;
+  const { removeError } = authSlice.actions;
+
+  const navigate = useNavigate();
 
   const [loginInput, setLogin] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -37,11 +42,13 @@ export const SignInForm = () => {
   const [passError, setPassError] = useState(false);
   const [passErrorText, setPassErrorText] = useState('');
 
+  const { t } = useTranslation();
+
   const loginHandler = (event: React.SyntheticEvent) => {
     const inputLogin = (event.target as HTMLInputElement).value;
     setLogin(inputLogin);
     loginValidation(inputLogin);
-    dispatch(remError());
+    dispatch(removeError());
   };
   const loginValidation = (inputLogin: string) => {
     if (inputLogin && inputLogin.length > 3) {
@@ -49,7 +56,7 @@ export const SignInForm = () => {
       setLoginErrorText('');
     } else {
       setLoginError(true);
-      setLoginErrorText('Login must be longer than 3 symbols');
+      setLoginErrorText(`${t('loginErrorText')}`);
     }
   };
 
@@ -59,7 +66,7 @@ export const SignInForm = () => {
       setPassErrorText('');
     } else {
       setPassError(true);
-      setPassErrorText('Password should contain at least 8 symbols');
+      setPassErrorText(`${t('passwordErrorText')}`);
     }
   };
 
@@ -67,7 +74,7 @@ export const SignInForm = () => {
     const inputPass = (event.target as HTMLInputElement).value;
     setPassword(inputPass);
     passValidation(inputPass);
-    dispatch(remError());
+    dispatch(removeError());
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -78,17 +85,22 @@ export const SignInForm = () => {
       login: data.get('login') as string,
       password: data.get('password') as string,
     };
-    dispatch(signInUser(curUser));
-
-    /*if (token?.length) {
-      setSuccess(true);
-      setTimeout(() => navigate('/main'), 700);
-    }*/
+    dispatch(signInUser(curUser))
+      .unwrap()
+      .then(() => {
+        navigate(`/${routes.main.path}`);
+        dispatch(getUserPersData(curUser.login));
+      })
+      .catch((e) => {
+        // error in case of rejection inside createAsyncThunk second argument
+        console.log('e', e as AxiosError);
+      });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container
+        data-testid="signIn"
         component="main"
         maxWidth="xs"
         sx={{ mt: 5, backgroundColor: theme.palette.background.default }}
@@ -104,7 +116,7 @@ export const SignInForm = () => {
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            {t('signIn')}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <TextField
@@ -117,7 +129,7 @@ export const SignInForm = () => {
               fullWidth
               id="login"
               name="login"
-              label="Login"
+              label={t('userLogin')}
               autoComplete="login"
               autoFocus
             />
@@ -130,7 +142,7 @@ export const SignInForm = () => {
               required
               fullWidth
               name="password"
-              label="Password"
+              label={t('userPassword')}
               type="password"
               id="password"
               autoComplete="current-password"
@@ -143,25 +155,24 @@ export const SignInForm = () => {
                 style={{ backgroundColor: '#69D882' }}
                 //disabled={Boolean(BEndError) || passError || loginError}
               >
-                Successfully!
+                {t('successfully')}
               </Button>
             ) : (
               <Button
+                data-testid="submit-signin"
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                style={{ backgroundColor: '#9D1C6A' }}
-                //disabled={Boolean(BEndError) || passError || loginError}
               >
-                Sign In
+                {t('signIn')}
               </Button>
             )}
             <Grid container>
               <Grid item>
-                <span>For the first time on the site? </span>
-                <Link to={'/signup'}>
-                  <span>Create an account</span>
+                <span style={{ marginRight: '10px' }}> {t('firstVisit')}</span>
+                <Link to={'/signup'} onClick={() => dispatch(removeError)}>
+                  <span>{t('signUp')}</span>
                 </Link>
               </Grid>
             </Grid>
@@ -170,7 +181,7 @@ export const SignInForm = () => {
         {isLoading ? <Loading /> : null}
         {error ? (
           <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
+            <AlertTitle>{t('error')}</AlertTitle>
             {error}
           </Alert>
         ) : null}

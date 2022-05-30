@@ -1,22 +1,95 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { IBoardDetails } from 'types';
-import { getBoard, updateColumn, deleteColumn } from './actions';
+import { createSlice, current } from '@reduxjs/toolkit';
+import { IBoardDetails, IColumn, IUser, ITask } from 'types';
+import {
+  getBoard,
+  getAllUsers,
+  createColumn,
+  deleteColumn,
+  createTask,
+  updateTask,
+  deleteTask,
+} from './actions';
 
 type IBoardState = {
   isLoading: boolean;
   error: string | null;
-  data: IBoardDetails | null;
+  data: IBoardDetails;
+  usersList: Array<IUser>;
+  searchResults: Array<ITask>;
+  isSearchFocus: boolean;
 };
+
 const initialState: IBoardState = {
   isLoading: true,
   error: null,
-  data: null,
+  data: {} as IBoardDetails,
+  usersList: [] as Array<IUser>,
+  searchResults: [],
+  isSearchFocus: false,
 };
 
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
-  reducers: {},
+  reducers: {
+    searchTasks: (state, action) => {
+      const search = action.payload.toLowerCase();
+      const columns = current(state.data.columns);
+
+      const allTasks: ITask[] = columns.map((col: IColumn) => col.tasks).flat();
+
+      const result: ITask[] = allTasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(search) ||
+          task.description.toLowerCase().includes(search)
+      );
+      state.searchResults = result;
+    },
+    clearTasksSearch: (state) => {
+      state.searchResults = [];
+    },
+    toggleSearchFocus: (state, action) => {
+      state.isSearchFocus = action.payload;
+      state.searchResults = [];
+    },
+    moveColumn: (state, action) => {
+      const { dragIndex, hoverIndex } = action.payload;
+      const columns = state.data.columns;
+      const dragColumn = columns[dragIndex - 1];
+      columns.splice(dragIndex - 1, 1);
+      columns.splice(hoverIndex - 1, 0, dragColumn);
+      columns.forEach(async (column, i) => {
+        // set state column order
+        column.order = i + 1;
+      });
+    },
+    moveTask: (state, action) => {
+      // console.log(action.payload);
+      const { dragIndex, dropIndex, dragColumnIndex, dropColumnIndex } = action.payload;
+      const columns = state.data.columns;
+
+      const dragColumn = columns[dragColumnIndex - 1].tasks;
+      const dropColumn = columns[dropColumnIndex - 1].tasks;
+      const dragTask = dragColumn[dragIndex - 1];
+      dragColumn.splice(dragIndex - 1, 1);
+
+      if (dragColumnIndex == dropColumnIndex) {
+        if (dropIndex < dragIndex) {
+          dragColumn.splice(dropIndex - 1, 0, dragTask);
+        } else {
+          dragColumn.splice(dropIndex - 2, 0, dragTask);
+        }
+      } else {
+        dropColumn.splice(dropIndex - 1, 0, dragTask);
+        dropColumn.forEach(async (task, i) => {
+          task.order = i + 1;
+        });
+      }
+      dragColumn.forEach(async (task, i) => {
+        task.order = i + 1;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       // getBoard
@@ -25,33 +98,110 @@ export const boardSlice = createSlice({
         state.error = null;
       })
       .addCase(getBoard.fulfilled, (state, action) => {
+        const sortedColumns: IColumn[] = action.payload.columns.sort(
+          (a: IColumn, b: IColumn) => a.order - b.order
+        );
+
+        sortedColumns.map((col) => {
+          const sortedTasks = col.tasks.sort((a, b) => a.order - b.order);
+          return {
+            ...col,
+            tasks: sortedTasks,
+          };
+        });
+
         state.data = action.payload;
+        state.data.columns = sortedColumns;
         state.isLoading = false;
       })
       .addCase(getBoard.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 
-      // updateColumn {
-      .addCase(updateColumn.fulfilled, () => {
-        // state.data = action.payload;
+      // getAllUsers
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.usersList = action.payload;
       })
-      .addCase(updateColumn.rejected, (state, action) => {
+      .addCase(getAllUsers.rejected, () => {
+        console.error('Something went wrong while fetching getAllUsers endpoint :( ');
+      })
+
+      // create column
+      .addCase(createColumn.fulfilled, (state, action) => {
+        state.data = {
+          ...state.data,
+          // добавляем к колонке tasks, т.к к ответе при создании приходит без этого массива
+          columns: [...state.data.columns, { ...action.payload, tasks: [] }],
+        };
+      })
+      .addCase(createColumn.rejected, (state, action) => {
         state.error = String(action.payload);
       })
 
       // deleteColumn
       .addCase(deleteColumn.fulfilled, (state, action) => {
-        if (state.data?.columns) {
-          state.data.columns = state.data?.columns.filter((column) => column.id !== action.payload);
-        }
+        state.data.columns = state.data.columns.filter((column) => column.id !== action.payload);
       })
       .addCase(deleteColumn.rejected, (state, action) => {
         state.error = String(action.payload);
+      })
+
+      // createTask
+      .addCase(createTask.fulfilled, (state, action) => {
+        const { columnId, taskDetails } = action.payload;
+        // создаём копию массива из state
+        const columns = Array.from(state.data.columns);
+
+        // в копию массива добавляем новый таск
+        const updatedColumn = columns.find((column) => column.id === columnId);
+        updatedColumn?.tasks.push(taskDetails);
+
+        // присваиваем копию массива в state.columns
+        state.data.columns = columns;
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // updateTask
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const { id, title, order, description, userId } = action.payload;
+
+        const column = state.data.columns.find((column) => column.id === action.payload.columnId);
+        if (column) {
+          const idx = column.tasks.findIndex((task) => task.id === id);
+
+          const task = {
+            id,
+            title,
+            order,
+            description,
+            userId,
+          };
+
+          column.tasks[idx] = task;
+        }
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.error = String(action.payload);
+      })
+
+      // deleteTask
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const column = state.data?.columns.find((column) => column.id === action.payload.columnId);
+        if (column) {
+          const tasks = column.tasks.filter((task) => task.id !== action.payload.taskId);
+          column.tasks = tasks;
+        }
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.error = String(action.payload);
+        state.isLoading = false;
       });
   },
 });
 
-// export const {  } = boardSlice.actions;
+export const { moveColumn, moveTask, clearTasksSearch, searchTasks, toggleSearchFocus } =
+  boardSlice.actions;
 
 export default boardSlice.reducer;

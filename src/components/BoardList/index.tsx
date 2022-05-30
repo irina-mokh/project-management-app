@@ -12,30 +12,27 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
 import { getBoards, deleteBoard } from 'store/boardList/actions';
-import { toggleModal } from 'store/boardList/reducer';
 import { selectBoardList } from 'store/boardList/selectors';
 import { Loading } from 'components/Loading';
-import { axiosClient } from 'utils/axios';
 import { AddButton } from 'components/AddButton';
 import { DeleteButton } from 'components/DeleteButton';
 import { IBoard } from 'types';
-
-// temp sign in
-const signin = () => {
-  axiosClient.post('/signin', {
-    login: 'mokh-user',
-    password: '07007pswrd',
-  });
-};
+import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const BoardList = () => {
-  signin();
-  const { data, isLoading, error } = useSelector(selectBoardList);
+  const { t } = useTranslation();
+  const { isLoading, error, boardsOnClient } = useSelector(selectBoardList);
+
   const dispatch: AppDispatch = useDispatch();
   let boards = null;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const addBoardHandler = () => {
-    dispatch(toggleModal());
+    // добавляем в url search параметр create-modal
+    searchParams.set('create-board', 'true');
+    setSearchParams(searchParams);
   };
 
   useEffect(() => {
@@ -43,8 +40,8 @@ export const BoardList = () => {
   }, [dispatch]);
   const { palette } = useTheme();
 
-  if (data?.length) {
-    boards = data?.map((item: IBoard) => {
+  if (boardsOnClient?.length) {
+    boards = boardsOnClient?.map((item: IBoard) => {
       const { id, title, description } = item;
       return (
         <Card
@@ -64,7 +61,7 @@ export const BoardList = () => {
             </CardContent>
           </CardActionArea>
           <DeleteButton
-            confirmText="Delete a board?"
+            confirmText={t('confirmTextButton')}
             deleteHandler={() => dispatch(deleteBoard(id))}
           />
         </Card>
@@ -89,8 +86,8 @@ export const BoardList = () => {
         gap: '1em',
       }}
     >
-      {data?.length && boards}
-      <AddButton text="add board" addHandler={addBoardHandler} />
+      {boardsOnClient?.length > 0 && boards}
+      <AddButton text={t('addBoard')} addHandler={addBoardHandler} />
     </List>
   );
 };

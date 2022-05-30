@@ -6,14 +6,19 @@ import Divider from '@mui/material/Divider';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { LetterAvatar } from './Avatar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { routes } from 'routes';
-import { RootState } from 'store';
+import { AppDispatch, RootState } from 'store';
+import { ConfirmDialog } from 'components/ConfirmDialog';
+import { useState } from 'react';
+import { authSlice } from 'store/auth/reducer';
+import { useTranslation } from 'react-i18next';
 
 export const AccountMenu = () => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,6 +28,10 @@ export const AccountMenu = () => {
     setAnchorEl(null);
   };
   const { login } = useSelector((state: RootState) => state.auth);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const { logOut } = authSlice.actions;
+  const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
@@ -69,21 +78,30 @@ export const AccountMenu = () => {
           {login}
         </MenuItem>
         <MenuItem>
-          <Link to={routes.editProfile.path} className="userMenu_link">
+          <Link to={routes.editProfile.path} style={{ display: 'flex', alignItems: 'center' }}>
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>
-            Edit profile
+            {t('editProfile')}
           </Link>
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={() => setConfirmOpen(true)}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Sign Out
+          {t('signOut')}
         </MenuItem>
       </Menu>
+      <ConfirmDialog
+        confirmText={t('confirmOut')}
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={() => {
+          dispatch(logOut());
+          navigate(`${routes.welcome.path}`);
+        }}
+      ></ConfirmDialog>
     </React.Fragment>
   );
 };

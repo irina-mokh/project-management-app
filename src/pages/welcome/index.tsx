@@ -51,7 +51,7 @@ export const Welcome = () => {
         >
           {token?.length ? (
             <Link to={routes.main.path} className="mainBtnLink">
-              {t('goToBoards')}
+              <span>{t('goToBoards')}</span>
             </Link>
           ) : (
             <Link to={routes.signUp.path} className="mainBtnLink">

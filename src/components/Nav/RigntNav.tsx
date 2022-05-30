@@ -1,6 +1,6 @@
 import { LangSwitcher } from 'components/LangSwitcher';
 import { ThemeSwitcher1 } from 'components/ThemeSwitcher';
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { CreateBoardModal } from 'components/Modals';
 
@@ -30,9 +30,8 @@ const Ul = styled.div<{ open: boolean }>`
 `;
 
 export const RightNav = (props: { open: boolean }) => {
-  const ref = useRef(null);
   return (
-    <Ul ref={ref} open={props.open}>
+    <Ul open={props.open}>
       <LangSwitcher />
       <ThemeSwitcher1 />
       <CreateBoardModal />

@@ -38,6 +38,7 @@ const StyledBurger = styled.div<{ open: boolean }>`
 
 export const Burger = () => {
   const [open, setOpen] = useState(false);
+
   return (
     <>
       <StyledBurger open={open} onClick={() => setOpen(!open)}>

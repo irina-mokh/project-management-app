@@ -38,19 +38,28 @@
   height: $height;
   padding: 10px;
   border: 2px solid $green;
-  margin-left: 10px;
   font-weight: 700;
   font-size: 1em;
   cursor: pointer;
 }
-.userHeaderCont {
+.changeHeaderCont {
   display: flex;
   gap: 10px;
-  margin-right: 0;
+  margin-right: 10px;
+  margin-left: auto;
 }
 .userMenu_link {
   display: flex;
   align-items: center;
   text-decoration: none;
   color: black;
+}
+.burgerChange {
+  display: flex;
+  flex-direction: row-reverse;
+}
+@media (max-width: 768px) {
+  .burgerChange {
+    flex-direction: row;
+  }
 }

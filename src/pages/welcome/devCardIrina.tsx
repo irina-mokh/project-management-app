@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -12,6 +12,9 @@ import iraPic from '../../assets/images/svg/ira-logo.svg';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
+import { getDesignTokens } from 'theme';
+import { useSelector } from 'react-redux';
+import { selectTheme } from 'store/theme/selectors';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: number | undefined;
@@ -35,55 +38,57 @@ export const DevCardIrina = () => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const mode = useSelector(selectTheme);
+  const theme = createTheme(getDesignTokens(mode));
 
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        backgroundColor: 'transparent',
-        border: 'none',
-        backgroundImage: 'none',
-      }}
-    >
-      <CardMedia component="img" image={iraPic} alt="Dev avatar" sx={{ zIndex: '100' }} />
-      <CardActions
-        disableSpacing
+    <ThemeProvider theme={theme}>
+      <Card
         sx={{
-          width: '70%',
-          marginTop: '-20px',
-          backgroundColor: '#009688',
-          marginLeft: '45px',
-          marginRight: '5px',
-          objectFit: 'none',
+          maxWidth: 345,
+          backgroundColor: 'transparent',
+          border: 'none',
+          backgroundImage: 'none',
+          padding: '5px',
         }}
       >
-        <Typography sx={{ color: 'white' }}>{t('irina')}</Typography>
-        <ExpandMore
-          expand={+expanded}
+        <CardMedia component="img" image={iraPic} alt="Dev avatar" sx={{ zIndex: '100' }} />
+        <CardActions
+          disableSpacing
           onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon sx={{ color: 'white' }} />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent
           sx={{
             width: '70%',
+            marginTop: '-20px',
+            backgroundColor: '#009688',
+            marginRight: '5px',
+            objectFit: 'none',
             marginLeft: '45px',
-            boxShadow: '0px 5px 10px 2px rgb(34 60 80 / 20%)',
+            cursor: 'pointer',
           }}
         >
-          <Typography paragraph>{t('developed')}</Typography>
-          <ul>
-            <li>{t('boardsPage')}</li>
-            <li>{t('tasks')}</li>
-            <li>Drag&apos;n&apos;drop</li>
-            <li>{t('tests')}</li>
-          </ul>
-        </CardContent>
-      </Collapse>
-    </Card>
+          <Typography sx={{ color: 'white' }}>{t('irina')}</Typography>
+          <ExpandMore expand={+expanded} aria-expanded={expanded} aria-label="show more">
+            <ExpandMoreIcon sx={{ color: 'white' }} />
+          </ExpandMore>
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent
+            sx={{
+              width: '70%',
+              marginLeft: '45px',
+              boxShadow: '0px 5px 10px 2px rgb(34 60 80 / 20%)',
+            }}
+          >
+            <Typography paragraph>{t('developed')}</Typography>
+            <ul>
+              <li>{t('boardsPage')}</li>
+              <li>{t('tasks')}</li>
+              <li>Drag&apos;n&apos;drop</li>
+              <li>{t('tests')}</li>
+            </ul>
+          </CardContent>
+        </Collapse>
+      </Card>
+    </ThemeProvider>
   );
 };

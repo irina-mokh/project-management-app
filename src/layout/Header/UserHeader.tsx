@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import './Header.scss';
 import { useTranslation } from 'react-i18next';
 import { routes } from 'routes';
+import { useEffect, useState } from 'react';
 
 export const UserHeader = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,13 +15,25 @@ export const UserHeader = () => {
   };
   const { t } = useTranslation();
 
+  const [windowDimenion, detectHW] = useState(window.innerWidth);
+  const detectSize = () => {
+    detectHW(window.innerWidth);
+  };
+  useEffect(() => {
+    window.addEventListener('resize', detectSize);
+
+    return () => {
+      window.removeEventListener('resize', detectSize);
+    };
+  }, [windowDimenion]);
+
   return (
-    <div className="userHeaderCont">
+    <div className="changeHeaderCont">
       <button className="headerBtn">
         <Link to={routes.main.path}>{t('boardsPage')}</Link>
       </button>
       <button className="headerBtn" onClick={addBoardHandler}>
-        {t('createBoard')}
+        {windowDimenion > 768 ? t('createBoard') : '+'}
       </button>
       <AccountMenu />
     </div>

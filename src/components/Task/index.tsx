@@ -130,6 +130,7 @@ export const Task = (props: ITaskProps) => {
       sx={{
         order: props.data.order,
         height: height,
+        flexGrow: 1,
         margin: '8px 0',
         padding: '10px',
         position: 'relative',

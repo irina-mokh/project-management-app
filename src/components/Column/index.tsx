@@ -174,6 +174,9 @@ export const Column = (props: IColumnProps) => {
         <List
           sx={{
             padding: '0 10px 0 0',
+            minHeight: '100%',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {column.tasks.map((task: ITask) => (

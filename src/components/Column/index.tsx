@@ -206,7 +206,7 @@ export const Column = (props: IColumnProps) => {
           ))}
           <AddButton
             text={t('addTask')}
-            // order={column.tasks.length + 1}
+            order={column.tasks.length + 1}
             addHandler={() => createTaskHandler()}
           />
           {column.tasks.length == 0 && (

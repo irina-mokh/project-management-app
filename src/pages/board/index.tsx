@@ -57,7 +57,7 @@ export const Board = () => {
     <Container
       maxWidth="xl"
       sx={{
-        height: '83vh',
+        height: '84vh',
         padding: '5px',
         display: 'flex',
         flexDirection: 'column',
@@ -103,7 +103,7 @@ export const Board = () => {
               sx={{
                 position: 'absolute',
                 width: '300px',
-                height: '100%',
+                // height: '100%',
                 zIndex: '10',
                 padding: '10px',
                 backgroundColor: 'background.paper',
@@ -118,6 +118,7 @@ export const Board = () => {
                   }
                   sx={{
                     cursor: 'pointer',
+                    padding: '7px',
                   }}
                 >
                   <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">

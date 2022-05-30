@@ -49,11 +49,13 @@ export const DevCardIrina = () => {
           backgroundColor: 'transparent',
           border: 'none',
           backgroundImage: 'none',
+          padding: '5px',
         }}
       >
         <CardMedia component="img" image={iraPic} alt="Dev avatar" sx={{ zIndex: '100' }} />
         <CardActions
           disableSpacing
+          onClick={handleExpandClick}
           sx={{
             width: '70%',
             marginTop: '-20px',
@@ -61,15 +63,11 @@ export const DevCardIrina = () => {
             marginRight: '5px',
             objectFit: 'none',
             marginLeft: '45px',
+            cursor: 'pointer',
           }}
         >
           <Typography sx={{ color: 'white' }}>{t('irina')}</Typography>
-          <ExpandMore
-            expand={+expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
+          <ExpandMore expand={+expanded} aria-expanded={expanded} aria-label="show more">
             <ExpandMoreIcon sx={{ color: 'white' }} />
           </ExpandMore>
         </CardActions>

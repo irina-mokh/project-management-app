@@ -171,7 +171,11 @@ export const SignInForm = () => {
             <Grid container>
               <Grid item>
                 <span style={{ marginRight: '10px' }}> {t('firstVisit')}</span>
-                <Link to={'/signup'} onClick={() => dispatch(removeError)}>
+                <Link
+                  to={'/signup'}
+                  onClick={() => dispatch(removeError)}
+                  style={{ color: '#009688', textDecoration: 'underline' }}
+                >
                   <span>{t('signUp')}</span>
                 </Link>
               </Grid>

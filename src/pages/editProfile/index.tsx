@@ -206,7 +206,10 @@ export const EditProfile = () => {
         setOpen={setConfirmOpen}
         onConfirm={() => {
           dispatch(deleteUser(userId));
-          setTimeout(() => navigate(`${routes.welcome.path}`), 1000);
+          setTimeout(() => {
+            navigate(`${routes.welcome.path}`);
+            dispatch(removeSnackState());
+          }, 1000);
         }}
       />
       <CustomSnackBar

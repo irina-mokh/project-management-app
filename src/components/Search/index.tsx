@@ -15,7 +15,7 @@ export const SearchBar = (props: SearchProps) => {
   const dispatch: AppDispatch = useDispatch();
 
   return (
-    <Box ml="auto" mb="1em" width="300px">
+    <Box minWidth="300px">
       <TextField
         variant="standard"
         type="text"

@@ -21,6 +21,7 @@ export const translationsEN = {
   addBoarddescription: 'Add description',
   addNewColumn: 'Add new column',
   addTitleColumn: 'Set title',
+  deleteColumn: 'Delete column?',
   deleteTask: 'Delete task?',
   homePage: 'Home',
   boardsPage: 'Boards',

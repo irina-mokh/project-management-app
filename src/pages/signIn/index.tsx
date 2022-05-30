@@ -153,7 +153,6 @@ export const SignInForm = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: '#69D882' }}
-                //disabled={Boolean(BEndError) || passError || loginError}
               >
                 {t('successfully')}
               </Button>
@@ -173,7 +172,7 @@ export const SignInForm = () => {
                 <span style={{ marginRight: '10px' }}> {t('firstVisit')}</span>
                 <Link
                   to={'/signup'}
-                  onClick={() => dispatch(removeError)}
+                  onClick={() => dispatch(removeError())}
                   style={{ color: '#009688', textDecoration: 'underline' }}
                 >
                   <span>{t('signUp')}</span>

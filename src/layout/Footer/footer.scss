@@ -1,0 +1,39 @@
+.footer {
+  height: 5vh;
+  position: relative;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-box-shadow: 0px -5px 5px -5px rgba(34, 60, 80, 0.6);
+  -moz-box-shadow: 0px -5px 5px -5px rgba(34, 60, 80, 0.6);
+  box-shadow: 0px -5px 5px -5px rgba(34, 60, 80, 0.6);
+}
+.footer_nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.team {
+  padding: 0;
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 600px) {
+    justify-content: space-around;
+  }
+}
+
+.member {
+  list-style: none;
+  margin: 0 5px;
+}
+
+.nav_link {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  height: 100%;
+  align-items: center;
+}

@@ -32,7 +32,6 @@ export const LangSwitcher = () => {
           type="checkbox"
           checked={lang === 'en'}
           onChange={(event) => {
-            console.log('event', event.target.checked);
             checkLang(event);
           }}
         />

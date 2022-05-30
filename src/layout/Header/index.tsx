@@ -56,18 +56,6 @@ export const Header = () => {
         {token && token.length ? <UserHeader /> : <WelcomeHeader />}
         <Navbar />
       </div>
-
-      {/*<Link to={routes.welcome.path} style={{ display: 'flex', alignItems: 'center' }}>
-        <MainLogo style={{ fill: '#FF7000', height: '100%', marginRight: '10px' }} />
-        <Typography variant="h5" component="h1">
-          PMA
-        </Typography>
-      </Link>
-      <LangSwitcher />
-      <ThemeSwitcher1 />
-      {token && token.length ? <UserHeader /> : <WelcomeHeader />}
-      <CreateBoardModal />
-    */}
     </header>
   );
 };

@@ -212,7 +212,7 @@ export const SignUpForm = () => {
                 <span style={{ marginRight: '10px' }}>{t('existAccount')} </span>
                 <Link
                   to={'/signin'}
-                  onClick={() => dispatch(removeError)}
+                  onClick={() => dispatch(removeError())}
                   style={{ color: '#009688', textDecoration: 'underline' }}
                 >
                   <span>{t('signIn')}</span>

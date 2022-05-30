@@ -33,6 +33,7 @@ export const authSlice = createSlice({
   reducers: {
     removeError: (state) => {
       state.error = null;
+      console.log('djdd');
     },
     logOut: (state) => {
       state.login = null;

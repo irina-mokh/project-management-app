@@ -24,7 +24,7 @@ export const createUser = createAsyncThunk(
         errorMessage = i18n.t('errorUserExist');
       }
       console.log('Something went wrong ->', errorMessage);
-      return rejectWithValue((err as AxiosError).response?.status);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -54,7 +54,7 @@ export const signInUser = createAsyncThunk(
         errorMessage = i18n.t('errorTokenExpired');
       }
       console.log('Something went wrong while signin->', errorMessage);
-      return rejectWithValue((err as AxiosError).response?.status);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -83,7 +83,7 @@ export const getUserPersData = createAsyncThunk(
         errorMessage = i18n.t('errorTokenExpired');
       }
       console.log('Something went wrong while getting userData->', errorMessage);
-      return rejectWithValue((err as AxiosError).response?.status);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -106,7 +106,7 @@ export const deleteUser = createAsyncThunk(
         errorMessage = i18n.t('errorTokenExpired');
       }
       console.log('Something went wrong while deleting userData->', errorMessage);
-      return rejectWithValue(err as AxiosError);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -129,13 +129,8 @@ export const editUser = createAsyncThunk(
       if ((err as AxiosError).response?.status === 401) {
         errorMessage = i18n.t('errorTokenExpired');
       }
-      /*if ((err as AxiosError).response?.status === 400) {
-        errorMessage = 'Fill fields to sign in';
-      } else if ((err as AxiosError).response?.status === 403) {
-        errorMessage = 'User with such login/password was not found';
-      }*/
       console.log('Something went wrong while editing userData->', errorMessage);
-      return rejectWithValue((err as AxiosError).response?.status);
+      return rejectWithValue(errorMessage);
     }
   }
 );

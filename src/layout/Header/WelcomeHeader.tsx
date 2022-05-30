@@ -19,7 +19,7 @@ export const WelcomeHeader = () => {
         variant="contained"
         onClick={() => {
           navigate(routes.signUp.path);
-          dispatch(removeError);
+          dispatch(removeError());
         }}
         sx={{ marginLeft: '5px' }}
       >
@@ -36,8 +36,8 @@ export const WelcomeHeader = () => {
       <Button
         variant="contained"
         onClick={() => {
+          dispatch(removeError());
           navigate(routes.signIn.path);
-          dispatch(removeError);
         }}
         sx={{
           marginLeft: '5px',

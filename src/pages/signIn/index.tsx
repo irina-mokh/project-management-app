@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { AxiosError } from 'axios';
 import { Loading } from 'components/Loading';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -93,7 +92,7 @@ export const SignInForm = () => {
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
-        console.error(e as AxiosError);
+        console.error(e);
       });
   };
 

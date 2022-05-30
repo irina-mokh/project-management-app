@@ -163,6 +163,7 @@ export const SignUpForm = () => {
               fullWidth
               id="userName"
               label={t('userName')}
+              name="userName"
               autoComplete="userName"
               autoFocus
             />

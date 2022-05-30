@@ -65,7 +65,10 @@ export const Column = (props: IColumnProps) => {
           setCurTitle(e.target.value);
         }}
         onFocus={() => setIsSelected(true)}
-        onBlur={() => setIsSelected(false)}
+        onBlur={() => {
+          setIsSelected(false);
+          setCurTitle(column.title);
+        }}
         InputProps={{
           style: { fontSize: '1.5rem', fontWeight: 700, padding: '5px', width: '90%' },
           startAdornment: <InputAdornment position="start">{inputButtons}</InputAdornment>,

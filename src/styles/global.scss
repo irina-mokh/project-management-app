@@ -1,5 +1,13 @@
 @use './vars';
 
+body {
+  margin: 0;
+}
+
+main {
+  height: 100%;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

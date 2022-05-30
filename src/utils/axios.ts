@@ -1,6 +1,10 @@
 import axios from 'axios';
+import { routes } from 'routes';
+import { store } from 'store';
+import { expiredToken } from 'store/auth/reducer';
+import { ITaskPut } from 'types';
 
-const instance = axios.create({
+export const axiosClient = axios.create({
   baseURL: 'https://safe-sea-96771.herokuapp.com/',
   timeout: 5000,
   headers: {
@@ -8,8 +12,7 @@ const instance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-instance.interceptors.request.use(
+axiosClient.interceptors.request.use(
   async (config) => {
     const value = localStorage.getItem('token');
 
@@ -24,8 +27,8 @@ instance.interceptors.request.use(
     Promise.reject(error);
   }
 );
-
-instance.interceptors.response.use(
+/*
+axiosClient.interceptors.response.use(
   (response) => {
     const {
       data: { token },
@@ -36,9 +39,56 @@ instance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(error);
     return Promise.reject(error);
   }
 );
+*/
+axiosClient.interceptors.response.use(
+  (response) => {
+    const {
+      data: { token },
+    } = response;
+    console.log('rees', response);
+    if (token && response.status !== 401) {
+      localStorage.setItem('token', token);
+    }
+    return response;
+  },
+  async (error) => {
+    if (error.response.data.statusCode === 401) {
+      store.dispatch(expiredToken());
+      //store.dispatch(logOut());
+      window.location.href = `${routes.welcome.path}`;
+    }
 
-export { instance as axios };
+    return Promise.reject(error);
+  }
+);
+export const updateColumn = async (
+  boardId: string,
+  columnId: string,
+  order: number,
+  title: string
+) => {
+  try {
+    await axiosClient.put(`boards/${boardId}/columns/${columnId}`, {
+      title: title,
+      order: order,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateTask = async (task: ITaskPut, taskId: string, dragColumnId: string) => {
+  const { boardId } = task;
+  try {
+    const response = await axiosClient.put(
+      `boards/${boardId}/columns/${dragColumnId}/tasks/${taskId}`,
+      task
+    );
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};

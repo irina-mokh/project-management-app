@@ -1,35 +1,92 @@
-import { createTheme } from '@mui/material/styles';
-import PTSansWoff2 from 'assets/fonts/ptsans.woff2';
-import PTSansWoff from 'assets/fonts/ptsans.woff';
+import { PaletteMode } from '@mui/material';
+import { teal, amber } from '@mui/material/colors';
 
-export const theme = createTheme({
-  palette: {
-    background: {
-      default: '#1f1f1f',
-    },
-    primary: {
-      light: '#272727',
-      main: '#1f1f1f',
-      dark: '#141414',
-      contrastText: '#fff',
-    },
-  },
+export const getDesignTokens = (mode: PaletteMode) => ({
   typography: {
-    fontFamily: 'Roboto',
+    fontFamily: 'PT Sans',
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        @font-face {
-          font-family: 'PT Sans';
-          font-style: normal;
-          font-display: swap;
-          font-weight: 400;
-          src: 
-            url(${PTSansWoff2}) format('woff2'), url(${PTSansWoff}) format('woff');
-          unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
-        }
-      `,
+    '@global': {
+      '&::-webkit-scrollbar': {
+        width: 7,
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: 'transparent',
+        borderWidth: '1px',
+        borderColor: 'primary',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: 'gray',
+        borderRadius: 2,
+      },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '-webkit-autofill:focus': {
+            transition: 'background-color 600000s 0s, color 600000s 0s',
+          },
+          '& fieldset': {
+            border: 'none',
+          },
+          '& .MuiOutlinedInput-input + fieldset': {
+            border: '2px solid #009688',
+          },
+          '& .MuiOutlinedInput-input:hover + fieldset': {
+            border: `2px solid #ced4da`,
+          },
+          '& .MuiOutlinedInput-input:focus + fieldset': {
+            border: `2px solid #ced4da`,
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0',
+          border: '1px solid #88888833',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0',
+          // backgroundColor: 'transparent',
+          // border: '1',
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          width: '1.2em',
+          height: '1.2em',
+        },
+      },
+    },
+  },
+
+  palette: {
+    primary: teal,
+    secondary: amber,
+    mode,
+    ...(mode === 'light'
+      ? {
+          type: 'light',
+          background: {
+            default: '#f1efef',
+            paper: '#f9f9f9',
+          },
+        }
+      : {
+          type: 'dark',
+          background: {
+            default: '#1f1f1f',
+            paper: '#272727',
+          },
+        }),
   },
 });

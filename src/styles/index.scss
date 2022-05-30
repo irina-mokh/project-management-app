@@ -1,3 +1,8 @@
-@use "./global.scss";
-@use "../components/App/app.scss";
-// @use '../layout/Header/header.scss';
+@use './global.scss';
+@use './vars.scss';
+@use '../components/App/app.scss';
+@use '../components/Loading/loading.scss';
+@use '../layout/Footer/footer.scss';
+@use '../pages/welcome/welcome.scss';
+@use '../components/ThemeSwitcher/themeSwitcher.scss';
+@use '../components/LangSwitcher/langSwitcher.scss';

@@ -50,12 +50,21 @@
   align-items: center;
   justify-content: center;
 }
-
+@media (max-width: 1120px) {
+  .mainBtnLink {
+    font-size: x-large;
+  }
+}
+@media (max-width: 1000px) {
+  .mainBtnLink {
+    font-size: large;
+  }
+}
 @media (max-width: 950px) {
   .mainTextContainer {
     display: grid;
     grid-template-columns: 1fr 1fr 2fr;
-    grid-template-rows: 0.3fr 0.1fr 1fr 0.5fr;
+    grid-template-rows: 0.3fr 0.1fr 1fr;
     gap: 0px 0px;
     grid-auto-flow: row;
     grid-template-areas:
@@ -63,6 +72,13 @@
       'appText appText appText'
       'appBanner appBanner appBanner'
       'appBtn appBtn appBtn';
+    margin-bottom: 40px;
+  }
+  .mainBtnLink {
+    font-size: x-large;
+  }
+  .appBtn {
+    height: 40%;
   }
 }
 @media (max-width: 800px) {

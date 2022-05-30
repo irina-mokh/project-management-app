@@ -29,6 +29,12 @@ export const Welcome = () => {
             textAlign: 'center',
             color: '#FF7000',
             fontWeight: '600',
+            '@media(max-width: 1000px)': {
+              fontSize: '2.5rem',
+            },
+            '@media(max-width: 950px)': {
+              fontSize: '3rem',
+            },
           }}
         >
           Project Manegment App
@@ -38,6 +44,12 @@ export const Welcome = () => {
           variant="h5"
           sx={{
             textAlign: 'center',
+            '@media(max-width: 1000px)': {
+              fontSize: '1.5rem',
+            },
+            '@media(max-width: 950px)': {
+              fontSize: '2rem',
+            },
           }}
         >
           {t('aboutApp')}
@@ -46,7 +58,18 @@ export const Welcome = () => {
         <Button
           className="appBtn"
           variant="contained"
-          sx={{ backgroundColor: '#ff8c32', marginLeft: 'auto', marginRight: 'auto' }}
+          sx={{
+            backgroundColor: '#ff8c32',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            '@media(max-width: 950px)': {
+              marginTop: '20px',
+              marginBottom: '20px',
+            },
+            '@media(max-width: 768px)': {
+              height: '70%',
+            },
+          }}
         >
           {token?.length ? (
             <Link to={routes.main.path} className="mainBtnLink">

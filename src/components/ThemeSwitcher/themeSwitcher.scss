@@ -1,8 +1,23 @@
 @import '../../styles/vars';
+.switchContainer {
+  display: flex;
+  align-items: center;
+}
+.setOption {
+  color: #fff;
+  font-size: 1rem;
+  display: none;
+}
+@media (max-width: 768px) {
+  .setOption {
+    display: inline;
+  }
+}
 .switchMode {
   position: relative;
   display: inline-block;
   margin-right: 20px;
+  margin-left: auto;
 }
 
 .switchMode > span {

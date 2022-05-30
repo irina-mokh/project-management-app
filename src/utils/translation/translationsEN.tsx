@@ -63,7 +63,7 @@ export const translationsEN = {
   welcomePage: 'Welcome Page',
   authorization: 'Authorization',
   localization: 'Localization',
-  confirmModal: 'Окно подтверждения',
+  confirmModal: 'Confirmational Modal',
   editTask: 'Edit task',
   editTaskConfirm: 'Confirm changes',
   createTask: 'Create task',
@@ -76,4 +76,6 @@ export const translationsEN = {
   responsible: 'Responsible',
   errorTokenExpired: 'Token has expired',
   goToBoards: 'Go to boards',
+  language: 'Language:',
+  theme: 'Theme:',
 };

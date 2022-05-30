@@ -20,7 +20,6 @@ export const Welcome = () => {
     <div className="welcomeContainer">
       <div className="mainTextContainer">
         <img className="startBanner" src={welcomeBanner} alt="start page banner" />
-        {/*<div className="aboutAppContainer">*/}
         <Typography
           className="appTitle"
           variant="h3"
@@ -55,11 +54,10 @@ export const Welcome = () => {
             </Link>
           ) : (
             <Link to={routes.signUp.path} className="mainBtnLink">
-              {t('getStarted')}
+              <span>{t('getStarted')}</span>
             </Link>
           )}
         </Button>
-        {/*</div>*/}
       </div>
       <section>
         <Typography

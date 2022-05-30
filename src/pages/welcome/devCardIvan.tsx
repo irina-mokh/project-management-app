@@ -57,7 +57,7 @@ export const DevCardIvan = () => {
         disableSpacing
         sx={{
           width: '100%',
-          marginTop: '0px',
+          marginTop: '-2px',
           backgroundColor: '#009688',
         }}
       >

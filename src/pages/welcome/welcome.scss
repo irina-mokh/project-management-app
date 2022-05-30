@@ -4,13 +4,15 @@
   padding: 10px;
   margin-top: 20px;
 }
-.mainTextContainer {
-  height: 90vh;
+/*.mainTextContainer {
+  //height: 90vh;
   position: relative;
-  background-image: url('../../assets/images/svg/welcomeBanner.svg');
-  background-repeat: no-repeat;
-  background-size: 60%;
-  background-position: left top;
+  display: flex;
+  margin-bottom: 10%;
+}
+.startBanner {
+  width: 50%;
+  height: auto;
 }
 .aboutAppContainer {
   display: flex;
@@ -20,11 +22,68 @@
   height: 70%;
   margin-right: 0;
   margin-left: auto;
-  margin-top: 10%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}*/
+.mainTextContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'appBanner appBanner appTitle'
+    'appBanner appBanner appText'
+    'appBanner appBanner appBtn';
+  margin-bottom: 10%;
 }
+
+.startBanner {
+  grid-area: appBanner;
+}
+
+.appTitle {
+  grid-area: appTitle;
+}
+
+.appText {
+  grid-area: appText;
+}
+
+.appBtn {
+  grid-area: appBtn;
+  width: 40%;
+  max-height: 70%;
+}
+
 .devCardsContainer {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+.mainBtnLink {
+  font-size: xx-large;
+}
+
+@media (max-width: 950px) {
+  .mainTextContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: 0.3fr 0.1fr 1fr 0.5fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      'appTitle appTitle appTitle'
+      'appText appText appText'
+      'appBanner appBanner appBanner'
+      'appBtn appBtn appBtn';
+  }
+}
+@media (max-width: 800px) {
+  .devCardsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
 }

@@ -75,5 +75,7 @@ export const translationsRU = {
   select: 'Выберите',
   responsible: 'Ответственный',
   errorTokenExpired: 'Срок действия токена истек',
-  goToBoards: 'Доски',
+  goToBoards: 'Доски:',
+  language: 'Язык:',
+  theme: 'Тема:',
 };

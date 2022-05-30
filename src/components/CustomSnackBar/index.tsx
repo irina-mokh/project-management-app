@@ -15,7 +15,16 @@ export const CustomSnackBar = (props: CustomSnackBarProps) => {
       autoHideDuration={2000}
       onClose={props.onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      sx={{ width: '50vw' }}
+      sx={{
+        width: '50vw',
+        '@media (min-width: 320px)': {
+          width: '70vw',
+          top: '24px',
+          left: '50%',
+          right: 'auto',
+          transform: 'translateX(-50%)',
+        },
+      }}
     >
       <Alert
         onClose={props.onClose}

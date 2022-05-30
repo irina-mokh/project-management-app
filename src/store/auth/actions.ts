@@ -114,7 +114,7 @@ export const deleteUser = createAsyncThunk(
         errorMessage = i18n.t('errorTokenExpired');
       }
 
-      console.log('Something went wrong while deleting userData->', errorMessage);
+      console.error('Something went wrong while deleting userData->', errorMessage);
       return rejectWithValue(errorMessage || (err as AxiosError).message);
     }
   }

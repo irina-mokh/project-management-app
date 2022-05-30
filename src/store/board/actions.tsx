@@ -14,13 +14,11 @@ export const getBoard = createAsyncThunk(
   async function (id: string, { rejectWithValue }) {
     try {
       const response = await axiosClient.get(`boards/${id}`);
+      /*
       if (response.statusText !== 'OK') {
         throw new Error('Error');
       }
-
-      console.log('recived from BE');
-      console.log(response);
-
+      */
       return response.data;
     } catch (err) {
       return rejectWithValue((err as AxiosError).message);

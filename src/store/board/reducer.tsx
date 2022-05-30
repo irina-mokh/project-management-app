@@ -73,7 +73,6 @@ export const boardSlice = createSlice({
       });
     },
     moveTask: (state, action) => {
-      // console.log(action.payload);
       const { dragIndex, dropIndex, dragColumnIndex, dropColumnIndex } = action.payload;
       const columns = state.data.columns;
 
@@ -125,6 +124,7 @@ export const boardSlice = createSlice({
       })
       .addCase(getBoard.rejected, (state, action) => {
         state.error = String(action.payload);
+        state.isLoading = false;
       })
 
       // getAllUsers

@@ -12,7 +12,7 @@ export function errorHandler(status?: number) {
   if (status) {
     if (status == 401) {
       store.dispatch(expiredToken());
-      window.location.href = `${routes.welcome.path}`;
+      window.location.href = routes.welcome.path.toString();
       return;
     }
 

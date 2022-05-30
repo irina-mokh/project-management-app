@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://thawing-spire-17017.herokuapp.com/',
+  baseURL: 'https://safe-sea-96771.herokuapp.com/',
   timeout: 5000,
   headers: {
     Accept: 'application/json',

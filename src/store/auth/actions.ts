@@ -89,8 +89,8 @@ export const getUserPersData = createAsyncThunk(
     } catch (err) {
       const errorMessage =
         (err as AxiosError).response?.status == 401
-          ? (err as AxiosError).message
-          : i18n.t('errorTokenExpired');
+          ? i18n.t('errorTokenExpired')
+          : (err as AxiosError).message;
 
       console.error('Something went wrong while getting userData->', errorMessage);
       return rejectWithValue(errorMessage);
@@ -131,17 +131,13 @@ export const editUser = createAsyncThunk(
       const response = await axiosClient.put(url, newData);
       return response.data;
     } catch (err) {
-      let errorMessage;
-      if ((err as AxiosError).response?.status === 401) {
-        errorMessage = i18n.t('errorTokenExpired');
-      }
-      /*if ((err as AxiosError).response?.status === 400) {
-        errorMessage = 'Fill fields to sign in';
-      } else if ((err as AxiosError).response?.status === 403) {
-        errorMessage = 'User with such login/password was not found';
-      }*/
+      const errorMessage =
+        (err as AxiosError).response?.status == 401
+          ? i18n.t('errorTokenExpired')
+          : (err as AxiosError).message;
+
       console.error('Something went wrong while editing userData->', err as AxiosError);
-      return rejectWithValue(errorMessage || (err as AxiosError).message);
+      return rejectWithValue(errorMessage);
     }
   }
 );

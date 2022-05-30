@@ -92,7 +92,6 @@ export const authSlice = createSlice({
       })
       .addCase(getUserPersData.rejected, (state) => {
         state.isLoading = false;
-        //state.errorCode = String(action.payload);
       })
 
       .addCase(deleteUser.fulfilled, (state) => {
@@ -117,7 +116,6 @@ export const authSlice = createSlice({
       })
       .addCase(editUser.rejected, (state) => {
         state.isLoading = false;
-        //state.errorCode = String(action.payload);
       });
   },
 });

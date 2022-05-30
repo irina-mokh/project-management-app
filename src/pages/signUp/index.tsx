@@ -123,13 +123,22 @@ export const SignUpForm = () => {
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
-        console.log('e', e);
+        console.error('e', e);
       });
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ mt: 5 }}>
+      <Container
+        maxWidth="xs"
+        sx={{
+          mt: 5,
+          marginBottom: '20px',
+          '@media (max-width: 768px)': {
+            marginTop: '0',
+          },
+        }}
+      >
         <CssBaseline />
         <Box
           sx={{
@@ -155,6 +164,7 @@ export const SignUpForm = () => {
               id="userName"
               label={t('userName')}
               name="userName"
+              autoComplete="userName"
               autoFocus
             />
             <TextField
@@ -210,7 +220,11 @@ export const SignUpForm = () => {
             <Grid container>
               <Grid item>
                 <span style={{ marginRight: '10px' }}>{t('existAccount')} </span>
-                <Link to={'/signin'} onClick={() => dispatch(removeError)}>
+                <Link
+                  to={'/signin'}
+                  onClick={() => dispatch(removeError())}
+                  style={{ color: '#009688', textDecoration: 'underline' }}
+                >
                   <span>{t('signIn')}</span>
                 </Link>
               </Grid>

@@ -14,26 +14,44 @@ export const WelcomeHeader = () => {
   const { t } = useTranslation();
 
   return (
-    <div>
+    <div className="changeHeaderCont">
       <Button
         variant="contained"
         onClick={() => {
           navigate(routes.signUp.path);
-          dispatch(removeError);
+          dispatch(removeError());
         }}
         sx={{ marginLeft: '5px' }}
       >
-        <Typography>{t('signUp')}</Typography>
+        <Typography
+          sx={{
+            '@media (max-width: 550px)': {
+              fontSize: '0.7rem',
+            },
+          }}
+        >
+          {t('signUp')}
+        </Typography>
       </Button>
       <Button
         variant="contained"
         onClick={() => {
+          dispatch(removeError());
           navigate(routes.signIn.path);
-          dispatch(removeError);
         }}
-        sx={{ marginLeft: '5px' }}
+        sx={{
+          marginLeft: '5px',
+        }}
       >
-        <Typography>{t('signIn')}</Typography>
+        <Typography
+          sx={{
+            '@media (max-width: 550px)': {
+              fontSize: '0.7rem',
+            },
+          }}
+        >
+          {t('signIn')}
+        </Typography>
       </Button>
     </div>
   );

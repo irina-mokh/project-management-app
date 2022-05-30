@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'store';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import welcomeBanner from '../../assets/images/svg/welcomeBanner.svg';
 
 export const Welcome = () => {
   useTitle(routes.welcome.title);
@@ -18,39 +19,68 @@ export const Welcome = () => {
   return (
     <div className="welcomeContainer">
       <div className="mainTextContainer">
-        <div className="aboutAppContainer">
-          <Typography
-            variant="h3"
-            sx={{
+        <img className="startBanner" src={welcomeBanner} alt="start page banner" />
+        <Typography
+          className="appTitle"
+          variant="h3"
+          sx={{
+            marginTop: '20px',
+            marginBottom: '20px',
+            textAlign: 'center',
+            color: '#FF7000',
+            fontWeight: '600',
+            '@media(max-width: 1000px)': {
+              fontSize: '2.5rem',
+            },
+            '@media(max-width: 950px)': {
+              fontSize: '3rem',
+            },
+          }}
+        >
+          Project Manegment App
+        </Typography>
+        <Typography
+          className="appText"
+          variant="h5"
+          sx={{
+            textAlign: 'center',
+            '@media(max-width: 1000px)': {
+              fontSize: '1.5rem',
+            },
+            '@media(max-width: 950px)': {
+              fontSize: '2rem',
+            },
+          }}
+        >
+          {t('aboutApp')}
+        </Typography>
+
+        <Button
+          className="appBtn"
+          variant="contained"
+          sx={{
+            backgroundColor: '#ff8c32',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            '@media(max-width: 950px)': {
               marginTop: '20px',
               marginBottom: '20px',
-              textAlign: 'center',
-              color: '#FF7000',
-              fontWeight: '600',
-            }}
-          >
-            Project Manegment App
-          </Typography>
-          <Typography
-            variant="h5"
-            sx={{
-              textAlign: 'center',
-            }}
-          >
-            {t('aboutApp')}
-          </Typography>
-
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: '#ff8c32', marginTop: '20%', width: '40%', height: '15%' }}
-          >
-            {token?.length ? (
-              <Link to={routes.main.path}> {t('goToBoards')} </Link>
-            ) : (
-              <Link to={routes.signUp.path}>{t('getStarted')}</Link>
-            )}
-          </Button>
-        </div>
+            },
+            '@media(max-width: 768px)': {
+              height: '70%',
+            },
+          }}
+        >
+          {token?.length ? (
+            <Link to={routes.main.path} className="mainBtnLink">
+              <span>{t('goToBoards')}</span>
+            </Link>
+          ) : (
+            <Link to={routes.signUp.path} className="mainBtnLink">
+              <span>{t('getStarted')}</span>
+            </Link>
+          )}
+        </Button>
       </div>
       <section>
         <Typography

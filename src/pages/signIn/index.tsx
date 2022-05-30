@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { AxiosError } from 'axios';
 import { Loading } from 'components/Loading';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -93,7 +92,7 @@ export const SignInForm = () => {
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
-        console.log('e', e as AxiosError);
+        console.error(e);
       });
   };
 
@@ -101,9 +100,14 @@ export const SignInForm = () => {
     <ThemeProvider theme={theme}>
       <Container
         data-testid="signIn"
-        component="main"
         maxWidth="xs"
-        sx={{ mt: 5, backgroundColor: theme.palette.background.default }}
+        sx={{
+          mt: 5,
+          marginBottom: '20px',
+          '@media (max-width: 768px)': {
+            marginTop: '0',
+          },
+        }}
       >
         <CssBaseline />
         <Box
@@ -153,7 +157,6 @@ export const SignInForm = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: '#69D882' }}
-                //disabled={Boolean(BEndError) || passError || loginError}
               >
                 {t('successfully')}
               </Button>
@@ -171,7 +174,11 @@ export const SignInForm = () => {
             <Grid container>
               <Grid item>
                 <span style={{ marginRight: '10px' }}> {t('firstVisit')}</span>
-                <Link to={'/signup'} onClick={() => dispatch(removeError)}>
+                <Link
+                  to={'/signup'}
+                  onClick={() => dispatch(removeError())}
+                  style={{ color: '#009688', textDecoration: 'underline' }}
+                >
                   <span>{t('signUp')}</span>
                 </Link>
               </Grid>

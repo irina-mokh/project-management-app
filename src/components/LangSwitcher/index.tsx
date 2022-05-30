@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography/Typography';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'store';
@@ -20,20 +21,24 @@ export const LangSwitcher = () => {
   };
 
   return (
-    <div className="switch">
-      <input
-        id="language-toggle"
-        className="check-toggle check-toggle-round-flat"
-        type="checkbox"
-        checked={lang === 'en'}
-        onChange={(event) => {
-          console.log('event', event.target.checked);
-          checkLang(event);
-        }}
-      />
-      <label htmlFor="language-toggle"></label>
-      <span className="on">{t('ruSwitcher')}</span>
-      <span className="off">{t('enSwitcher')}</span>
+    <div className="switchContainer">
+      <Typography className="setOption" variant="h5">
+        {t('language')}
+      </Typography>
+      <div className="switch">
+        <input
+          id="language-toggle"
+          className="check-toggle check-toggle-round-flat"
+          type="checkbox"
+          checked={lang === 'en'}
+          onChange={(event) => {
+            checkLang(event);
+          }}
+        />
+        <label htmlFor="language-toggle"></label>
+        <span className="on">{t('ruSwitcher')}</span>
+        <span className="off">{t('enSwitcher')}</span>
+      </div>
     </div>
   );
 };

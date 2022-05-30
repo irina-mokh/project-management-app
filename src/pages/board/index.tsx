@@ -6,7 +6,7 @@ import { searchTasks, clearTasksSearch, toggleSearchFocus } from 'store/board/re
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Card, Typography, Container, Breadcrumbs, Link } from '@mui/material';
+import { List, Card, Typography, Container, Breadcrumbs, Link, Box } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
 import { CreateColumnModal, CreateTaskModal, EditTaskModal } from 'components/Modals';
@@ -16,7 +16,7 @@ import { routes } from 'routes';
 import { Column } from 'components/Column';
 import { useTranslation } from 'react-i18next';
 import { SearchBar } from 'components/Search';
-import { Box } from '@mui/system';
+// import { Box } from '@mui/system';
 
 export const Board = () => {
   const { t } = useTranslation();
@@ -57,14 +57,26 @@ export const Board = () => {
     <Container
       maxWidth="xl"
       sx={{
-        height: '83vh',
+        height: '84vh',
         padding: '5px',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
       <h2 className="visually-hidden">Board page</h2>
-      <Box display="flex" justifyContent="space-between" sx={{ width: '100%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+
+          '@media(max-width: 600px)': {
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          },
+        }}
+      >
         <Breadcrumbs aria-label="breadcrumbs" sx={{ margin: '5px 0' }}>
           <Link underline="hover" color="inherit" href="/">
             {t('homePage')}
@@ -74,7 +86,13 @@ export const Board = () => {
           </Link>
           <Typography color="text.primary">{`${t('board')}: ${data?.title}`}</Typography>
         </Breadcrumbs>
-        <Box>
+        <Box
+          sx={{
+            '@media(max-width: 600px)': {
+              width: '100%',
+            },
+          }}
+        >
           <SearchBar
             placeholder={t('searchTaskPlaceholder')}
             searchClear={() => dispatch(clearTasksSearch())}
@@ -85,6 +103,7 @@ export const Board = () => {
               sx={{
                 position: 'absolute',
                 width: '300px',
+                // height: '100%',
                 zIndex: '10',
                 padding: '10px',
                 backgroundColor: 'background.paper',
@@ -94,15 +113,18 @@ export const Board = () => {
               {searchResults.map((task) => (
                 <Card
                   key={task.id}
-                  onMouseDown={() => navigate(`/boards/${id}/tasks/${task.id}`)}
+                  onMouseDown={() =>
+                    navigate(`/boards/${id}/?columnId=${task.columnId}&taskId=${task.id}`)
+                  }
                   sx={{
                     cursor: 'pointer',
+                    padding: '7px',
                   }}
                 >
-                  <Typography variant="subtitle1" sx={{ margin: '10px 0 5px 0' }}>
+                  <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
                     {task.title}
                   </Typography>
-                  <Typography variant="body2" sx={{ margin: '10px 0 5px 0' }}>
+                  <Typography fontSize="0.9em" fontStyle="italic">
                     {task.description}
                   </Typography>
                 </Card>
@@ -111,16 +133,17 @@ export const Board = () => {
           )}
         </Box>
       </Box>
-      <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '10px 0 5px 0' }}>
+      <Typography variant="h3" color="primary" fontSize="1.8em" sx={{ margin: '0 0 5px 0' }}>
         {data?.title}
       </Typography>
-      <List
+      <Box
         sx={{
           width: '100%',
-          height: '90%',
-          display: 'flex',
+          height: '100%',
           overflowX: 'scroll',
+          overflowY: 'hidden',
           '&::-webkit-scrollbar': {
+            height: 7,
             width: 7,
           },
           '&::-webkit-scrollbar-track': {
@@ -134,13 +157,15 @@ export const Board = () => {
           },
         }}
       >
-        {columns.map((column: IColumn) => (
-          <Column column={column} boardId={String(id)} key={column.id} />
-        ))}
-        <Card sx={{ order: `${columns.length + 1}`, minWidth: '250px', padding: '10px' }}>
-          <AddButton text={t('addNewColumn')} addHandler={() => setShowModal(true)} />
-        </Card>
-      </List>
+        <List sx={{ display: 'flex', height: '100%' }}>
+          {columns.map((column: IColumn) => (
+            <Column column={column} boardId={String(id)} key={column.id} />
+          ))}
+          <Card sx={{ order: `${columns.length + 1}`, minWidth: '250px', padding: '10px' }}>
+            <AddButton text={t('addNewColumn')} addHandler={() => setShowModal(true)} />
+          </Card>
+        </List>
+      </Box>
 
       <CreateColumnModal boardId={id} isVisible={showModal} setVisible={setShowModal} />
       <CreateTaskModal boardId={id} />

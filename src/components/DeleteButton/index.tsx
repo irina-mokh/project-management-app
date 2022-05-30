@@ -19,8 +19,12 @@ export const DeleteButton = (props: IDeleteButtonProps) => {
       <IconButton
         name="delete"
         aria-label="delete"
-        sx={{ position: 'absolute', right: 0, top: 0 }}
-        //onClick={deleteHandler}
+        sx={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          padding: 0,
+        }}
         onClick={() => setConfirmOpen(true)}
       >
         <Clear

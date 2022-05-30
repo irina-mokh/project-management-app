@@ -44,11 +44,13 @@ export const DevCardMary = () => {
         backgroundColor: 'transparent',
         border: 'none',
         backgroundImage: 'none',
+        padding: '5px',
       }}
     >
-      <CardMedia component="img" image={maryPic} alt="Paella dish" sx={{ zIndex: '100' }} />
+      <CardMedia component="img" image={maryPic} alt="dev avatar" sx={{ zIndex: '100' }} />
       <CardActions
         disableSpacing
+        onClick={handleExpandClick}
         sx={{
           width: '70%',
           marginTop: '-20px',
@@ -56,15 +58,11 @@ export const DevCardMary = () => {
           marginLeft: '55px',
           marginRight: '5px',
           objectFit: 'none',
+          cursor: 'pointer',
         }}
       >
         <Typography sx={{ color: 'white' }}>{t('mariia')}</Typography>
-        <ExpandMore
-          expand={+expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
+        <ExpandMore expand={+expanded} aria-expanded={expanded} aria-label="show more">
           <ExpandMoreIcon sx={{ color: 'white' }} />
         </ExpandMore>
       </CardActions>

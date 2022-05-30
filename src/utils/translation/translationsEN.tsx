@@ -21,6 +21,7 @@ export const translationsEN = {
   addBoarddescription: 'Add description',
   addNewColumn: 'Add new column',
   addTitleColumn: 'Set title',
+  deleteColumn: 'Delete column?',
   deleteTask: 'Delete task?',
   homePage: 'Home',
   boardsPage: 'Boards',
@@ -63,7 +64,7 @@ export const translationsEN = {
   welcomePage: 'Welcome Page',
   authorization: 'Authorization',
   localization: 'Localization',
-  confirmModal: 'Окно подтверждения',
+  confirmModal: 'Confirmational Modal',
   editTask: 'Edit task',
   editTaskConfirm: 'Confirm changes',
   createTask: 'Create task',
@@ -86,4 +87,6 @@ export const translationsEN = {
   serverError: 'Произошла ошибка на сервере. Обратитесь в поддержку',
   errorTokenExpired: 'Token has expired',
   goToBoards: 'Go to boards',
+  language: 'Language:',
+  theme: 'Theme:',
 };

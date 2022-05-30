@@ -9,10 +9,9 @@ import { UserHeader } from './UserHeader';
 import { FetchFailedModal } from 'components/Modals';
 import { getUserPersData } from 'store/auth/actions';
 import { ReactComponent as MainLogo } from '../../assets/images/svg/logo.svg';
-import { ThemeSwitcher1 } from 'components/ThemeSwitcher';
-import { LangSwitcher } from 'components/LangSwitcher';
 import { Link } from 'react-router-dom';
 import { routes } from 'routes';
+import { Navbar } from 'components/Nav/NavBar';
 
 export const Header = () => {
   const [isSticky, setSticky] = useState(false);
@@ -54,9 +53,10 @@ export const Header = () => {
           PMA
         </Typography>
       </Link>
-      <LangSwitcher />
-      <ThemeSwitcher1 />
-      {token && token.length ? <UserHeader /> : <WelcomeHeader />}
+      <div className="burgerChange">
+        {token && token.length ? <UserHeader /> : <WelcomeHeader />}
+        <Navbar />
+      </div>
       <FetchFailedModal />
     </header>
   );

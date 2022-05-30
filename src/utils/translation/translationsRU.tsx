@@ -22,6 +22,7 @@ export const translationsRU = {
   addNewColumn: 'Добавить новую колонку',
   addTitleColumn: 'Добавить название',
   deleteTask: 'Удалить задачу',
+  deleteColumn: 'Удалить колонку?',
   homePage: 'На главную',
   boardsPage: 'Доски',
   board: 'Доска',
@@ -85,5 +86,7 @@ export const translationsRU = {
   userError: 'Произошла ошибка при запросе. Проверьте вводимые значения',
   serverError: 'Произошла ошибка на сервере. Обратитесь в поддержку',
   errorTokenExpired: 'Срок действия токена истек',
-  goToBoards: 'Доски',
+  goToBoards: 'Доски:',
+  language: 'Язык:',
+  theme: 'Тема:',
 };

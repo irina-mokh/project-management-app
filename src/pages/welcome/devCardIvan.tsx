@@ -55,19 +55,16 @@ export const DevCardIvan = () => {
       />
       <CardActions
         disableSpacing
+        onClick={handleExpandClick}
         sx={{
           width: '100%',
-          marginTop: '0px',
+          marginTop: '-2px',
           backgroundColor: '#009688',
+          cursor: 'pointer',
         }}
       >
         <Typography sx={{ color: 'white' }}>{t('ivan')}</Typography>
-        <ExpandMore
-          expand={+expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
+        <ExpandMore expand={+expanded} aria-expanded={expanded} aria-label="show more">
           <ExpandMoreIcon sx={{ color: 'white' }} />
         </ExpandMore>
       </CardActions>

@@ -113,15 +113,17 @@ export const Board = () => {
               {searchResults.map((task) => (
                 <Card
                   key={task.id}
-                  onMouseDown={() => navigate(`/boards/${id}/tasks/${task.id}`)}
+                  onMouseDown={() =>
+                    navigate(`/boards/${id}/?columnId=${task.columnId}&taskId=${task.id}`)
+                  }
                   sx={{
                     cursor: 'pointer',
                   }}
                 >
-                  <Typography variant="subtitle1" sx={{ margin: '10px 0 5px 0' }}>
+                  <Typography variant="h5" fontSize="1.2em" marginBottom="0.5em">
                     {task.title}
                   </Typography>
-                  <Typography variant="body2" sx={{ margin: '10px 0 5px 0' }}>
+                  <Typography fontSize="0.9em" fontStyle="italic">
                     {task.description}
                   </Typography>
                 </Card>

@@ -123,13 +123,22 @@ export const SignUpForm = () => {
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
-        console.log('e', e);
+        console.error('e', e);
       });
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ mt: 5 }}>
+      <Container
+        maxWidth="xs"
+        sx={{
+          mt: 5,
+          marginBottom: '20px',
+          '@media (max-width: 768px)': {
+            marginTop: '0',
+          },
+        }}
+      >
         <CssBaseline />
         <Box
           sx={{
@@ -154,7 +163,7 @@ export const SignUpForm = () => {
               fullWidth
               id="userName"
               label={t('userName')}
-              name="userName"
+              autoComplete="userName"
               autoFocus
             />
             <TextField

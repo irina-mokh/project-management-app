@@ -93,7 +93,7 @@ export const SignInForm = () => {
       })
       .catch((e) => {
         // error in case of rejection inside createAsyncThunk second argument
-        console.log('e', e as AxiosError);
+        console.error(e as AxiosError);
       });
   };
 
@@ -101,9 +101,14 @@ export const SignInForm = () => {
     <ThemeProvider theme={theme}>
       <Container
         data-testid="signIn"
-        component="main"
         maxWidth="xs"
-        sx={{ mt: 5, backgroundColor: theme.palette.background.default }}
+        sx={{
+          mt: 5,
+          marginBottom: '20px',
+          '@media (max-width: 768px)': {
+            marginTop: '0',
+          },
+        }}
       >
         <CssBaseline />
         <Box

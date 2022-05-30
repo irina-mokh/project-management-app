@@ -4,13 +4,16 @@ import { store } from 'store';
 import { MainLayout } from 'components/MainLayout';
 import { Suspense } from 'react';
 import { Loading } from 'components/Loading';
+import { ErrorBoundary } from 'components/ErrorBoundary';
 
 export const App = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Provider store={store}>
         <BrowserRouter>
-          <MainLayout />
+          <ErrorBoundary>
+            <MainLayout />
+          </ErrorBoundary>
         </BrowserRouter>
       </Provider>
     </Suspense>

@@ -162,7 +162,7 @@ index bdbda26..5c37610 100644
        })
        .catch((e) => {
          // error in case of rejection inside createAsyncThunk second argument
-         console.log('e', e);
+         console.error('e', e);
 -      });*/
 +      });
    };
@@ -233,7 +233,7 @@ index b0dc15a..4bb3c6f 100644
        } else if ((err as AxiosError).response?.status === 409) {
          errorMessage = 'User login already exists!';
        }
-+      console.log('Something went wrong ->', errorMessage);
++      console.error('Something went wrong ->', errorMessage);
        return rejectWithValue(errorMessage);
      }
    }
@@ -241,7 +241,7 @@ index b0dc15a..4bb3c6f 100644
        } else if ((err as AxiosError).response?.status === 403) {
          errorMessage = 'User with such login/password was not found';
        }
-+      console.log('Something went wrong while signin->', errorMessage);
++      console.error('Something went wrong while signin->', errorMessage);
        return rejectWithValue(errorMessage);
      }
    }
@@ -257,8 +257,7 @@ index b0dc15a..4bb3c6f 100644
        } else if ((err as AxiosError).response?.status === 403) {
          errorMessage = 'User with such login/password was not found';
        }*/
--      console.log('err', err);
-+      console.log('Something went wrong while getting userData->', err as AxiosError);
++      console.error('Something went wrong while getting userData->', err as AxiosError);
        return rejectWithValue(err as AxiosError);
      }
    }
@@ -391,7 +390,6 @@ index 02ac6ec..87eac29 100644
 +        state.userName = action.payload.name;
 +        state.login = action.payload.login;
 +        state.editSuccess = true;
-         console.log('actionEdit', action.payload);
        })
        .addCase(editUser.rejected, (state) => {
 @@ -100,6 +104,6 @@ export const authSlice = createSlice({

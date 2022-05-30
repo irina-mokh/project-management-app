@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'store';
 import { UserHeader } from './UserHeader';
+import { FetchFailedModal } from 'components/Modals';
 import { getUserPersData } from 'store/auth/actions';
 import { ReactComponent as MainLogo } from '../../assets/images/svg/logo.svg';
 import { Link } from 'react-router-dom';
@@ -56,6 +57,7 @@ export const Header = () => {
         {token && token.length ? <UserHeader /> : <WelcomeHeader />}
         <Navbar />
       </div>
+      <FetchFailedModal />
     </header>
   );
 };

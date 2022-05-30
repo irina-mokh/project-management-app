@@ -1,4 +1,5 @@
 import { AccountMenu } from './AccountMenu';
+import { CreateBoardModal } from 'components/Modals';
 import { Link, useSearchParams } from 'react-router-dom';
 import './Header.scss';
 import { useTranslation } from 'react-i18next';
@@ -36,6 +37,7 @@ export const UserHeader = () => {
         {windowDimenion > 768 ? t('createBoard') : '+'}
       </button>
       <AccountMenu />
+      <CreateBoardModal />
     </div>
   );
 };

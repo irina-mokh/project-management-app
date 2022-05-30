@@ -6,7 +6,7 @@ import { searchTasks, clearTasksSearch, toggleSearchFocus } from 'store/board/re
 import { Loading } from 'components/Loading';
 import { selectBoard } from 'store/board/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Card, Typography, Container, Breadcrumbs, Link, Box } from '@mui/material';
+import { List, Card, Typography, Container, Breadcrumbs, Link, Box, Button } from '@mui/material';
 import { IColumn } from 'types';
 import { AddButton } from 'components/AddButton';
 import { CreateColumnModal, CreateTaskModal, EditTaskModal } from 'components/Modals';
@@ -50,7 +50,28 @@ export const Board = () => {
   }
 
   if (error) {
-    return <>{error}</>;
+    return (
+      <Box
+        sx={{
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        {`${t('error')}: ${error}`}
+        <Button
+          onClick={() => navigate('/' + routes.main.path, { replace: true })}
+          sx={{
+            padding: 2,
+            margin: 2,
+          }}
+        >
+          {t('returnStartPage')}
+        </Button>
+      </Box>
+    );
   }
 
   return (

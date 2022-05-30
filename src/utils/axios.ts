@@ -1,7 +1,5 @@
-import axios from 'axios';
-import { routes } from 'routes';
-import { store } from 'store';
-import { expiredToken } from 'store/auth/reducer';
+import axios, { AxiosError } from 'axios';
+import { errorHandler } from './axiosErrorHandler';
 import { ITaskPut } from 'types';
 
 export const axiosClient = axios.create({
@@ -11,7 +9,12 @@ export const axiosClient = axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
+  // валидация всех ответов от сервера
+  validateStatus: (status) => {
+    return status >= 200 && status <= 299;
+  },
 });
+
 axiosClient.interceptors.request.use(
   async (config) => {
     const value = localStorage.getItem('token');
@@ -33,21 +36,20 @@ axiosClient.interceptors.response.use(
     const {
       data: { token },
     } = response;
-    if (token && response.status !== 401) {
+
+    if (token) {
       localStorage.setItem('token', token);
     }
+
     return response;
   },
-  async (error) => {
-    if (error.response.data.statusCode === 401) {
-      store.dispatch(expiredToken());
-      //store.dispatch(logOut());
-      window.location.href = `${routes.welcome.path}`;
-    }
-
+  async (error: AxiosError) => {
+    // глобальный обработчик ошибок
+    errorHandler(error.response?.status);
     return Promise.reject(error);
   }
 );
+
 export const updateColumn = async (
   boardId: string,
   columnId: string,
@@ -60,7 +62,7 @@ export const updateColumn = async (
       order: order,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -73,6 +75,6 @@ export const updateTask = async (task: ITaskPut, taskId: string, dragColumnId: s
     );
     return response;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

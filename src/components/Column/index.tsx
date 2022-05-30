@@ -34,6 +34,8 @@ export const Column = (props: IColumnProps) => {
   const { boardId, column } = props;
 
   const [curTitle, setCurTitle] = useState(column.title);
+  const [stateTitle, setStateTitle] = useState(column.title);
+  const [submit, setSubmit] = useState(false);
   const [curOrder] = useState(column.order);
   const [isSelected, setIsSelected] = useState(false);
 
@@ -44,7 +46,14 @@ export const Column = (props: IColumnProps) => {
   };
 
   const handleTitleChangeCancel = () => {
-    setCurTitle(column.title);
+    setCurTitle(stateTitle);
+  };
+
+  const handleSubmit = () => {
+    setIsSelected(false);
+    setSubmit(true);
+    setStateTitle(curTitle);
+    updateColumn(boardId, column.id, curOrder, curTitle);
   };
 
   // ref for column DnD
@@ -106,11 +115,7 @@ export const Column = (props: IColumnProps) => {
       <IconButton onMouseDown={handleTitleChangeCancel} size="small">
         <Clear aria-label="cancel" />
       </IconButton>
-      <IconButton
-        aria-label="submit"
-        size="small"
-        onMouseDown={() => updateColumn(boardId, column.id, curOrder, curTitle)}
-      >
+      <IconButton aria-label="submit" size="small" onMouseDown={handleSubmit}>
         <Check />
       </IconButton>
     </>
@@ -142,9 +147,20 @@ export const Column = (props: IColumnProps) => {
           setCurTitle(e.target.value);
         }}
         onFocus={() => setIsSelected(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSubmit();
+            setTimeout(() => {
+              (e.target as HTMLInputElement).blur();
+            }, 100);
+          }
+        }}
         onBlur={() => {
           setIsSelected(false);
-          setCurTitle(column.title);
+          if (!submit) {
+            setCurTitle(stateTitle);
+          }
+          setSubmit(false);
         }}
         InputProps={{
           style: { fontSize: '1.5rem', fontWeight: 700, width: '90%', marginBottom: '10px' },

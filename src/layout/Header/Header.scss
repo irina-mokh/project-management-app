@@ -1,0 +1,70 @@
+@import '../../styles/vars';
+
+.header {
+  width: 100%;
+  display: flex;
+  z-index: 100;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  top: 0;
+  position: relative;
+  transition: all 0.5 ease;
+  height: 70px;
+  box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  -webkit-transition: background-color 500ms linear;
+  -moz-transition: background-color 500ms linear;
+  -o-transition: background-color 500ms linear;
+  -ms-transition: background-color 500ms linear;
+  transition: height 500ms linear;
+}
+
+.header.sticky {
+  position: sticky;
+  top: 0;
+  transition: all 0.5 ease;
+  height: 50px;
+  -webkit-transition: background-color 500ms linear;
+  -moz-transition: background-color 500ms linear;
+  -o-transition: background-color 500ms linear;
+  -ms-transition: background-color 500ms linear;
+  transition: height 500ms linear;
+}
+
+.headerBtn {
+  border-radius: 10px;
+  background-color: transparent;
+  color: $green;
+  height: $height;
+  padding: 10px;
+  border: 2px solid $green;
+  font-weight: 700;
+  font-size: 1em;
+  cursor: pointer;
+}
+.changeHeaderCont {
+  display: flex;
+  gap: 10px;
+  margin-right: 10px;
+  margin-left: auto;
+}
+.userMenu_link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+}
+.burgerChange {
+  display: flex;
+  flex-direction: row-reverse;
+}
+@media (max-width: 768px) {
+  .burgerChange {
+    flex-direction: row;
+  }
+}
+@media (max-width: 346px) {
+  .changeHeaderCont {
+    font-size: x-small;
+  }
+}

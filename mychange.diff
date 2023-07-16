@@ -1,0 +1,402 @@
+diff --git a/src/layout/Header/AccountMenu.tsx b/src/layout/Header/AccountMenu.tsx
+index 0cc3d15..360c0a6 100644
+--- a/src/layout/Header/AccountMenu.tsx
++++ b/src/layout/Header/AccountMenu.tsx
+@@ -101,7 +101,7 @@ export const AccountMenu = () => {
+         setOpen={setConfirmOpen}
+         onConfirm={() => {
+           dispatch(logOut());
+-          navigate(`/${routes.welcome.path}`);
++          navigate(`${routes.welcome.path}`);
+         }}
+       ></ConfirmDialog>
+     </React.Fragment>
+diff --git a/src/layout/Header/Avatar.tsx b/src/layout/Header/Avatar.tsx
+index 00b6041..b67019b 100644
+--- a/src/layout/Header/Avatar.tsx
++++ b/src/layout/Header/Avatar.tsx
+@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
+ import { useSelector } from 'react-redux';
+ import './Header.scss';
+ import { RootState } from 'store';
++import { useEffect } from 'react';
+ 
+ const stringToColor = (string: string) => {
+   let hash = 0;
+@@ -43,5 +44,8 @@ export const LetterAvatar = (props: {
+   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+ }) => {
+   const { login } = useSelector((state: RootState) => state.auth);
++  useEffect(() => {
++    stringAvatar(login);
++  }, [login]);
+   return <Avatar onClick={props.onClick} {...stringAvatar(login)} />;
+ };
+diff --git a/src/layout/Header/WelcomeHeader.tsx b/src/layout/Header/WelcomeHeader.tsx
+index 7328dc3..494c934 100644
+--- a/src/layout/Header/WelcomeHeader.tsx
++++ b/src/layout/Header/WelcomeHeader.tsx
+@@ -1,23 +1,34 @@
+ import Button from '@mui/material/Button/Button';
+ import Typography from '@mui/material/Typography/Typography';
++import { useDispatch } from 'react-redux';
+ import { useNavigate } from 'react-router-dom';
+ import { routes } from 'routes';
++import { AppDispatch } from 'store';
++import { removeError } from 'store/auth/reducer';
+ import './Header.scss';
+ 
+ export const WelcomeHeader = () => {
+   const navigate = useNavigate();
++  const dispatch = useDispatch<AppDispatch>();
++
+   return (
+     <div>
+       <Button
+         variant="contained"
+-        onClick={() => navigate(routes.signUp.path)}
++        onClick={() => {
++          navigate(routes.signUp.path);
++          dispatch(removeError);
++        }}
+         sx={{ marginLeft: '5px' }}
+       >
+         <Typography>Sign Up</Typography>
+       </Button>
+       <Button
+         variant="contained"
+-        onClick={() => navigate(routes.signIn.path)}
++        onClick={() => {
++          navigate(routes.signIn.path);
++          dispatch(removeError);
++        }}
+         sx={{ marginLeft: '5px' }}
+       >
+         <Typography>Sign In</Typography>
+diff --git a/src/pages/editProfile/index.tsx b/src/pages/editProfile/index.tsx
+index af25e9e..786229d 100644
+--- a/src/pages/editProfile/index.tsx
++++ b/src/pages/editProfile/index.tsx
+@@ -9,13 +9,23 @@ import { AppDispatch, RootState } from 'store';
+ import { ChangeEvent, useState } from 'react';
+ import { ConfirmDialog } from 'components/ConfirmDialog';
+ import { deleteUser, editUser } from 'store/auth/actions';
++import { useNavigate } from 'react-router-dom';
++import { routes } from 'routes';
++import { CustomSnackBar } from 'components/CustomSnackBar';
++import { authSlice } from 'store/auth/reducer';
+ 
+ export const EditProfile = () => {
+   const mode = useSelector(selectTheme);
+   const theme = createTheme(getDesignTokens(mode));
+-  const { userName, login, userId, userPassword } = useSelector((state: RootState) => state.auth);
++  const { userName, login, userId, userPassword, editSuccess, deleteSuccess } = useSelector(
++    (state: RootState) => state.auth
++  );
+   const dispatch = useDispatch<AppDispatch>();
+   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
++  const [snackOpen, setSnackOpen] = useState<boolean>(editSuccess && deleteSuccess);
++  const { removeSnackState } = authSlice.actions;
++
++  const navigate = useNavigate();
+ 
+   const [curName, setCurName] = useState<string | null>(userName);
+   const [nameError, setNameError] = useState(false);
+@@ -188,7 +198,18 @@ export const EditProfile = () => {
+         confirmText={'Delete this account?'}
+         open={confirmOpen}
+         setOpen={setConfirmOpen}
+-        onConfirm={() => dispatch(deleteUser(userId))}
++        onConfirm={() => {
++          dispatch(deleteUser(userId));
++          setTimeout(() => navigate(`${routes.welcome.path}`), 10000);
++        }}
++      />
++      <CustomSnackBar
++        open={snackOpen}
++        snackText={
++          editSuccess ? 'Account data was changed successfully' : 'Account was deleted successfully'
++        }
++        setOpen={setSnackOpen}
++        onClose={() => dispatch(removeSnackState())}
+       />
+     </ThemeProvider>
+   );
+diff --git a/src/pages/signIn/index.tsx b/src/pages/signIn/index.tsx
+index bdbda26..5c37610 100644
+--- a/src/pages/signIn/index.tsx
++++ b/src/pages/signIn/index.tsx
+@@ -15,9 +15,10 @@ import AlertTitle from '@mui/material/AlertTitle';
+ import { Loading } from 'components/Loading';
+ import { useState } from 'react';
+ import { useDispatch, useSelector } from 'react-redux';
+-import { Link } from 'react-router-dom';
++import { Link, useNavigate } from 'react-router-dom';
++import { routes } from 'routes';
+ import { AppDispatch, RootState } from 'store';
+-import { signInUser } from 'store/auth/actions';
++import { getUserPersData, signInUser } from 'store/auth/actions';
+ import { authSlice } from 'store/auth/reducer';
+ import { selectTheme } from 'store/theme/selectors';
+ import { getDesignTokens } from 'theme';
+@@ -29,6 +30,8 @@ export const SignInForm = () => {
+   const { error, isLoading, token } = useSelector((state: RootState) => state.auth);
+   const { removeError } = authSlice.actions;
+ 
++  const navigate = useNavigate();
++
+   const [loginInput, setLogin] = useState('');
+   const [loginError, setLoginError] = useState(false);
+   const [loginErrorText, setLoginErrorText] = useState('');
+@@ -78,15 +81,16 @@ export const SignInForm = () => {
+       login: data.get('login') as string,
+       password: data.get('password') as string,
+     };
+-    dispatch(signInUser(curUser));
+-    /*.unwrap()
++    dispatch(signInUser(curUser))
++      .unwrap()
+       .then(() => {
++        navigate(`${routes.welcome.path}`);
+         dispatch(getUserPersData(curUser.login));
+       })
+       .catch((e) => {
+         // error in case of rejection inside createAsyncThunk second argument
+         console.error('e', e);
+-      });*/
++      });
+   };
+ 
+   return (
+@@ -163,7 +167,7 @@ export const SignInForm = () => {
+             <Grid container>
+               <Grid item>
+                 <span>For the first time on the site? </span>
+-                <Link to={'/signup'}>
++                <Link to={'/signup'} onClick={() => dispatch(removeError)}>
+                   <span>Create an account</span>
+                 </Link>
+               </Grid>
+diff --git a/src/pages/signUp/index.tsx b/src/pages/signUp/index.tsx
+index 09b9cc3..cfca64f 100644
+--- a/src/pages/signUp/index.tsx
++++ b/src/pages/signUp/index.tsx
+@@ -12,8 +12,8 @@ import {
+   ThemeProvider,
+   Typography,
+ } from '@mui/material';
+-import { useState } from 'react';
+-import { Link } from 'react-router-dom';
++import { useEffect, useState } from 'react';
++import { Link, useNavigate } from 'react-router-dom';
+ import { getDesignTokens } from 'theme';
+ import { useSelector } from 'react-redux';
+ import { selectTheme } from 'store/theme/selectors';
+@@ -22,6 +22,7 @@ import { Loading } from 'components/Loading';
+ import { createUser, signInUser } from 'store/auth/actions';
+ import { AppDispatch, RootState } from 'store';
+ import { authSlice } from 'store/auth/reducer';
++import { routes } from 'routes';
+ 
+ export interface NewUserType {
+   name: string;
+@@ -39,6 +40,7 @@ export const SignUpForm = () => {
+   const dispatch = useDispatch<AppDispatch>();
+   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+   const { removeError } = authSlice.actions;
++  const navigate = useNavigate();
+ 
+   const [name, setName] = useState('');
+   const [nameError, setNameError] = useState(false);
+@@ -114,6 +116,7 @@ export const SignUpForm = () => {
+       .unwrap()
+       .then(() => {
+         dispatch(signInUser({ login: newUser.login, password: newUser.password }));
++        navigate(`${routes.welcome.path}`);
+       })
+       .catch((e) => {
+         // error in case of rejection inside createAsyncThunk second argument
+@@ -204,7 +207,7 @@ export const SignUpForm = () => {
+             <Grid container>
+               <Grid item>
+                 <span>Already have an account? </span>
+-                <Link to={'/signin'}>
++                <Link to={'/signin'} onClick={() => dispatch(removeError)}>
+                   <span>Sign In</span>
+                 </Link>
+               </Grid>
+diff --git a/src/store/auth/actions.ts b/src/store/auth/actions.ts
+index b0dc15a..4bb3c6f 100644
+--- a/src/store/auth/actions.ts
++++ b/src/store/auth/actions.ts
+@@ -22,6 +22,7 @@ export const createUser = createAsyncThunk(
+       } else if ((err as AxiosError).response?.status === 409) {
+         errorMessage = 'User login already exists!';
+       }
++      console.error('Something went wrong ->', errorMessage);
+       return rejectWithValue(errorMessage);
+     }
+   }
+@@ -49,6 +50,7 @@ export const signInUser = createAsyncThunk(
+       } else if ((err as AxiosError).response?.status === 403) {
+         errorMessage = 'User with such login/password was not found';
+       }
++      console.error('Something went wrong while signin->', errorMessage);
+       return rejectWithValue(errorMessage);
+     }
+   }
+@@ -65,6 +67,7 @@ export const getUserPersData = createAsyncThunk(
+       const arrUser = response.data.filter((item: NewUserType) => {
+         return item.login === login;
+       });
++
+       const persData = {
+         userId: arrUser[0].id,
+         userName: arrUser[0].name,
+@@ -78,7 +81,7 @@ export const getUserPersData = createAsyncThunk(
+       } else if ((err as AxiosError).response?.status === 403) {
+         errorMessage = 'User with such login/password was not found';
+       }*/
++      console.error('Something went wrong while getting userData->', err as AxiosError);
+       return rejectWithValue(err as AxiosError);
+     }
+   }
+@@ -94,15 +97,15 @@ export const deleteUser = createAsyncThunk(
+         throw new Error('Error');
+       }
+       console.log('nansn', response);
+-      return response;
++      return response.data;
+     } catch (err) {
+-      /*let errorMessage;
+-      if ((err as AxiosError).response?.status === 400) {
+-        errorMessage = 'Fill fields to sign in';
+-      } else if ((err as AxiosError).response?.status === 403) {
++      let errorMessage;
++      if ((err as AxiosError).response?.status === 404) {
++        errorMessage = 'User was not found';
++      } /*else if ((err as AxiosError).response?.status === 403) {
+         errorMessage = 'User with such login/password was not found';
+       }*/
+-      console.log('err', err);
++      console.log('Something went wrong while deleting userData->', err as AxiosError);
+       return rejectWithValue(err as AxiosError);
+     }
+   }
+@@ -120,8 +123,8 @@ export const editUser = createAsyncThunk(
+       if (response.status !== 200) {
+         throw new Error('Error');
+       }
+-      console.log('nansn', response);
+-      return response;
++      console.log('nansn', response.data);
++      return response.data;
+     } catch (err) {
+       /*let errorMessage;
+       if ((err as AxiosError).response?.status === 400) {
+@@ -129,7 +132,7 @@ export const editUser = createAsyncThunk(
+       } else if ((err as AxiosError).response?.status === 403) {
+         errorMessage = 'User with such login/password was not found';
+       }*/
+-      console.log('errEdit', err);
++      console.log('Something went wrong while editing userData->', err as AxiosError);
+       return rejectWithValue(err as AxiosError);
+     }
+   }
+diff --git a/src/store/auth/reducer.tsx b/src/store/auth/reducer.tsx
+index 02ac6ec..87eac29 100644
+--- a/src/store/auth/reducer.tsx
++++ b/src/store/auth/reducer.tsx
+@@ -1,5 +1,4 @@
+ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+-import { routes } from 'routes';
+ import { createUser, deleteUser, editUser, getUserPersData, signInUser } from './actions';
+ 
+ export type IAuthState = {
+@@ -10,7 +9,8 @@ export type IAuthState = {
+   error: null | string;
+   isLoading: boolean;
+   token: null | string;
+-  isConfirmOpen: boolean;
++  editSuccess: boolean;
++  deleteSuccess: boolean;
+ };
+ const initialState: IAuthState = {
+   userName: null,
+@@ -20,7 +20,8 @@ const initialState: IAuthState = {
+   error: null,
+   isLoading: false,
+   token: null,
+-  isConfirmOpen: false,
++  editSuccess: false,
++  deleteSuccess: false,
+ };
+ 
+ export const authSlice = createSlice({
+@@ -30,14 +31,15 @@ export const authSlice = createSlice({
+     removeError: (state) => {
+       state.error = null;
+     },
+-    setConfirmOpen: (state, action: PayloadAction<boolean>) => {
+-      state.isConfirmOpen = action.payload;
+-    },
+     logOut: (state) => {
+       state.login = null;
+       state.token = null;
+       state.userId = null;
+     },
++    removeSnackState: (state) => {
++      state.editSuccess = false;
++      state.deleteSuccess = false;
++    },
+   },
+   extraReducers: (builder) => {
+     builder
+@@ -62,7 +64,7 @@ export const authSlice = createSlice({
+         state.login = action.payload.login;
+         state.isLoading = false;
+         state.userPassword = action.payload.password;
+-        window.location.href = `/${routes.main.path}`;
++        state.error = null;
+       })
+       .addCase(signInUser.rejected, (state, action) => {
+         state.isLoading = false;
+@@ -71,18 +73,17 @@ export const authSlice = createSlice({
+       .addCase(getUserPersData.fulfilled, (state, action) => {
+         state.userId = action.payload.userId;
+         state.userName = action.payload.userName;
+-        console.log('action1', action.payload);
++        console.log('action1-getUserPersData', action.payload);
+       })
+       .addCase(getUserPersData.rejected, (state) => {
+         state.isLoading = false;
+       })
+-      .addCase(deleteUser.fulfilled, (state, action) => {
++      .addCase(deleteUser.fulfilled, (state) => {
+         state.userId = null;
+         state.userName = null;
+         state.token = null;
+         state.login = null;
+-        window.location.href = `${routes.welcome.path}`;
+-        console.log('action2', action.payload);
++        state.deleteSuccess = true;
+       })
+       .addCase(deleteUser.rejected, (state) => {
+         state.isLoading = false;
+@@ -92,6 +93,9 @@ export const authSlice = createSlice({
+       })
+       .addCase(editUser.fulfilled, (state, action) => {
+         state.isLoading = false;
++        state.userName = action.payload.name;
++        state.login = action.payload.login;
++        state.editSuccess = true;
+       })
+       .addCase(editUser.rejected, (state) => {
+@@ -100,6 +104,6 @@ export const authSlice = createSlice({
+   },
+ });
+ 
+-export const { removeError, setConfirmOpen, logOut } = authSlice.actions;
++export const { removeError, removeSnackState, logOut } = authSlice.actions;
+ 
+ export default authSlice.reducer;

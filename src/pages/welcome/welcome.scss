@@ -1,0 +1,94 @@
+.welcomeContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-top: 20px;
+}
+.mainTextContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'appBanner appBanner appTitle'
+    'appBanner appBanner appText'
+    'appBanner appBanner appBtn';
+  margin-bottom: 10%;
+}
+
+.startBanner {
+  grid-area: appBanner;
+}
+
+.appTitle {
+  grid-area: appTitle;
+}
+
+.appText {
+  grid-area: appText;
+}
+
+.appBtn {
+  grid-area: appBtn;
+  width: 40%;
+  max-height: 70%;
+}
+
+.devCardsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+.mainBtnLink {
+  font-size: xx-large;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 1120px) {
+  .mainBtnLink {
+    font-size: x-large;
+  }
+}
+@media (max-width: 1000px) {
+  .mainBtnLink {
+    font-size: large;
+  }
+}
+@media (max-width: 950px) {
+  .mainTextContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: 0.3fr 0.1fr 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      'appTitle appTitle appTitle'
+      'appText appText appText'
+      'appBanner appBanner appBanner'
+      'appBtn appBtn appBtn';
+    margin-bottom: 40px;
+  }
+  .mainBtnLink {
+    font-size: x-large;
+  }
+  .appBtn {
+    height: 40%;
+  }
+}
+@media (max-width: 800px) {
+  .devCardsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@media (max-width: 550px) {
+  .mainBtnLink {
+    font-size: large;
+  }
+}
